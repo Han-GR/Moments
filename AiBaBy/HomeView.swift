@@ -86,12 +86,6 @@ struct BabyGridItem: View {
                 .font(.headline)
                 .foregroundColor(.primary)
                 .lineLimit(1)
-            
-            if let birthDate = baby.birthDate {
-                Text(birthDate, style: .date)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
         }
         .padding(.bottom, 5)
         .frame(width: 160)

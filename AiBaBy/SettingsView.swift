@@ -31,7 +31,7 @@ struct SettingsView: View {
                         .clipShape(Circle())
                     
                     VStack(alignment: .leading) {
-                        Text("爱贝贝")
+                        Text("AiBaby")
                             .font(.headline)
                         Text("版本 \(appVersion)")
                             .font(.caption)
@@ -43,7 +43,7 @@ struct SettingsView: View {
                 Button(action: {
                     showingAbout = true
                 }) {
-                    Label("关于爱贝贝", systemImage: "info.circle")
+                    Label("关于AiBaby", systemImage: "info.circle")
                 }
             }
             
@@ -128,7 +128,7 @@ struct AboutView: View {
                     .background(Color.pink.opacity(0.2))
                     .clipShape(Circle())
                 
-                Text("爱贝贝")
+                Text("AiBaby")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 
@@ -140,7 +140,7 @@ struct AboutView: View {
                     .frame(height: 30)
                 
                 VStack(alignment: .leading, spacing: 15) {
-                    Text("爱贝贝是一款专为记录和管理您的阿贝贝而设计的应用。您可以在这里记录与您有关的任何事物,不要错过任何瞬间。")
+                    Text("AiBaby是一款专为记录和管理您的阿贝贝而设计的应用。您可以在这里记录与您有关的任何事物,不要错过任何瞬间。")
                     
                     Text("功能特点：")
                         .fontWeight(.bold)
@@ -163,7 +163,7 @@ struct AboutView: View {
                     .foregroundColor(.secondary)
             }
             .padding()
-            .navigationTitle("关于爱贝贝")
+            .navigationTitle("关于AiBaby")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
