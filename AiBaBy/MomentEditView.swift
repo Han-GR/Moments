@@ -66,7 +66,7 @@ struct MomentEditView: View {
                 }
             }
             
-            Section("趣事标题") {
+            Section("瞬间标题") {
                 TextField("输入标题", text: $title)
             }
             
@@ -75,7 +75,7 @@ struct MomentEditView: View {
                     .datePickerStyle(.compact)
             }
             
-            Section("趣事内容") {
+            Section("瞬间内容") {
                 TextEditor(text: $content)
                     .frame(minHeight: 100)
             }
@@ -118,7 +118,7 @@ struct MomentEditView: View {
                 }
             }
         }
-        .navigationTitle("记录生活趣事")
+        .navigationTitle("记录生活瞬间")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {

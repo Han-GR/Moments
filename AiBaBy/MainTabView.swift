@@ -21,12 +21,12 @@ struct MainTabView: View {
             }
             .tag(0)
             
-            // 生活趣事页面
+            // 生活瞬间页面
             NavigationStack {
                 MomentsView()
             }
             .tabItem {
-                Label("趣事", systemImage: "heart.text.square.fill")
+                Label("瞬间", systemImage: "heart.text.square.fill")
             }
             .tag(1)
             

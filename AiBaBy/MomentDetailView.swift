@@ -77,7 +77,7 @@ struct MomentDetailView: View {
             }
             .padding(.vertical)
         }
-        .navigationTitle("趣事详情")
+        .navigationTitle("瞬间详情")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -112,7 +112,7 @@ struct MomentDetailView: View {
                 deleteMoment()
             }
         } message: {
-            Text("确定要删除这条生活趣事吗？此操作无法撤销。")
+            Text("确定要删除这条生活瞬间吗？此操作无法撤销。")
         }
     }
     

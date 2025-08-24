@@ -17,7 +17,7 @@ AiBaBy（爱贝贝）是一款帮助用户管理自己的"阿贝贝"的iOS应用
 - 主页：展示所有的"阿贝贝"
 - 详情页：查看单个"阿贝贝"的详细信息
 - 编辑页：添加或编辑"阿贝贝"的信息
-- 记事本：记录关于"阿贝贝"的生活趣事
+- 记事本：记录关于"阿贝贝"的生活瞬间
 
 ## 页面结构
 
@@ -26,7 +26,7 @@ AiBaBy（爱贝贝）是一款帮助用户管理自己的"阿贝贝"的iOS应用
 | 主页 | 展示所有阿贝贝 | 网格/列表展示所有阿贝贝，支持搜索和筛选 | SwiftUI List/Grid, Core Data | 应用启动首页，点击进入详情页 | `AiBaBy/HomeView.swift` |
 | 详情页 | 展示单个阿贝贝的详细信息 | 显示照片、基本信息、生活记录 | SwiftUI, Core Data | 从主页点击进入，可跳转到编辑页 | `AiBaBy/BabyDetailView.swift` |
 | 编辑页 | 添加/编辑阿贝贝信息 | 上传照片，编辑名字、生日等信息 | SwiftUI Form, Image Picker | 从详情页或主页的添加按钮进入 | `AiBaBy/BabyEditView.swift` |
-| 记事本 | 记录阿贝贝的生活趣事 | 添加、编辑、删除生活记录 | SwiftUI, Core Data | 从详情页进入或通过标签栏访问 | `AiBaBy/MomentsView.swift` |
+| 记事本 | 记录阿贝贝的生活瞬间 | 添加、编辑、删除生活记录 | SwiftUI, Core Data | 从详情页进入或通过标签栏访问 | `AiBaBy/MomentsView.swift` |
 | 设置页 | 应用设置 | 主题切换、数据备份、通知设置 | SwiftUI, UserDefaults | 通过标签栏或主页设置按钮访问 | `AiBaBy/SettingsView.swift` |
 
 ## 数据模型

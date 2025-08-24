@@ -87,16 +87,16 @@ struct BabyDetailView: View {
                     }
                 }
                 
-                // 生活趣事区域
+                // 生活瞬间区域
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
-                        Text("生活趣事")
+                        Text("生活瞬间")
                             .font(.headline)
                         
                         Spacer()
                         
                         Button(action: { isAddingMoment = true }) {
-                            Label("添加趣事", systemImage: "plus")
+                            Label("添加瞬间", systemImage: "plus")
                                 .font(.caption)
                         }
                         .buttonStyle(.bordered)
@@ -112,7 +112,7 @@ struct BabyDetailView: View {
                             .buttonStyle(.plain)
                         }
                     } else {
-                        ContentUnavailableView("暂无生活趣事", systemImage: "book.closed", description: Text("点击添加按钮记录阿贝贝的生活点滴"))
+                        ContentUnavailableView("暂无生活瞬间", systemImage: "book.closed", description: Text("点击添加按钮记录阿贝贝的生活点滴"))
                             .frame(height: 200)
                     }
                 }

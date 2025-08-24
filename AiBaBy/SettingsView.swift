@@ -56,7 +56,7 @@ struct SettingsView: View {
                 }
                 
                 HStack {
-                    Label("生活趣事", systemImage: "heart.text.square.fill")
+                    Label("生活瞬间", systemImage: "heart.text.square.fill")
                     Spacer()
                     Text("\(moments.count)")
                         .foregroundColor(.secondary)
@@ -86,7 +86,7 @@ struct SettingsView: View {
                 deleteAllData()
             }
         } message: {
-            Text("确定要删除所有阿贝贝和生活趣事数据吗？此操作无法撤销。")
+            Text("确定要删除所有阿贝贝和生活瞬间数据吗？此操作无法撤销。")
         }
         .sheet(isPresented: $showingAbout) {
             AboutView()
@@ -94,7 +94,7 @@ struct SettingsView: View {
     }
     
     private func deleteAllData() {
-        // 先删除所有趣事
+        // 先删除所有瞬间
         for moment in moments {
             modelContext.delete(moment)
         }
@@ -140,7 +140,7 @@ struct AboutView: View {
                     .frame(height: 30)
                 
                 VStack(alignment: .leading, spacing: 15) {
-                    Text("爱贝贝是一款专为记录和管理您的阿贝贝而设计的应用。无论是宠物、玩偶还是其他珍贵的物品，都可以在这里记录它们的成长和生活点滴。")
+                    Text("爱贝贝是一款专为记录和管理您的阿贝贝而设计的应用。您可以在这里记录与您有关的任何事物,不要错过任何瞬间。")
                     
                     Text("功能特点：")
                         .fontWeight(.bold)
@@ -148,7 +148,7 @@ struct AboutView: View {
                     
                     FeatureRow(icon: "camera.fill", text: "拍照并上传阿贝贝的照片")
                     FeatureRow(icon: "pencil", text: "编辑阿贝贝的基本信息")
-                    FeatureRow(icon: "heart.text.square.fill", text: "记录阿贝贝的生活趣事")
+                    FeatureRow(icon: "heart.text.square.fill", text: "记录阿贝贝的生活瞬间")
                     FeatureRow(icon: "house.fill", text: "在主页查看所有阿贝贝")
                 }
                 .padding()
@@ -158,7 +158,7 @@ struct AboutView: View {
                 
                 Spacer()
                 
-                Text("© 2025 爱贝贝团队")
+                Text("© 2025 Han-GR")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }

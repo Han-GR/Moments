@@ -18,7 +18,7 @@ struct MomentsView: View {
         if let selectedBaby = selectedBaby, let moments = selectedBaby.moments {
             return moments.sorted(by: { $0.date > $1.date })
         } else {
-            // 获取所有阿贝贝的所有趣事，并按日期排序
+            // 获取所有阿贝贝的所有瞬间，并按日期排序
             var allMoments: [Moment] = []
             for baby in babies {
                 if let moments = baby.moments {
@@ -94,7 +94,7 @@ struct MomentsView: View {
                 }
                 
                 if moments.isEmpty {
-                    ContentUnavailableView("暂无生活趣事", systemImage: "book.closed", description: Text("点击添加按钮记录阿贝贝的生活点滴"))
+                    ContentUnavailableView("暂无生活瞬间", systemImage: "book.closed", description: Text("点击添加按钮记录阿贝贝的生活点滴"))
                 } else {
                     List {
                         ForEach(moments) { moment in
@@ -106,7 +106,7 @@ struct MomentsView: View {
                     .listStyle(.plain)
                 }
             }
-            .navigationTitle("生活趣事")
+            .navigationTitle("生活瞬间")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -116,7 +116,7 @@ struct MomentsView: View {
                             isAddingMoment = true
                         }
                     }) {
-                        Label("添加趣事", systemImage: "plus")
+                        Label("添加瞬间", systemImage: "plus")
                     }
                     .disabled(babies.isEmpty)
                 }
