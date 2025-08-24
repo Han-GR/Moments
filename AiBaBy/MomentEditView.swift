@@ -35,7 +35,7 @@ struct MomentEditView: View {
                             if let photoData = selectedBaby.photo, let uiImage = UIImage(data: photoData) {
                                 Image(uiImage: uiImage)
                                     .resizable()
-                                    .aspectRatio(contentMode: .fill)
+                                    .aspectRatio(1, contentMode: .fill)
                                     .frame(width: 40, height: 40)
                                     .clipShape(Circle())
                             } else {
@@ -96,7 +96,7 @@ struct MomentEditView: View {
                                     ZStack(alignment: .topTrailing) {
                                         Image(uiImage: uiImage)
                                             .resizable()
-                                            .aspectRatio(contentMode: .fill)
+                                            .aspectRatio(1, contentMode: .fill)
                                             .frame(width: 100, height: 100)
                                             .clipShape(RoundedRectangle(cornerRadius: 8))
                                         
@@ -169,7 +169,7 @@ struct MomentEditView: View {
                             if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
                                 Image(uiImage: uiImage)
                                     .resizable()
-                                    .aspectRatio(contentMode: .fill)
+                                    .aspectRatio(1, contentMode: .fill)
                                     .frame(width: 40, height: 40)
                                     .clipShape(Circle())
                             } else {

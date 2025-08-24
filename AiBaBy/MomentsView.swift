@@ -58,7 +58,7 @@ struct MomentsView: View {
                                         if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
                                             Image(uiImage: uiImage)
                                                 .resizable()
-                                                .aspectRatio(contentMode: .fill)
+                                                .aspectRatio(1, contentMode: .fill)
                                                 .frame(width: 50, height: 50)
                                                 .clipShape(Circle())
                                                 .overlay(
@@ -141,7 +141,7 @@ struct MomentListItem: View {
                     if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
                         Image(uiImage: uiImage)
                             .resizable()
-                            .aspectRatio(contentMode: .fill)
+                            .aspectRatio(1, contentMode: .fill)
                             .frame(width: 40, height: 40)
                             .clipShape(Circle())
                     } else {
@@ -189,7 +189,7 @@ struct MomentListItem: View {
                             if let uiImage = UIImage(data: photos[index]) {
                                 Image(uiImage: uiImage)
                                     .resizable()
-                                    .aspectRatio(contentMode: .fill)
+                                    .aspectRatio(1, contentMode: .fill)
                                     .frame(width: 80, height: 80)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }

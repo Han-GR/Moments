@@ -33,7 +33,7 @@ struct BabyEditView: View {
                     if let photoData = photoData, let uiImage = UIImage(data: photoData) {
                         Image(uiImage: uiImage)
                             .resizable()
-                            .aspectRatio(contentMode: .fill)
+                            .aspectRatio(1, contentMode: .fill)
                             .frame(width: 200, height: 200)
                             .clipShape(RoundedRectangle(cornerRadius: 15))
                     } else {

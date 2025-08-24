@@ -66,7 +66,7 @@ struct BabyGridItem: View {
             if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
+                    .aspectRatio(1, contentMode: .fill)
                     .frame(width: 150, height: 150)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                     .shadow(radius: 5)

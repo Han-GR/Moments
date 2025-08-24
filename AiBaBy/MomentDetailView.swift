@@ -26,7 +26,7 @@ struct MomentDetailView: View {
                             if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
                                 Image(uiImage: uiImage)
                                     .resizable()
-                                    .aspectRatio(contentMode: .fill)
+                                    .aspectRatio(1, contentMode: .fill)
                                     .frame(width: 50, height: 50)
                                     .clipShape(Circle())
                             } else {
@@ -132,7 +132,7 @@ struct PhotoGallery: View {
                 if let uiImage = UIImage(data: photos[index]) {
                     Image(uiImage: uiImage)
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
+                        .aspectRatio(1, contentMode: .fill)
                         .frame(width: 120, height: 120)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                         .onTapGesture {

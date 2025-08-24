@@ -22,7 +22,7 @@ struct BabyDetailView: View {
                     if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
                         Image(uiImage: uiImage)
                             .resizable()
-                            .aspectRatio(contentMode: .fill)
+                            .aspectRatio(4/3, contentMode: .fill)
                             .frame(height: 300)
                             .frame(maxWidth: .infinity)
                             .clipShape(RoundedRectangle(cornerRadius: 20))
@@ -112,8 +112,27 @@ struct BabyDetailView: View {
                             .buttonStyle(.plain)
                         }
                     } else {
-                        ContentUnavailableView("暂无生活瞬间", systemImage: "book.closed", description: Text("点击添加按钮记录阿贝贝的生活点滴"))
-                            .frame(height: 200)
+                        VStack(spacing: 16) {
+                            Image(systemName: "book.closed")
+                                .font(.system(size: 48))
+                                .foregroundColor(.secondary)
+                            
+                            VStack(spacing: 8) {
+                                Text("暂无生活瞬间")
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                                
+                                Text("点击添加按钮记录阿贝贝的生活点滴")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 40)
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .padding(.horizontal)
                     }
                 }
             }
@@ -165,7 +184,7 @@ struct MomentRow: View {
             if let photos = moment.photos, !photos.isEmpty, let firstPhoto = photos.first, let uiImage = UIImage(data: firstPhoto) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
+                    .aspectRatio(16/9, contentMode: .fill)
                     .frame(height: 150)
                     .frame(maxWidth: .infinity)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
