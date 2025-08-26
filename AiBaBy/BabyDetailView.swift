@@ -14,6 +14,12 @@ struct BabyDetailView: View {
     @State private var isAddingMoment = false
     let baby: Baby
     
+    @Query private var allMoments: [Moment]
+    
+    var moments: [Moment] {
+        allMoments.filter { $0.baby?.id == baby.id }.sorted(by: { $0.date > $1.date })
+    }
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -104,8 +110,8 @@ struct BabyDetailView: View {
                     }
                     .padding(.horizontal)
                     
-                    if let moments = baby.moments, !moments.isEmpty {
-                        ForEach(moments.sorted(by: { $0.date > $1.date })) { moment in
+                    if !moments.isEmpty {
+                        ForEach(moments) { moment in
                             NavigationLink(destination: MomentDetailView(moment: moment)) {
                                 MomentRow(moment: moment)
                             }

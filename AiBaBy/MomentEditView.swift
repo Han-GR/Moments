@@ -273,6 +273,13 @@ struct MomentEditView: View {
         // 添加到数据库
         modelContext.insert(moment)
         
+        // 立即保存更改
+        do {
+            try modelContext.save()
+        } catch {
+            print("保存瞬间失败: \(error)")
+        }
+        
         // 关闭视图
         dismiss()
     }
