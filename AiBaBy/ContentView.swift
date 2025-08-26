@@ -15,7 +15,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             if babies.isEmpty {
-                ContentUnavailableView("欢迎使用AiBaby", systemImage: "heart.fill", description: Text("点击添加按钮开始记录您的阿贝贝"))
+                ContentUnavailableView("欢迎使用AiBaby", systemImage: "bubbles.and.sparkles", description: Text("点击添加按钮开始记录您的阿贝贝"))
                     .background(Color(.systemGroupedBackground))
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {

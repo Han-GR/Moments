@@ -26,7 +26,7 @@ struct HomeView: View {
         NavigationStack {
             ZStack {
                 if babies.isEmpty {
-                    ContentUnavailableView("没有阿贝贝", systemImage: "heart.fill", description: Text("点击加号添加您的第一个阿贝贝"))
+                    ContentUnavailableView("没有阿贝贝", systemImage: "bubbles.and.sparkles", description: Text("点击加号添加您的第一个阿贝贝"))
                 } else {
                     ScrollView {
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 160))], spacing: 16) {
@@ -71,7 +71,7 @@ struct BabyGridItem: View {
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                     .shadow(radius: 5)
             } else {
-                Image(systemName: "heart.fill")
+                Image(systemName: "bubbles.and.sparkles")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 80, height: 80)

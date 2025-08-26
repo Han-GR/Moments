@@ -30,7 +30,7 @@ struct MomentDetailView: View {
                                     .frame(width: 50, height: 50)
                                     .clipShape(Circle())
                             } else {
-                                Image(systemName: "heart.fill")
+                                Image(systemName: "bubbles.and.sparkles")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 25, height: 25)

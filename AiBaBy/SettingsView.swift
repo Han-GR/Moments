@@ -21,13 +21,11 @@ struct SettingsView: View {
         List {
             Section("应用信息") {
                 HStack {
-                    Image(systemName: "heart.fill")
+                    Image(systemName: "bubbles.and.sparkles")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 30, height: 30)
-                        .foregroundColor(.pink)
                         .padding(10)
-                        .background(Color.pink.opacity(0.2))
                         .clipShape(Circle())
                     
                     VStack(alignment: .leading) {
@@ -119,13 +117,11 @@ struct AboutView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
-                Image(systemName: "heart.fill")
+                Image(systemName: "bubbles.and.sparkles")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 80, height: 80)
-                    .foregroundColor(.pink)
                     .padding(20)
-                    .background(Color.pink.opacity(0.2))
                     .clipShape(Circle())
                 
                 Text("AiBaby")

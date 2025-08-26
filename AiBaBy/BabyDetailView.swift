@@ -34,7 +34,7 @@ struct BabyDetailView: View {
                             .frame(maxWidth: .infinity)
                             .clipShape(RoundedRectangle(cornerRadius: 20))
                             .overlay(
-                                Image(systemName: "heart.fill")
+                                Image(systemName: "bubbles.and.sparkles")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 100, height: 100)

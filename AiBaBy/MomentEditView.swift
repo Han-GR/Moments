@@ -39,7 +39,7 @@ struct MomentEditView: View {
                                     .frame(width: 40, height: 40)
                                     .clipShape(Circle())
                             } else {
-                                Image(systemName: "heart.fill")
+                                Image(systemName: "bubbles.and.sparkles")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 20, height: 20)
@@ -173,7 +173,7 @@ struct MomentEditView: View {
                                     .frame(width: 40, height: 40)
                                     .clipShape(Circle())
                             } else {
-                                Image(systemName: "heart.fill")
+                                Image(systemName: "bubbles.and.sparkles")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 20, height: 20)

@@ -66,7 +66,7 @@ struct MomentsView: View {
                                                         .stroke(selectedBaby?.id == baby.id ? Color.blue : Color.clear, lineWidth: 3)
                                                 )
                                         } else {
-                                            Image(systemName: "heart.fill")
+                                            Image(systemName: "bubbles.and.sparkles")
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
                                                 .frame(width: 25, height: 25)
@@ -145,7 +145,7 @@ struct MomentListItem: View {
                             .frame(width: 40, height: 40)
                             .clipShape(Circle())
                     } else {
-                        Image(systemName: "heart.fill")
+                        Image(systemName: "bubbles.and.sparkles")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 20, height: 20)

@@ -37,7 +37,7 @@ struct BabyEditView: View {
                             .frame(width: 200, height: 200)
                             .clipShape(RoundedRectangle(cornerRadius: 15))
                     } else {
-                        Image(systemName: "heart.fill")
+                        Image(systemName: "bubbles.and.sparkles")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 80, height: 80)
