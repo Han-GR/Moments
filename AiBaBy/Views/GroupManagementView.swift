@@ -166,8 +166,6 @@ struct AddGroupView: View {
         }
         .alert("分组名称重复", isPresented: $showingDuplicateAlert) {
             Button("确定", role: .cancel) { }
-        } message: {
-            Text("该分组名称已存在，请使用其他名称")
         }
     }
     
@@ -296,8 +294,6 @@ struct EditGroupView: View {
         }
         .alert("分组名称重复", isPresented: $showingDuplicateAlert) {
             Button("确定", role: .cancel) { }
-        } message: {
-            Text("该分组名称已存在，请使用其他名称")
         }
     }
     
