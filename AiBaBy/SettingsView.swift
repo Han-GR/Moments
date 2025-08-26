@@ -121,6 +121,11 @@ struct SettingsView: View {
         for baby in babies {
             modelContext.delete(baby)
         }
+
+        // 最后删除所有分组
+        for group in groups {
+            modelContext.delete(group)
+        }
         
         // 尝试保存更改
         do {
