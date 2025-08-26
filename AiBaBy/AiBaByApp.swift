@@ -15,6 +15,7 @@ struct AiBaByApp: App {
         let schema = Schema([
             Baby.self,
             Moment.self,
+            Group.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

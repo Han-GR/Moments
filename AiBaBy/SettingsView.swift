@@ -12,9 +12,11 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var babies: [Baby]
     @Query private var moments: [Moment]
+    @Query private var groups: [Group]
     
     @State private var showingDeleteAllConfirmation = false
     @State private var showingAbout = false
+    @State private var showingGroupManagement = false
     @State private var appVersion = ""
     
     var body: some View {
@@ -59,6 +61,21 @@ struct SettingsView: View {
                     Text("\(moments.count)")
                         .foregroundColor(.secondary)
                 }
+                
+                HStack {
+                    Label("分组数量", systemImage: "folder.fill")
+                    Spacer()
+                    Text("\(groups.count)")
+                        .foregroundColor(.secondary)
+                }
+            }
+            
+            Section("分组管理") {
+                Button(action: {
+                    showingGroupManagement = true
+                }) {
+                    Label("管理分组", systemImage: "folder.badge.gearshape")
+                }
             }
             
             Section("数据管理") {
@@ -88,6 +105,9 @@ struct SettingsView: View {
         }
         .sheet(isPresented: $showingAbout) {
             AboutView()
+        }
+        .sheet(isPresented: $showingGroupManagement) {
+            GroupManagementView()
         }
     }
     
@@ -191,6 +211,6 @@ struct FeatureRow: View {
 #Preview {
     NavigationStack {
         SettingsView()
-            .modelContainer(for: [Baby.self, Moment.self], inMemory: true)
+            .modelContainer(for: [Baby.self, Moment.self, Group.self], inMemory: true)
     }
 }

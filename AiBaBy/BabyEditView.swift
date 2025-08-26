@@ -12,6 +12,7 @@ import PhotosUI
 struct BabyEditView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Query private var groups: [Group]
     
     @State private var name = ""
     @State private var birthDate: Date? = nil
@@ -24,6 +25,7 @@ struct BabyEditView: View {
     @State private var showingImagePicker = false
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State private var showingCameraAlert = false
+    @State private var selectedGroup: Group? = nil
     
     var baby: Baby? = nil
     
@@ -102,6 +104,29 @@ struct BabyEditView: View {
                     .frame(minHeight: 100)
             }
             
+            Section("分组") {
+                if groups.isEmpty {
+                    Text("暂无分组")
+                        .foregroundColor(.secondary)
+                } else {
+                    Picker("选择分组", selection: $selectedGroup) {
+                        Text("无分组")
+                            .tag(Group?.none)
+                        
+                        ForEach(groups, id: \.id) { group in
+                            HStack {
+                                Circle()
+                                    .fill(group.displayColor)
+                                    .frame(width: 12, height: 12)
+                                Text(group.name)
+                            }
+                            .tag(Group?.some(group))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+            }
+            
             if isEditing {
                 Section {
                     Button("删除", role: .destructive) {
@@ -136,6 +161,7 @@ struct BabyEditView: View {
                 birthDate = baby.birthDate
                 notes = baby.notes
                 photoData = baby.photo
+                selectedGroup = baby.group
             }
         }
         .onChange(of: selectedItem) { _, newValue in
@@ -196,10 +222,18 @@ struct BabyEditView: View {
             baby.birthDate = birthDate
             baby.notes = notes
             baby.photo = photoData
+            baby.group = selectedGroup
         } else {
             // 创建新的阿贝贝
             let newBaby = Baby(name: name, birthDate: birthDate, photo: photoData, notes: notes)
+            newBaby.group = selectedGroup
             modelContext.insert(newBaby)
+        }
+        
+        do {
+            try modelContext.save()
+        } catch {
+            print("保存阿贝贝失败: \(error)")
         }
     }
 }
@@ -207,6 +241,6 @@ struct BabyEditView: View {
 #Preview {
     NavigationStack {
         BabyEditView()
-            .modelContainer(for: [Baby.self, Moment.self], inMemory: true)
+            .modelContainer(for: [Baby.self, Moment.self, Group.self], inMemory: true)
     }
 }
