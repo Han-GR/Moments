@@ -210,6 +210,7 @@ struct MomentListItem: View {
                         }
                     }
                 }
+                .allowsHitTesting(false)
             }
         }
         .padding(.vertical, 8)
