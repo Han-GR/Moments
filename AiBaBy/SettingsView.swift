@@ -68,16 +68,7 @@ struct SettingsView: View {
                     Text("\(groups.count)")
                         .foregroundColor(.secondary)
                 }
-            }
-            
-            Section("分组管理") {
-                Button(action: {
-                    showingGroupManagement = true
-                }) {
-                    Label("管理分组", systemImage: "folder.badge.gearshape")
-                }
-            }
-            
+            }            
             Section("数据管理") {
                 Button(role: .destructive, action: {
                     showingDeleteAllConfirmation = true
