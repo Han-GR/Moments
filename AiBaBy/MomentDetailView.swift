@@ -76,6 +76,7 @@ struct MomentDetailView: View {
                 }
             }
             .padding(.vertical)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .navigationTitle("瞬间详情")
         .navigationBarTitleDisplayMode(.inline)
