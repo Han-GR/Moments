@@ -24,7 +24,12 @@ struct MomentEditView: View {
     @State private var selectedBaby: Baby?
     @State private var selectedItems: [PhotosPickerItem] = []
     @State private var selectedPhotosData: [Data] = []
+    @State private var selectedImages: [UIImage] = []
     @State private var isShowingBabyPicker = false
+    @State private var isShowingPhotoPicker = false
+    @State private var showingImagePicker = false
+    @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    @State private var showingCameraAlert = false
     
     var body: some View {
         Form {
@@ -81,12 +86,16 @@ struct MomentEditView: View {
             }
             
             Section("照片") {
-                PhotosPicker(
-                    selection: $selectedItems,
-                    matching: .images,
-                    photoLibrary: .shared()) {
-                        Label("选择照片", systemImage: "photo.on.rectangle.angled")
-                    }
+                Button(action: {
+                    isShowingPhotoPicker = true
+                }) {
+                    Label("添加照片", systemImage: "plus.circle.fill")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue.opacity(0.1))
+                        .foregroundColor(.blue)
+                        .cornerRadius(8)
+                }
                 
                 if !selectedPhotosData.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -152,11 +161,50 @@ struct MomentEditView: View {
                         }
                     }
                 }
-                // 清空选择器状态，以便下次选择
+                // 清空选择
                 await MainActor.run {
                     selectedItems = []
                 }
             }
+        }
+        .onChange(of: selectedImages) { _, newImages in
+            for image in newImages {
+                if let data = image.jpegData(compressionQuality: 0.8) {
+                    selectedPhotosData.append(data)
+                }
+            }
+            selectedImages.removeAll()
+        }
+        .confirmationDialog("选择照片", isPresented: $isShowingPhotoPicker, titleVisibility: .visible) {
+            Button("拍照") {
+                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                    sourceType = .camera
+                    showingImagePicker = true
+                } else {
+                    showingCameraAlert = true
+                }
+            }
+            
+            Button("从相册选择") {
+                sourceType = .photoLibrary
+                showingImagePicker = true
+            }
+            
+            Button("取消", role: .cancel) {
+                isShowingPhotoPicker = false
+            }
+        }
+        .sheet(isPresented: $showingImagePicker) {
+            ImagePicker(
+                selectedImages: $selectedImages,
+                sourceType: sourceType,
+                allowsMultipleSelection: sourceType == .photoLibrary
+            )
+        }
+        .alert("相机不可用", isPresented: $showingCameraAlert) {
+            Button("确定", role: .cancel) { }
+        } message: {
+            Text("此设备不支持相机功能")
         }
         .sheet(isPresented: $isShowingBabyPicker) {
             NavigationStack {
