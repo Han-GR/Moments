@@ -26,6 +26,8 @@ struct BabyEditView: View {
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State private var showingCameraAlert = false
     @State private var selectedGroup: Group? = nil
+    @State private var showingAddGroup = false
+    @State private var showingGroupManagement = false
     
     var baby: Baby? = nil
     
@@ -105,25 +107,68 @@ struct BabyEditView: View {
             }
             
             Section("分组") {
-                if groups.isEmpty {
-                    Text("暂无分组")
-                        .foregroundColor(.secondary)
-                } else {
-                    Picker("选择分组", selection: $selectedGroup) {
-                        Text("无分组")
-                            .tag(Group?.none)
+                Menu {
+                    Button("无分组") {
+                        selectedGroup = nil
+                    }
+                    
+                    if !groups.isEmpty {
+                        Divider()
                         
-                        ForEach(groups, id: \.id) { group in
-                            HStack {
-                                Circle()
-                                    .fill(group.displayColor)
-                                    .frame(width: 12, height: 12)
-                                Text(group.name)
+                        // 限制显示的分组数量，避免菜单过长
+                        ForEach(groups.prefix(5), id: \.id) { group in
+                            Button(action: {
+                                selectedGroup = group
+                            }) {
+                                HStack {
+                                    Circle()
+                                        .fill(group.displayColor)
+                                        .frame(width: 12, height: 12)
+                                    Text(group.name)
+                                        .lineLimit(1)
+                                }
                             }
-                            .tag(Group?.some(group))
+                        }
+                        
+                        if groups.count > 5 {
+                            Button("查看更多分组...") {
+                                showingGroupManagement = true
+                            }
+                            .foregroundColor(.secondary)
                         }
                     }
-                    .pickerStyle(.menu)
+                    
+                    Divider()
+                    
+                    Button(action: {
+                        showingAddGroup = true
+                    }) {
+                        HStack {
+                            Image(systemName: "plus.circle.fill")
+                            Text("新建分组")
+                        }
+                    }
+                } label: {
+                    HStack {
+                        Text("选择分组")
+                            .foregroundColor(.primary)
+                        Spacer()
+                        if let selectedGroup = selectedGroup {
+                            HStack {
+                                Circle()
+                                    .fill(selectedGroup.displayColor)
+                                    .frame(width: 12, height: 12)
+                                Text(selectedGroup.name)
+                                    .foregroundColor(.secondary)
+                            }
+                        } else {
+                            Text("无分组")
+                                .foregroundColor(.secondary)
+                        }
+                        Image(systemName: "chevron.up.chevron.down")
+                            .foregroundColor(.secondary)
+                            .font(.caption)
+                    }
                 }
             }
             
@@ -213,6 +258,17 @@ struct BabyEditView: View {
         } message: {
             Text("此设备不支持相机功能")
         }
+        .sheet(isPresented: $showingAddGroup) {
+            AddGroupView { newGroup in
+                selectedGroup = newGroup
+                showingAddGroup = false
+            }
+        }
+        .sheet(isPresented: $showingGroupManagement) {
+                GroupSelectionView(selectedGroup: selectedGroup) { group in
+                    selectedGroup = group
+                }
+            }
     }
     
     private func saveBaby() {
