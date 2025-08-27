@@ -49,11 +49,21 @@ struct ImagePicker: UIViewControllerRepresentable {
         
         // UIImagePickerController delegate (for camera)
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            var imageToSave: UIImage?
+            
             if let editedImage = info[.editedImage] as? UIImage {
                 parent.selectedImages.append(editedImage)
+                imageToSave = editedImage
             } else if let originalImage = info[.originalImage] as? UIImage {
                 parent.selectedImages.append(originalImage)
+                imageToSave = originalImage
             }
+            
+            // 保存照片到相册（仅当使用相机拍照时）
+            if picker.sourceType == .camera, let image = imageToSave {
+                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+            }
+            
             parent.presentationMode.wrappedValue.dismiss()
         }
         
