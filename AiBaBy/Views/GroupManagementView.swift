@@ -2,7 +2,7 @@
 //  GroupManagementView.swift
 //  AiBaBy
 //
-//  Created by han han on 2025/1/26.
+//  Created by han han on 2025/8/24.
 //
 
 import SwiftUI
