@@ -54,7 +54,6 @@ struct BabyEditView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: iconSize, height: iconSize)
-                            .foregroundColor(.pink)
                             .frame(width: photoSize, height: photoSize)
                             .background(AppColors.lightPinkBackground)
                             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
