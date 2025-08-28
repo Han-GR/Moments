@@ -36,24 +36,30 @@ struct BabyEditView: View {
     }
     
     var body: some View {
+        let isIPad = UIDevice.current.userInterfaceIdiom == .pad
+        
         Form {
             Section("照片") {
                 VStack {
+                    let photoSize: CGFloat = isIPad ? 280 : 200
+                    let iconSize: CGFloat = isIPad ? 120 : 80
+                    let cornerRadius: CGFloat = isIPad ? 20 : 15
+                    
                     if let photoData = photoData, let uiImage = UIImage(data: photoData) {
                         Image(uiImage: uiImage)
                             .resizable()
                             .aspectRatio(1, contentMode: .fill)
-                            .frame(width: 200, height: 200)
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .frame(width: photoSize, height: photoSize)
+                            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                     } else {
                         Image(systemName: "bubbles.and.sparkles")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 80, height: 80)
+                            .frame(width: iconSize, height: iconSize)
                             .foregroundColor(.pink)
-                            .frame(width: 200, height: 200)
+                            .frame(width: photoSize, height: photoSize)
                             .background(AppColors.lightPinkBackground)
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                     }
                     
                     Button(action: {
@@ -63,11 +69,11 @@ struct BabyEditView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
-                    .controlSize(.large)
-                    .padding(.top, 8)
+                    .controlSize(isIPad ? .large : .large)
+                    .padding(.top, isIPad ? 12 : 8)
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
+                .padding(.vertical, isIPad ? 12 : 8)
             }
             
             Section("基本信息") {

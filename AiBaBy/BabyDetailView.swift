@@ -26,25 +26,30 @@ struct BabyDetailView: View {
             VStack(alignment: .leading, spacing: 20) {
                 // 头部照片区域
                 ZStack(alignment: .bottom) {
+                    let isIPad = UIDevice.current.userInterfaceIdiom == .pad
+                    let headerHeight: CGFloat = isIPad ? 400 : 300
+                    let iconSize: CGFloat = isIPad ? 140 : 100
+                    let cornerRadius: CGFloat = isIPad ? 25 : 20
+                    
                     if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
                         Image(uiImage: uiImage)
                             .resizable()
                             .aspectRatio(4/3, contentMode: .fill)
-                            .frame(height: 300)
+                            .frame(height: headerHeight)
                             .frame(maxWidth: .infinity)
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                             .padding(.horizontal)
                     } else {
                         Rectangle()
                             .fill(AppColors.pinkBackground)
-                            .frame(height: 300)
+                            .frame(height: headerHeight)
                             .frame(maxWidth: .infinity)
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                             .overlay(
                                 Image(systemName: "bubbles.and.sparkles")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(width: 100, height: 100)
+                                    .frame(width: iconSize, height: iconSize)
                                     .foregroundColor(AppColors.primaryPink)
                             )
                             .padding(.horizontal)

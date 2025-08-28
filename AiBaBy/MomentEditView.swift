@@ -34,6 +34,8 @@ struct MomentEditView: View {
     @State private var showingCameraAlert = false
     
     var body: some View {
+        let isIPad = UIDevice.current.userInterfaceIdiom == .pad
+        
         Form {
             Section("阿贝贝") {
                 HStack {
@@ -84,15 +86,18 @@ struct MomentEditView: View {
                 
                 if !selectedPhotosData.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 10) {
+                        HStack(spacing: isIPad ? 15 : 10) {
                             ForEach(0..<selectedPhotosData.count, id: \.self) { index in
                                 if let uiImage = UIImage(data: selectedPhotosData[index]) {
+                                    let imageSize: CGFloat = isIPad ? 140 : 100
+                                    let cornerRadius: CGFloat = isIPad ? 12 : 8
+                                    
                                     ZStack(alignment: .topTrailing) {
                                         Image(uiImage: uiImage)
                                             .resizable()
                                             .aspectRatio(1, contentMode: .fill)
-                                            .frame(width: 100, height: 100)
-                                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                                            .frame(width: imageSize, height: imageSize)
+                                            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                                         
                                         Button(action: {
                                             selectedPhotosData.remove(at: index)
@@ -101,13 +106,13 @@ struct MomentEditView: View {
                                                 .foregroundColor(.white)
                                                 .background(AppColors.blackOverlay)
                                                 .clipShape(Circle())
-                                                .padding(4)
+                                                .padding(isIPad ? 6 : 4)
                                         }
                                     }
                                 }
                             }
                         }
-                        .padding(.vertical, 5)
+                        .padding(.vertical, isIPad ? 8 : 5)
                     }
                 }
             }

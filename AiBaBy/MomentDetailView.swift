@@ -108,26 +108,49 @@ struct PhotoGallery: View {
     @State private var selectedPhotoIndex: Int? = nil
     
     var body: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100, maximum: 150), spacing: 8)], spacing: 8) {
-            ForEach(0..<photos.count, id: \.self) { index in
-                if let uiImage = UIImage(data: photos[index]) {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .aspectRatio(1, contentMode: .fill)
-                        .frame(width: 120, height: 120)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .onTapGesture {
-                            selectedPhotoIndex = index
-                        }
+        GeometryReader { geometry in
+            let screenWidth = geometry.size.width - 32 // 减去左右padding
+            let isIPad = UIDevice.current.userInterfaceIdiom == .pad
+            let minItemWidth: CGFloat = isIPad ? 150 : 100
+            let maxItemWidth: CGFloat = isIPad ? 200 : 150
+            let spacing: CGFloat = isIPad ? 12 : 8
+            
+            // 计算每行可以放置的图片数量
+            let itemsPerRow = max(2, Int(screenWidth / (minItemWidth + spacing)))
+            let actualItemWidth = (screenWidth - CGFloat(itemsPerRow - 1) * spacing) / CGFloat(itemsPerRow)
+            let finalItemWidth = min(maxItemWidth, actualItemWidth)
+            
+            LazyVGrid(columns: Array(repeating: GridItem(.fixed(finalItemWidth), spacing: spacing), count: itemsPerRow), spacing: spacing) {
+                ForEach(0..<photos.count, id: \.self) { index in
+                    if let uiImage = UIImage(data: photos[index]) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .aspectRatio(1, contentMode: .fill)
+                            .frame(width: finalItemWidth, height: finalItemWidth)
+                            .clipShape(RoundedRectangle(cornerRadius: isIPad ? 12 : 8))
+                            .onTapGesture {
+                                selectedPhotoIndex = index
+                            }
+                    }
                 }
             }
         }
+        .frame(height: calculateGridHeight())
         .padding(.horizontal)
         .sheet(isPresented: Binding(get: { selectedPhotoIndex != nil }, set: { if !$0 { selectedPhotoIndex = nil } })) {
             if let index = selectedPhotoIndex {
                 PhotoDetailView(photos: photos, initialIndex: index)
             }
         }
+    }
+    
+    private func calculateGridHeight() -> CGFloat {
+        let isIPad = UIDevice.current.userInterfaceIdiom == .pad
+        let itemsPerRow = isIPad ? 4 : 3 // 估算值
+        let rows = ceil(Double(photos.count) / Double(itemsPerRow))
+        let itemHeight: CGFloat = isIPad ? 200 : 150
+        let spacing: CGFloat = isIPad ? 12 : 8
+        return CGFloat(rows) * itemHeight + CGFloat(max(0, rows - 1)) * spacing
     }
     
     struct PhotoDetail: Identifiable {
