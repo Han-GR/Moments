@@ -156,6 +156,13 @@ struct MomentListItem: View {
                 }
                 
                 VStack(alignment: .leading, spacing: 4) {
+
+                    if let baby = moment.baby {
+                        Text(baby.name)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    
                     HStack {
                         Text(moment.date, style: .date)
                             .font(.caption)
@@ -164,30 +171,22 @@ struct MomentListItem: View {
                         Spacer()
                     }
                     
-                    if let baby = moment.baby {
-                        Text(baby.name)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
                     
                     Text(moment.content)
                         .font(.body)
                         .lineLimit(2)
                         .padding(.top, 2)
-                }
-                .padding(.leading, 4)
-            }
-            
-            // 照片预览
-            if let photos = moment.photos, !photos.isEmpty {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        ForEach(0..<min(photos.count, 3), id: \.self) { index in
-                            if let uiImage = UIImage(data: photos[index]) {
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .aspectRatio(1, contentMode: .fill)
-                                    .frame(width: 80, height: 80)
+
+                    // 照片预览
+                    if let photos = moment.photos, !photos.isEmpty {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                ForEach(0..<min(photos.count, 3), id: \.self) { index in
+                                    if let uiImage = UIImage(data: photos[index]) {
+                                        Image(uiImage: uiImage)
+                                            .resizable()
+                                            .aspectRatio(1, contentMode: .fill)
+                                            .frame(width: 80, height: 80)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                         }
@@ -209,6 +208,11 @@ struct MomentListItem: View {
                 }
                 .allowsHitTesting(false)
             }
+                }
+                .padding(.leading, 4)
+            }
+            
+            
         }
         .padding(.vertical, 8)
     }
