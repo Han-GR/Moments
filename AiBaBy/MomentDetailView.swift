@@ -95,7 +95,7 @@ struct MomentDetailView: View {
         }
         .sheet(isPresented: $isEditing) {
             NavigationStack {
-                MomentEditView(baby: moment.baby)
+                MomentEditView(moment: moment)
                     .onDisappear {
                         // 刷新视图
                     }

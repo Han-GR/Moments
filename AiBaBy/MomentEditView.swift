@@ -17,6 +17,8 @@ struct MomentEditView: View {
     
     // 如果传入了特定的阿贝贝，则默认选择该阿贝贝
     var baby: Baby?
+    // 如果传入了moment，则为编辑模式
+    var moment: Moment?
     
 
     @State private var content = ""
@@ -125,7 +127,7 @@ struct MomentEditView: View {
                 }
             }
         }
-        .navigationTitle("记录生活瞬间")
+        .navigationTitle(moment != nil ? "编辑生活瞬间" : "记录生活瞬间")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -142,12 +144,22 @@ struct MomentEditView: View {
             }
         }
         .onAppear {
-            // 如果传入了特定的阿贝贝，则默认选择该阿贝贝
-            if let baby = baby {
-                selectedBaby = baby
-            } else if let firstBaby = allBabies.first {
-                // 如果没有传入特定的阿贝贝，但有阿贝贝存在，则默认选择第一个
-                selectedBaby = firstBaby
+            // 如果是编辑模式，初始化现有数据
+            if let moment = moment {
+                content = moment.content
+                date = moment.date
+                selectedBaby = moment.baby
+                if let photos = moment.photos {
+                    selectedPhotosData = photos
+                }
+            } else {
+                // 如果传入了特定的阿贝贝，则默认选择该阿贝贝
+                if let baby = baby {
+                    selectedBaby = baby
+                } else if let firstBaby = allBabies.first {
+                    // 如果没有传入特定的阿贝贝，则默认选择第一个阿贝贝
+                    selectedBaby = firstBaby
+                }
             }
         }
         .onChange(of: selectedItems) { _, newItems in
@@ -258,17 +270,26 @@ struct MomentEditView: View {
     private func saveMoment() {
         guard let selectedBaby = selectedBaby else { return }
         
-        let moment = Moment(
-            content: content,
-            date: date,
-            photos: selectedPhotosData.isEmpty ? nil : selectedPhotosData
-        )
-        
-        // 设置关系
-        moment.baby = selectedBaby
-        
-        // 添加到数据库
-        modelContext.insert(moment)
+        if let existingMoment = moment {
+            // 编辑模式：更新现有瞬间
+            existingMoment.content = content
+            existingMoment.date = date
+            existingMoment.baby = selectedBaby
+            existingMoment.photos = selectedPhotosData.isEmpty ? nil : selectedPhotosData
+        } else {
+            // 新建模式：创建新瞬间
+            let newMoment = Moment(
+                content: content,
+                date: date,
+                photos: selectedPhotosData.isEmpty ? nil : selectedPhotosData
+            )
+            
+            // 设置关系
+            newMoment.baby = selectedBaby
+            
+            // 添加到数据库
+            modelContext.insert(newMoment)
+        }
         
         // 立即保存更改
         do {
