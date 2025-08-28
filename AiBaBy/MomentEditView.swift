@@ -25,6 +25,7 @@ struct MomentEditView: View {
     @State private var selectedBaby: Baby?
     @State private var selectedPhotosData: [Data] = []
     @State private var selectedImages: [UIImage] = []
+    @State private var isProcessingImages = false
     @State private var isShowingBabyPicker = false
     @State private var isShowingPhotoPicker = false
     @State private var showingImagePicker = false
@@ -152,12 +153,27 @@ struct MomentEditView: View {
         }
 
         .onChange(of: selectedImages) { _, newImages in
-            for image in newImages {
-                if let data = image.jpegData(compressionQuality: 0.8) {
-                    selectedPhotosData.append(data)
+            // 等待所有图片异步加载完成后再处理
+            if !newImages.isEmpty && !isProcessingImages {
+                isProcessingImages = true
+                
+                // 延迟处理，等待PHPickerViewController异步加载完所有图片
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    // 处理所有新图片
+                    for image in self.selectedImages {
+                        if let data = image.jpegData(compressionQuality: 0.8) {
+                            // 检查是否已存在相同的图片数据，避免重复添加
+                            if !self.selectedPhotosData.contains(data) {
+                                self.selectedPhotosData.append(data)
+                            }
+                        }
+                    }
+                    
+                    // 清空临时数组并重置状态
+                    self.selectedImages.removeAll()
+                    self.isProcessingImages = false
                 }
             }
-            selectedImages.removeAll()
         }
         .confirmationDialog("选择照片", isPresented: $isShowingPhotoPicker, titleVisibility: .visible) {
             Button("拍照") {
