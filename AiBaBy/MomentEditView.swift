@@ -92,7 +92,6 @@ struct MomentEditView: View {
                     Label("添加照片", systemImage: "plus.circle.fill")
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue.opacity(0.1))
                         .foregroundColor(.blue)
                         .cornerRadius(8)
                 }
