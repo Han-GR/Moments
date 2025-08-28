@@ -62,7 +62,7 @@ struct HomeView: View {
                                     .font(.subheadline)
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 8)
-                                    .background(selectedGroupFilter == nil ? Color.blue : Color.gray.opacity(0.2))
+                                    .background(selectedGroupFilter == nil ? AppColors.selectedBlue : AppColors.grayBackground)
                                     .foregroundColor(selectedGroupFilter == nil ? .white : .primary)
                                     .clipShape(Capsule())
                             }
@@ -81,7 +81,7 @@ struct HomeView: View {
                                     .font(.subheadline)
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 8)
-                                    .background(selectedGroupFilter?.id == group.id ? group.displayColor.opacity(0.8) : Color.gray.opacity(0.2))
+                                    .background(selectedGroupFilter?.id == group.id ? group.displayColor.opacity(0.8) : AppColors.grayBackground)
                                     .foregroundColor(selectedGroupFilter?.id == group.id ? .white : .primary)
                                     .clipShape(Capsule())
                                 }
@@ -156,7 +156,7 @@ struct BabyGridItem: View {
                     .frame(width: 80, height: 80)
                     .foregroundColor(.pink)
                     .frame(width: 150, height: 150)
-                    .background(Color.pink.opacity(0.1))
+                    .background(AppColors.lightPinkBackground)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                     .shadow(radius: 5)
             }

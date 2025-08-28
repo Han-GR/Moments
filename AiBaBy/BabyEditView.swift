@@ -52,7 +52,7 @@ struct BabyEditView: View {
                             .frame(width: 80, height: 80)
                             .foregroundColor(.pink)
                             .frame(width: 200, height: 200)
-                            .background(Color.pink.opacity(0.1))
+                            .background(AppColors.lightPinkBackground)
                             .clipShape(RoundedRectangle(cornerRadius: 15))
                     }
                     

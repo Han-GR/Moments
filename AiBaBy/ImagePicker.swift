@@ -97,7 +97,7 @@ struct PhotoPickerSheet: View {
     @State private var showingCameraAlert = false
     
     var body: some View {
-        Color.clear
+        AppColors.clearColor
             .confirmationDialog("选择照片", isPresented: $isPresented, titleVisibility: .visible) {
                 Button("拍照") {
                     if UIImagePickerController.isSourceTypeAvailable(.camera) {

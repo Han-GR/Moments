@@ -137,7 +137,7 @@ struct AddGroupView: View {
                                 .frame(width: 30, height: 30)
                                 .overlay(
                                     Circle()
-                                        .stroke(selectedColor == color ? Color.primary : Color.clear, lineWidth: 2)
+                                        .stroke(selectedColor == color ? AppColors.primaryText : AppColors.strokeClear, lineWidth: 2)
                                 )
                                 .onTapGesture {
                                     selectedColor = color
@@ -233,7 +233,7 @@ struct EditGroupView: View {
                                 .frame(width: 30, height: 30)
                                 .overlay(
                                     Circle()
-                                        .stroke(selectedColor == color ? Color.primary : Color.clear, lineWidth: 2)
+                                        .stroke(selectedColor == color ? AppColors.primaryText : AppColors.strokeClear, lineWidth: 2)
                                 )
                                 .onTapGesture {
                                     selectedColor = color
@@ -255,7 +255,7 @@ struct EditGroupView: View {
                                         .clipShape(Circle())
                                 } else {
                                     Circle()
-                                        .fill(Color.gray.opacity(0.3))
+                                        .fill(AppColors.lightGrayBackground)
                                         .frame(width: 40, height: 40)
                                         .overlay(
                                             Image(systemName: "person.fill")
@@ -337,7 +337,7 @@ struct GroupSelectionView: View {
                 }) {
                     HStack {
                         Circle()
-                            .fill(Color.gray.opacity(0.3))
+                            .fill(AppColors.lightGrayBackground)
                             .frame(width: 20, height: 20)
                         
                         Text("无分组")
@@ -347,7 +347,7 @@ struct GroupSelectionView: View {
                         
                         if selectedGroup == nil {
                             Image(systemName: "checkmark")
-                                .foregroundColor(.blue)
+                                .foregroundColor(AppColors.selectedBlue)
                         }
                     }
                 }
@@ -376,7 +376,7 @@ struct GroupSelectionView: View {
                             
                             if selectedGroup?.id == group.id {
                                 Image(systemName: "checkmark")
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(AppColors.selectedBlue)
                             }
                         }
                     }

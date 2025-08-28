@@ -54,7 +54,7 @@ struct MomentsView: View {
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 30, height: 30)
                                         .padding(10)
-                                        .background(selectedBaby == nil ? Color.blue : Color.gray.opacity(0.3))
+                                        .background(selectedBaby == nil ? AppColors.selectedBlue : AppColors.lightGrayBackground)
                                         .clipShape(Circle())
                                         .foregroundColor(.white)
                                     
@@ -74,7 +74,7 @@ struct MomentsView: View {
                                                 .clipShape(Circle())
                                                 .overlay(
                                                     Circle()
-                                                        .stroke(selectedBaby?.id == baby.id ? Color.blue : Color.clear, lineWidth: 3)
+                                                        .stroke(selectedBaby?.id == baby.id ? AppColors.selectedBlue : AppColors.strokeClear, lineWidth: 3)
                                                 )
                                         } else {
                                             Image(systemName: "bubbles.and.sparkles")
@@ -82,11 +82,11 @@ struct MomentsView: View {
                                                 .aspectRatio(contentMode: .fit)
                                                 .frame(width: 25, height: 25)
                                                 .padding(12.5)
-                                                .background(Color.pink.opacity(0.2))
+                                                .background(AppColors.pinkBackground)
                                                 .clipShape(Circle())
                                                 .overlay(
                                                     Circle()
-                                                        .stroke(selectedBaby?.id == baby.id ? Color.blue : Color.clear, lineWidth: 3)
+                                                        .stroke(selectedBaby?.id == baby.id ? AppColors.selectedBlue : AppColors.strokeClear, lineWidth: 3)
                                                 )
                                         }
                                         
@@ -171,7 +171,7 @@ struct MomentListItem: View {
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 20, height: 20)
                             .padding(10)
-                            .background(Color.pink.opacity(0.2))
+                            .background(AppColors.pinkBackground)
                             .clipShape(Circle())
                     }
                 }
@@ -215,7 +215,7 @@ struct MomentListItem: View {
                         if photos.count > 3 {
                             ZStack {
                                 Rectangle()
-                                    .fill(Color.gray.opacity(0.2))
+                                    .fill(AppColors.grayBackground)
                                     .frame(width: 80, height: 80)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                                 

@@ -35,7 +35,7 @@ struct MomentDetailView: View {
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 25, height: 25)
                                     .padding(12.5)
-                                    .background(Color.pink.opacity(0.2))
+                                    .background(AppColors.pinkBackground)
                                     .clipShape(Circle())
                             }
                             
@@ -162,7 +162,7 @@ struct PhotoDetailView: View {
     
     var body: some View {
         ZStack {
-            Color.black.edgesIgnoringSafeArea(.all)
+            AppColors.blackOverlay.edgesIgnoringSafeArea(.all)
             
             TabView(selection: $currentIndex) {
                 ForEach(0..<photos.count, id: \.self) { index in
@@ -183,7 +183,7 @@ struct PhotoDetailView: View {
                         Image(systemName: "xmark")
                             .foregroundColor(.white)
                             .padding()
-                            .background(Circle().fill(Color.black.opacity(0.5)))
+                            .background(Circle().fill(AppColors.lightBlackOverlay))
                     }
                     
                     Spacer()
@@ -194,7 +194,7 @@ struct PhotoDetailView: View {
                 Text("\(currentIndex + 1) / \(photos.count)")
                     .foregroundColor(.white)
                     .padding(8)
-                    .background(Capsule().fill(Color.black.opacity(0.5)))
+                    .background(Capsule().fill(AppColors.lightBlackOverlay))
             }
             .padding()
         }

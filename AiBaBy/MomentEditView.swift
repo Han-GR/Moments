@@ -51,7 +51,7 @@ struct MomentEditView: View {
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 20, height: 20)
                                     .padding(10)
-                                    .background(Color.pink.opacity(0.2))
+                                    .background(AppColors.pinkBackground)
                                     .clipShape(Circle())
                             }
                             
@@ -113,7 +113,7 @@ struct MomentEditView: View {
                                         }) {
                                             Image(systemName: "xmark.circle.fill")
                                                 .foregroundColor(.white)
-                                                .background(Color.black.opacity(0.7))
+                                                .background(AppColors.blackOverlay)
                                                 .clipShape(Circle())
                                                 .padding(4)
                                         }
@@ -235,7 +235,7 @@ struct MomentEditView: View {
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 20, height: 20)
                                     .padding(10)
-                                    .background(Color.pink.opacity(0.2))
+                                    .background(AppColors.pinkBackground)
                                     .clipShape(Circle())
                             }
                             
