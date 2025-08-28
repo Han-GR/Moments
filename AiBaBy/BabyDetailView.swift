@@ -14,18 +14,11 @@ struct BabyDetailView: View {
     @State private var isAddingMoment = false
     let baby: Baby
     
-    @Query private var moments: [Moment]
+
+    @Query private var allMoments: [Moment]
     
-    init(baby: Baby) {
-        self.baby = baby
-        let babyId = baby.id
-        self._moments = Query(
-            filter: #Predicate<Moment> { moment in
-                moment.baby?.id == babyId
-            },
-            sort: \Moment.date,
-            order: .reverse
-        )
+    var moments: [Moment] {
+        allMoments.filter { $0.baby?.id == baby.id }.sorted(by: { $0.date > $1.date })
     }
     
     var body: some View {
