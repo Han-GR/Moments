@@ -34,8 +34,7 @@ struct BabyDetailView: View {
                     if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
                         Image(uiImage: uiImage)
                             .resizable()
-                            .aspectRatio(4/3, contentMode: .fill)
-                            .frame(height: headerHeight)
+                            .aspectRatio(contentMode: .fit)
                             .frame(maxWidth: .infinity)
                             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                             .padding(.horizontal)
