@@ -53,12 +53,6 @@ struct MomentDetailView: View {
                     .padding(.horizontal)
                 }
                 
-                // 标题
-                Text(moment.title)
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .padding(.horizontal)
-                
                 // 内容
                 Text(moment.content)
                     .font(.body)
@@ -277,7 +271,7 @@ extension View {
     
     // 创建示例数据
     let baby = Baby(name: "小贝贝", birthDate: Date(), photo: nil, notes: "可爱的小贝贝")
-    let moment = Moment(title: "第一次笑", content: "今天小贝贝第一次对我笑了，真是太可爱了！", date: Date(), photos: nil)
+    let moment = Moment(content: "今天小贝贝第一次对我笑了，真是太可爱了！", date: Date(), photos: nil)
     moment.baby = baby
     
     return NavigationStack {

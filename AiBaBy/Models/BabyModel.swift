@@ -35,16 +35,14 @@ final class Baby {
 @Model
 final class Moment {
     var id: UUID
-    var title: String
     var content: String
     var date: Date
     var photos: [Data]?
     
     @Relationship(inverse: \Baby.moments) var baby: Baby?
     
-    init(title: String, content: String, date: Date = Date(), photos: [Data]? = nil) {
+    init(content: String, date: Date = Date(), photos: [Data]? = nil) {
         self.id = UUID()
-        self.title = title
         self.content = content
         self.date = date
         self.photos = photos

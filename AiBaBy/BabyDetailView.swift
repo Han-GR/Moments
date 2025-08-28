@@ -171,15 +171,11 @@ struct MomentRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text(moment.title)
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                
-                Spacer()
-                
                 Text(moment.date, style: .date)
                     .font(.caption)
                     .foregroundColor(.secondary)
+                
+                Spacer()
             }
             
             Text(moment.content)
@@ -212,7 +208,7 @@ struct MomentRow: View {
         let sampleBaby = Baby(name: "小可爱", birthDate: Date(), notes: "这是一个测试笔记")
         container.mainContext.insert(sampleBaby)
         
-        let moment1 = Moment(title: "第一次见面", content: "今天第一次见到小可爱，非常开心！")
+        let moment1 = Moment(content: "今天第一次见到小可爱，非常开心！")
         moment1.baby = sampleBaby
         container.mainContext.insert(moment1)
         

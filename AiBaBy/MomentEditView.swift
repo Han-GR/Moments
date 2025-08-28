@@ -18,7 +18,7 @@ struct MomentEditView: View {
     // 如果传入了特定的阿贝贝，则默认选择该阿贝贝
     var baby: Baby?
     
-    @State private var title = ""
+
     @State private var content = ""
     @State private var date = Date()
     @State private var selectedBaby: Baby?
@@ -71,9 +71,7 @@ struct MomentEditView: View {
                 }
             }
             
-            Section("瞬间标题") {
-                TextField("输入标题", text: $title)
-            }
+
             
             Section("日期") {
                 DatePicker("选择日期", selection: $date, displayedComponents: [.date])
@@ -140,7 +138,7 @@ struct MomentEditView: View {
                 Button("保存") {
                     saveMoment()
                 }
-                .disabled(selectedBaby == nil || title.isEmpty)
+                .disabled(selectedBaby == nil || (content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && selectedPhotosData.isEmpty))
             }
         }
         .onAppear {
@@ -261,7 +259,6 @@ struct MomentEditView: View {
         guard let selectedBaby = selectedBaby else { return }
         
         let moment = Moment(
-            title: title,
             content: content,
             date: date,
             photos: selectedPhotosData.isEmpty ? nil : selectedPhotosData

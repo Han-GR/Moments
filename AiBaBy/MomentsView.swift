@@ -157,14 +157,11 @@ struct MomentListItem: View {
                 
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
-                        Text(moment.title)
-                            .font(.headline)
-                        
-                        Spacer()
-                        
                         Text(moment.date, style: .date)
                             .font(.caption)
                             .foregroundColor(.secondary)
+                        
+                        Spacer()
                     }
                     
                     if let baby = moment.baby {
