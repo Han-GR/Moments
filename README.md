@@ -81,14 +81,71 @@ AiBaBy（AiBaby）是一款帮助用户管理自己的"阿贝贝"的iOS应用。
 ## 开发状态跟踪
 | 页面/组件名称 | 开发状态 | 文件路径 | 备注 |
 |:-------------:|:--------:|:--------:|:----:|
-| 应用入口 | ✅ 已创建 | `AiBaBy/AiBaByApp.swift` | 应用生命周期管理 |
-| 主标签视图 | ✅ 已创建 | `AiBaBy/MainTabView.swift` | 标签导航容器 |
-| 主页 | ✅ 已创建 | `AiBaBy/HomeView.swift` | 需完善功能实现 |
-| 详情页 | ✅ 已创建 | `AiBaBy/BabyDetailView.swift` | 需完善功能实现 |
-| 编辑页 | ✅ 已创建 | `AiBaBy/BabyEditView.swift` | 需完善功能实现 |
-| 记事本 | ✅ 已创建 | `AiBaBy/MomentsView.swift` | 需完善功能实现 |
-| 记事详情页 | ✅ 已创建 | `AiBaBy/MomentDetailView.swift` | 需完善功能实现 |
-| 记事编辑页 | ✅ 已创建 | `AiBaBy/MomentEditView.swift` | 需完善功能实现 |
-| 设置页 | ✅ 已创建 | `AiBaBy/SettingsView.swift` | 需完善功能实现 |
-| 数据模型 | ✅ 已创建 | `AiBaBy/Models/BabyModel.swift` | 需完善Swift Data模型 |
-| 内容视图 | ✅ 已创建 | `AiBaBy/ContentView.swift` | 主要内容容器 |
+| 应用入口 | ✅ 已完成 | `AiBaBy/AiBaByApp.swift` | 应用生命周期管理 |
+| 主标签视图 | ✅ 已完成 | `AiBaBy/MainTabView.swift` | 标签导航容器 |
+| 主页 | ✅ 已完成 | `AiBaBy/HomeView.swift` | 阿贝贝展示和管理 |
+| 详情页 | ✅ 已完成 | `AiBaBy/BabyDetailView.swift` | 阿贝贝详细信息展示 |
+| 编辑页 | ✅ 已完成 | `AiBaBy/BabyEditView.swift` | 阿贝贝信息编辑 |
+| 记事本 | ✅ 已完成 | `AiBaBy/MomentsView.swift` | 生活记录展示 |
+| 记事详情页 | ✅ 已完成 | `AiBaBy/MomentDetailView.swift` | 单条记录详细展示 |
+| 记事编辑页 | ✅ 已完成 | `AiBaBy/MomentEditView.swift` | 生活记录编辑 |
+| 设置页 | ✅ 已完成 | `AiBaBy/SettingsView.swift` | 应用设置和数据管理 |
+| 分组管理 | ✅ 已完成 | `AiBaBy/Views/GroupManagementView.swift` | 阿贝贝分组功能 |
+| 数据模型 | ✅ 已完成 | `AiBaBy/Models/BabyModel.swift` | Swift Data数据模型 |
+| 头像组件 | ✅ 已完成 | `AiBaBy/Components/BabyAvatarView.swift` | 可复用头像组件 |
+| 工具类 | ✅ 已完成 | `AiBaBy/Utils/AppColors.swift` | 应用颜色主题 |
+| 图片选择器 | ✅ 已完成 | `AiBaBy/ImagePicker.swift` | 照片选择功能 |
+
+## 项目结构
+
+```
+AiBaBy/
+├── AiBaBy/
+│   ├── AiBaByApp.swift          # 应用入口
+│   ├── MainTabView.swift        # 主标签导航
+│   ├── ContentView.swift        # 内容视图
+│   ├── HomeView.swift           # 主页
+│   ├── BabyDetailView.swift     # 阿贝贝详情页
+│   ├── BabyEditView.swift       # 阿贝贝编辑页
+│   ├── MomentsView.swift        # 记事本列表
+│   ├── MomentDetailView.swift   # 记事详情页
+│   ├── MomentEditView.swift     # 记事编辑页
+│   ├── SettingsView.swift       # 设置页
+│   ├── ImagePicker.swift        # 图片选择器
+│   ├── Models/
+│   │   └── BabyModel.swift      # 数据模型
+│   ├── Views/
+│   │   └── GroupManagementView.swift  # 分组管理
+│   ├── Components/
+│   │   └── BabyAvatarView.swift # 头像组件
+│   ├── Utils/
+│   │   └── AppColors.swift      # 颜色主题
+│   ├── Extensions/              # 扩展文件夹
+│   └── Assets.xcassets/         # 资源文件
+├── AiBaByTests/                 # 单元测试
+├── AiBaByUITests/               # UI测试
+└── README.md                    # 项目说明
+```
+
+## 开发计划
+
+### 已完成功能 ✅
+- [x] 基础项目架构搭建
+- [x] 数据模型设计与实现
+- [x] 主要页面UI实现
+- [x] 阿贝贝管理功能
+- [x] 生活记录功能
+- [x] 分组管理功能
+- [x] 图片上传与显示
+- [x] 应用大小优化
+- [x] 代码重构与组件化
+
+### 待优化功能 🔄
+- [ ] 数据导入导出功能
+- [ ] 云端同步支持
+- [ ] 更多主题选择
+- [ ] 通知提醒功能
+- [ ] 数据统计分析
+- [ ] 分享功能
+- [ ] 搜索功能增强
+- [ ] 无障碍访问支持
