@@ -23,21 +23,7 @@ struct MomentDetailView: View {
                 if let baby = moment.baby {
                     NavigationLink(destination: BabyDetailView(baby: baby)) {
                         HStack {
-                            if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .aspectRatio(1, contentMode: .fill)
-                                    .frame(width: 50, height: 50)
-                                    .clipShape(Circle())
-                            } else {
-                                Image(systemName: "bubbles.and.sparkles")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 25, height: 25)
-                                    .padding(12.5)
-                                    .background(AppColors.pinkBackground)
-                                    .clipShape(Circle())
-                            }
+                            BabyAvatarView(baby: baby, size: 50)
                             
                             VStack(alignment: .leading) {
                                 Text(baby.name)

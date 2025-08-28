@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-import Foundation
 
 @main
 struct AiBaByApp: App {

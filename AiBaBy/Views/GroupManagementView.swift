@@ -247,21 +247,7 @@ struct EditGroupView: View {
                     if let babies = group.babies, !babies.isEmpty {
                         ForEach(babies, id: \.id) { baby in
                             HStack {
-                                if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
-                                    Image(uiImage: uiImage)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: 40, height: 40)
-                                        .clipShape(Circle())
-                                } else {
-                                    Circle()
-                                        .fill(AppColors.lightGrayBackground)
-                                        .frame(width: 40, height: 40)
-                                        .overlay(
-                                            Image(systemName: "person.fill")
-                                                .foregroundColor(.gray)
-                                        )
-                                }
+                                BabyAvatarView(baby: baby, size: 40)
                                 
                                 Text(baby.name)
                                     .font(.body)

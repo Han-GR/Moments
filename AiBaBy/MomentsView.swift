@@ -66,29 +66,11 @@ struct MomentsView: View {
                             ForEach(babies) { baby in
                                 Button(action: { selectedBaby = baby }) {
                                     VStack {
-                                        if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
-                                            Image(uiImage: uiImage)
-                                                .resizable()
-                                                .aspectRatio(1, contentMode: .fill)
-                                                .frame(width: 50, height: 50)
-                                                .clipShape(Circle())
-                                                .overlay(
-                                                    Circle()
-                                                        .stroke(selectedBaby?.id == baby.id ? AppColors.selectedBlue : AppColors.strokeClear, lineWidth: 3)
-                                                )
-                                        } else {
-                                            Image(systemName: "bubbles.and.sparkles")
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fit)
-                                                .frame(width: 25, height: 25)
-                                                .padding(12.5)
-                                                .background(AppColors.pinkBackground)
-                                                .clipShape(Circle())
-                                                .overlay(
-                                                    Circle()
-                                                        .stroke(selectedBaby?.id == baby.id ? AppColors.selectedBlue : AppColors.strokeClear, lineWidth: 3)
-                                                )
-                                        }
+                                        BabyAvatarView.large(
+                                            baby: baby,
+                                            showBorder: true,
+                                            borderColor: selectedBaby?.id == baby.id ? AppColors.selectedBlue : AppColors.strokeClear
+                                        )
                                         
                                         Text(baby.name)
                                             .font(.caption)
@@ -158,23 +140,7 @@ struct MomentListItem: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .top) {
                 // 阿贝贝头像
-                if let baby = moment.baby {
-                    if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .aspectRatio(1, contentMode: .fill)
-                            .frame(width: 40, height: 40)
-                            .clipShape(Circle())
-                    } else {
-                        Image(systemName: "bubbles.and.sparkles")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 20, height: 20)
-                            .padding(10)
-                            .background(AppColors.pinkBackground)
-                            .clipShape(Circle())
-                    }
-                }
+                BabyAvatarView.medium(baby: moment.baby)
                 
                 VStack(alignment: .leading, spacing: 4) {
 

@@ -39,21 +39,7 @@ struct MomentEditView: View {
                 HStack {
                     if let selectedBaby = selectedBaby {
                         HStack {
-                            if let photoData = selectedBaby.photo, let uiImage = UIImage(data: photoData) {
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .aspectRatio(1, contentMode: .fill)
-                                    .frame(width: 40, height: 40)
-                                    .clipShape(Circle())
-                            } else {
-                                Image(systemName: "bubbles.and.sparkles")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 20, height: 20)
-                                    .padding(10)
-                                    .background(AppColors.pinkBackground)
-                                    .clipShape(Circle())
-                            }
+                            BabyAvatarView.medium(baby: selectedBaby)
                             
                             Text(selectedBaby.name)
                                 .font(.headline)
@@ -223,21 +209,7 @@ struct MomentEditView: View {
                         isShowingBabyPicker = false
                     }) {
                         HStack {
-                            if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .aspectRatio(1, contentMode: .fill)
-                                    .frame(width: 40, height: 40)
-                                    .clipShape(Circle())
-                            } else {
-                                Image(systemName: "bubbles.and.sparkles")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 20, height: 20)
-                                    .padding(10)
-                                    .background(AppColors.pinkBackground)
-                                    .clipShape(Circle())
-                            }
+                            BabyAvatarView.medium(baby: baby)
                             
                             Text(baby.name)
                                 .font(.headline)
