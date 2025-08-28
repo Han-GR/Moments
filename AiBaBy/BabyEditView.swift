@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-import PhotosUI
 
 struct BabyEditView: View {
     @Environment(\.modelContext) private var modelContext
@@ -17,7 +16,6 @@ struct BabyEditView: View {
     @State private var name = ""
     @State private var birthDate: Date? = nil
     @State private var notes = ""
-    @State private var selectedItem: PhotosPickerItem? = nil
     @State private var photoData: Data? = nil
     @State private var selectedImage: UIImage? = nil
     @State private var showDatePicker = false
@@ -215,13 +213,7 @@ struct BabyEditView: View {
                 selectedGroup = baby.group
             }
         }
-        .onChange(of: selectedItem) { _, newValue in
-            Task {
-                if let data = try? await newValue?.loadTransferable(type: Data.self) {
-                    photoData = data
-                }
-            }
-        }
+
         .onChange(of: selectedImage) { _, newImage in
             if let image = newImage {
                 photoData = image.jpegData(compressionQuality: 0.8)
@@ -295,7 +287,7 @@ struct BabyEditView: View {
         do {
             try modelContext.save()
         } catch {
-            print("保存阿贝贝失败: \(error)")
+            // 保存失败，静默处理
         }
     }
 }

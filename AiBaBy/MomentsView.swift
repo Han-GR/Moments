@@ -108,11 +108,7 @@ struct MomentsView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        if babies.isEmpty {
-                            // 如果没有阿贝贝，提示用户先添加阿贝贝
-                        } else {
-                            isAddingMoment = true
-                        }
+                        isAddingMoment = true
                     }) {
                         Label("添加瞬间", systemImage: "plus")
                     }

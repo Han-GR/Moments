@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-import PhotosUI
 
 struct MomentEditView: View {
     @Environment(\.modelContext) private var modelContext
@@ -24,7 +23,6 @@ struct MomentEditView: View {
     @State private var content = ""
     @State private var date = Date()
     @State private var selectedBaby: Baby?
-    @State private var selectedItems: [PhotosPickerItem] = []
     @State private var selectedPhotosData: [Data] = []
     @State private var selectedImages: [UIImage] = []
     @State private var isShowingBabyPicker = false
@@ -152,21 +150,7 @@ struct MomentEditView: View {
                 }
             }
         }
-        .onChange(of: selectedItems) { _, newItems in
-            Task {
-                for item in newItems {
-                    if let data = try? await item.loadTransferable(type: Data.self) {
-                        await MainActor.run {
-                            selectedPhotosData.append(data)
-                        }
-                    }
-                }
-                // 清空选择
-                await MainActor.run {
-                    selectedItems = []
-                }
-            }
-        }
+
         .onChange(of: selectedImages) { _, newImages in
             for image in newImages {
                 if let data = image.jpegData(compressionQuality: 0.8) {
@@ -271,7 +255,7 @@ struct MomentEditView: View {
         do {
             try modelContext.save()
         } catch {
-            print("保存瞬间失败: \(error)")
+            // 保存失败，静默处理
         }
         
         // 关闭视图

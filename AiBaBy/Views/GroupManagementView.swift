@@ -14,14 +14,6 @@ struct GroupManagementView: View {
     @Query private var groups: [Group]
     
     @State private var showingAddGroup = false
-    @State private var newGroupName = ""
-    @State private var selectedColor = "#FF69B4"
-    
-    private let predefinedColors = [
-        "#FF69B4", "#87CEEB", "#98FB98", "#FFB6C1",
-        "#DDA0DD", "#F0E68C", "#FFA07A", "#20B2AA",
-        "#FF6347", "#9370DB", "#32CD32", "#FF1493"
-    ]
     
     var body: some View {
         NavigationView {
@@ -68,8 +60,8 @@ struct GroupManagementView: View {
             do {
                 try modelContext.save()
             } catch {
-                print("删除分组失败: \(error)")
-            }
+                    // 删除失败，静默处理
+                }
         }
     }
 }
@@ -106,6 +98,13 @@ struct GroupRowView: View {
     }
 }
 
+// 预定义颜色常量
+private let predefinedColors = [
+    "#FF69B4", "#87CEEB", "#98FB98", "#FFB6C1",
+    "#DDA0DD", "#F0E68C", "#FFA07A", "#20B2AA",
+    "#FF6347", "#9370DB", "#32CD32", "#FF1493"
+]
+
 struct AddGroupView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -115,12 +114,6 @@ struct AddGroupView: View {
     @State private var showingDuplicateAlert = false
     
     let onGroupCreated: ((Group) -> Void)?
-    
-    private let predefinedColors = [
-        "#FF69B4", "#87CEEB", "#98FB98", "#FFB6C1",
-        "#DDA0DD", "#F0E68C", "#FFA07A", "#20B2AA",
-        "#FF6347", "#9370DB", "#32CD32", "#FF1493"
-    ]
     
     var body: some View {
         NavigationView {
@@ -192,7 +185,7 @@ struct AddGroupView: View {
             onGroupCreated?(newGroup)
             dismiss()
         } catch {
-            print("保存分组失败: \(error)")
+            // 保存失败，静默处理
         }
     }
 }
@@ -205,12 +198,6 @@ struct EditGroupView: View {
     @State private var groupName: String
     @State private var selectedColor: String
     @State private var showingDuplicateAlert = false
-    
-    private let predefinedColors = [
-        "#FF69B4", "#87CEEB", "#98FB98", "#FFB6C1",
-        "#DDA0DD", "#F0E68C", "#FFA07A", "#20B2AA",
-        "#FF6347", "#9370DB", "#32CD32", "#FF1493"
-    ]
     
     init(group: Group) {
         self.group = group
@@ -301,7 +288,7 @@ struct EditGroupView: View {
             try modelContext.save()
             dismiss()
         } catch {
-            print("保存分组更改失败: \(error)")
+            // 保存失败，静默处理
         }
     }
 }

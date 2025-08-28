@@ -122,8 +122,8 @@ struct SettingsView: View {
         do {
             try modelContext.save()
         } catch {
-            print("删除数据时出错: \(error)")
-        }
+                // 删除失败，静默处理
+            }
     }
 }
 
