@@ -10,8 +10,10 @@ import SwiftData
 
 struct BabyDetailView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     @State private var isEditing = false
     @State private var isAddingMoment = false
+    @State private var showDeleteConfirmation = false
     let baby: Baby
     
 
@@ -147,9 +149,21 @@ struct BabyDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button("编辑") {
-                    isEditing = true
-                }
+                Menu {
+                     Button(action: {
+                         isEditing = true
+                     }) {
+                         Label("编辑", systemImage: "pencil")
+                     }
+                     
+                     Button(role: .destructive, action: {
+                         showDeleteConfirmation = true
+                     }) {
+                         Label("删除", systemImage: "trash")
+                     }
+                 } label: {
+                     Image(systemName: "ellipsis.circle")
+                 }
             }
         }
         .sheet(isPresented: $isEditing) {
@@ -162,8 +176,35 @@ struct BabyDetailView: View {
                 MomentEditView(baby: baby)
             }
         }
-    }
-}
+        .alert("删除阿贝贝", isPresented: $showDeleteConfirmation) {
+             Button("取消", role: .cancel) { }
+             Button("删除", role: .destructive) {
+                 deleteBaby()
+             }
+         } message: {
+             Text("确定要删除 \(baby.name) 吗？此操作无法撤销。")
+         }
+     }
+     
+     private func deleteBaby() {
+          // 删除与该阿贝贝相关的所有瞬间
+          for moment in moments {
+              modelContext.delete(moment)
+          }
+          
+          // 删除阿贝贝
+          modelContext.delete(baby)
+          
+          // 保存更改
+          do {
+              try modelContext.save()
+              // 删除成功后返回上一页
+              dismiss()
+          } catch {
+              print("删除阿贝贝时出错: \(error)")
+          }
+      }
+ }
 
 
 

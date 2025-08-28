@@ -175,16 +175,7 @@ struct BabyEditView: View {
                 }
             }
             
-            if isEditing {
-                Section {
-                    Button("删除", role: .destructive) {
-                        if let baby = baby {
-                            modelContext.delete(baby)
-                            dismiss()
-                        }
-                    }
-                }
-            }
+
         }
         .navigationTitle(isEditing ? "编辑阿贝贝" : "添加阿贝贝")
         .navigationBarTitleDisplayMode(.inline)
