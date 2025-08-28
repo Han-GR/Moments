@@ -82,9 +82,6 @@ struct MomentDetailView: View {
         .sheet(isPresented: $isEditing) {
             NavigationStack {
                 MomentEditView(moment: moment)
-                    .onDisappear {
-                        // 刷新视图
-                    }
             }
         }
         .alert("确认删除", isPresented: $showDeleteConfirmation) {
@@ -285,9 +282,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
             return hostingController.view
         }
         
-        func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
-            // 缩放结束后的处理
-        }
+
         
         @objc func handleLeftSwipe() {
             // 只有在未缩放状态下才响应滑动
