@@ -14,10 +14,18 @@ struct BabyDetailView: View {
     @State private var isAddingMoment = false
     let baby: Baby
     
-    @Query private var allMoments: [Moment]
+    @Query private var moments: [Moment]
     
-    var moments: [Moment] {
-        allMoments.filter { $0.baby?.id == baby.id }.sorted(by: { $0.date > $1.date })
+    init(baby: Baby) {
+        self.baby = baby
+        let babyId = baby.id
+        self._moments = Query(
+            filter: #Predicate<Moment> { moment in
+                moment.baby?.id == babyId
+            },
+            sort: \Moment.date,
+            order: .reverse
+        )
     }
     
     var body: some View {
@@ -35,7 +43,7 @@ struct BabyDetailView: View {
                             .padding(.horizontal)
                     } else {
                         Rectangle()
-                            .fill(Color.pink.opacity(0.2))
+                            .fill(AppColors.pinkBackground)
                             .frame(height: 300)
                             .frame(maxWidth: .infinity)
                             .clipShape(RoundedRectangle(cornerRadius: 20))
@@ -44,7 +52,7 @@ struct BabyDetailView: View {
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 100, height: 100)
-                                    .foregroundColor(.pink)
+                                    .foregroundColor(AppColors.primaryPink)
                             )
                             .padding(.horizontal)
                     }
@@ -160,40 +168,7 @@ struct BabyDetailView: View {
     }
 }
 
-struct MomentRow: View {
-    let moment: Moment
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text(moment.date, style: .date)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                
-                Spacer()
-            }
-            
-            Text(moment.content)
-                .font(.body)
-                .foregroundColor(.secondary)
-                .lineLimit(2)
-            
-            if let photos = moment.photos, !photos.isEmpty, let firstPhoto = photos.first, let uiImage = UIImage(data: firstPhoto) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .aspectRatio(16/9, contentMode: .fill)
-                    .frame(height: 150)
-                    .frame(maxWidth: .infinity)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-            }
-        }
-        .padding()
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
-        .padding(.horizontal)
-    }
-}
+
 
 #Preview {
     do {
