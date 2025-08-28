@@ -180,7 +180,22 @@ struct PhotoDetailView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .tag(index)
-                            .pinchToZoom()
+                            .pinchToZoom(
+                                onSwipeLeft: {
+                                    withAnimation {
+                                        if currentIndex < photos.count - 1 {
+                                            currentIndex += 1
+                                        }
+                                    }
+                                },
+                                onSwipeRight: {
+                                    withAnimation {
+                                        if currentIndex > 0 {
+                                            currentIndex -= 1
+                                        }
+                                    }
+                                }
+                            )
                     }
                 }
             }
@@ -217,6 +232,9 @@ struct PinchToZoom: ViewModifier {
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
     
+    let onSwipeLeft: (() -> Void)?
+    let onSwipeRight: (() -> Void)?
+    
     func body(content: Content) -> some View {
         content
             .scaleEffect(scale)
@@ -242,11 +260,26 @@ struct PinchToZoom: ViewModifier {
                             )
                         }
                     }
-                    .onEnded { _ in
+                    .onEnded { value in
                         lastOffset = offset
                         if scale <= 1 {
                             withAnimation {
                                 offset = .zero
+                            }
+                            
+                            // 检测水平滑动手势
+                            let horizontalDistance = abs(value.translation.width)
+                            let verticalDistance = abs(value.translation.height)
+                            
+                            // 如果水平滑动距离大于垂直滑动距离且超过阈值，则触发图片切换
+                            if horizontalDistance > verticalDistance && horizontalDistance > 50 {
+                                if value.translation.width > 0 {
+                                    // 向右滑动，显示上一张图片
+                                    onSwipeRight?()
+                                } else {
+                                    // 向左滑动，显示下一张图片
+                                    onSwipeLeft?()
+                                }
                             }
                         }
                     }
@@ -269,8 +302,8 @@ struct PinchToZoom: ViewModifier {
 }
 
 extension View {
-    func pinchToZoom() -> some View {
-        modifier(PinchToZoom())
+    func pinchToZoom(onSwipeLeft: (() -> Void)? = nil, onSwipeRight: (() -> Void)? = nil) -> some View {
+        modifier(PinchToZoom(onSwipeLeft: onSwipeLeft, onSwipeRight: onSwipeRight))
     }
 }
 
