@@ -137,7 +137,7 @@ struct PhotoGallery: View {
         }
         .frame(height: calculateGridHeight())
         .padding(.horizontal)
-        .sheet(isPresented: Binding(get: { selectedPhotoIndex != nil }, set: { if !$0 { selectedPhotoIndex = nil } })) {
+        .navigationDestination(isPresented: Binding(get: { selectedPhotoIndex != nil }, set: { if !$0 { selectedPhotoIndex = nil } })) {
             if let index = selectedPhotoIndex {
                 PhotoDetailView(photos: photos, initialIndex: index)
             }
@@ -152,17 +152,11 @@ struct PhotoGallery: View {
         let spacing: CGFloat = isIPad ? 12 : 8
         return CGFloat(rows) * itemHeight + CGFloat(max(0, rows - 1)) * spacing
     }
-    
-    struct PhotoDetail: Identifiable {
-        let id = UUID()
-        let index: Int
-    }
 }
 
 struct PhotoDetailView: View {
     let photos: [Data]
     @State private var currentIndex: Int
-    @Environment(\.dismiss) private var dismiss
     
     init(photos: [Data], initialIndex: Int) {
         self.photos = photos
@@ -176,43 +170,33 @@ struct PhotoDetailView: View {
             TabView(selection: $currentIndex) {
                 ForEach(0..<photos.count, id: \.self) { index in
                     if let uiImage = UIImage(data: photos[index]) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .tag(index)
-                            .pinchToZoom(
-                                onSwipeLeft: {
-                                    withAnimation {
-                                        if currentIndex < photos.count - 1 {
-                                            currentIndex += 1
-                                        }
-                                    }
-                                },
-                                onSwipeRight: {
-                                    withAnimation {
-                                        if currentIndex > 0 {
-                                            currentIndex -= 1
-                                        }
+                        ZoomableScrollView(
+                            onSwipeLeft: {
+                                withAnimation {
+                                    if currentIndex < photos.count - 1 {
+                                        currentIndex += 1
                                     }
                                 }
-                            )
+                            },
+                            onSwipeRight: {
+                                withAnimation {
+                                    if currentIndex > 0 {
+                                        currentIndex -= 1
+                                    }
+                                }
+                            }
+                        ) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                        .tag(index)
                     }
                 }
             }
             .tabViewStyle(PageTabViewStyle())
             
             VStack {
-                HStack {
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "xmark")
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Circle().fill(AppColors.lightBlackOverlay))
-                    }
-                    
-                    Spacer()
-                }
-                
                 Spacer()
                 
                 Text("\(currentIndex + 1) / \(photos.count)")
@@ -222,88 +206,145 @@ struct PhotoDetailView: View {
             }
             .padding()
         }
+        .navigationTitle("照片预览")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-// 图片缩放功能
-struct PinchToZoom: ViewModifier {
-    @State private var scale: CGFloat = 1.0
-    @State private var lastScale: CGFloat = 1.0
-    @State private var offset: CGSize = .zero
-    @State private var lastOffset: CGSize = .zero
+// 原生缩放滚动视图
+struct ZoomableScrollView<Content: View>: UIViewRepresentable {
+    private var content: Content
+    private let onSwipeLeft: (() -> Void)?
+    private let onSwipeRight: (() -> Void)?
     
-    let onSwipeLeft: (() -> Void)?
-    let onSwipeRight: (() -> Void)?
-    
-    func body(content: Content) -> some View {
-        content
-            .scaleEffect(scale)
-            .offset(offset)
-            .gesture(
-                MagnificationGesture()
-                    .onChanged { value in
-                        let delta = value / lastScale
-                        lastScale = value
-                        scale = min(max(scale * delta, 1), 5)
-                    }
-                    .onEnded { _ in
-                        lastScale = 1.0
-                    }
-            )
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        if scale > 1 {
-                            offset = CGSize(
-                                width: lastOffset.width + value.translation.width,
-                                height: lastOffset.height + value.translation.height
-                            )
-                        }
-                    }
-                    .onEnded { value in
-                        lastOffset = offset
-                        if scale <= 1 {
-                            withAnimation {
-                                offset = .zero
-                            }
-                            
-                            // 检测水平滑动手势
-                            let horizontalDistance = abs(value.translation.width)
-                            let verticalDistance = abs(value.translation.height)
-                            
-                            // 如果水平滑动距离大于垂直滑动距离且超过阈值，则触发图片切换
-                            if horizontalDistance > verticalDistance && horizontalDistance > 50 {
-                                if value.translation.width > 0 {
-                                    // 向右滑动，显示上一张图片
-                                    onSwipeRight?()
-                                } else {
-                                    // 向左滑动，显示下一张图片
-                                    onSwipeLeft?()
-                                }
-                            }
-                        }
-                    }
-            )
-            .gesture(
-                TapGesture(count: 2)
-                    .onEnded {
-                        withAnimation {
-                            if scale > 1 {
-                                scale = 1
-                                offset = .zero
-                                lastOffset = .zero
-                            } else {
-                                scale = 2
-                            }
-                        }
-                    }
-            )
+    init(onSwipeLeft: (() -> Void)? = nil, onSwipeRight: (() -> Void)? = nil, @ViewBuilder content: () -> Content) {
+        self.content = content()
+        self.onSwipeLeft = onSwipeLeft
+        self.onSwipeRight = onSwipeRight
     }
-}
-
-extension View {
-    func pinchToZoom(onSwipeLeft: (() -> Void)? = nil, onSwipeRight: (() -> Void)? = nil) -> some View {
-        modifier(PinchToZoom(onSwipeLeft: onSwipeLeft, onSwipeRight: onSwipeRight))
+    
+    func makeUIView(context: Context) -> UIScrollView {
+        let scrollView = UIScrollView()
+        scrollView.delegate = context.coordinator
+        scrollView.maximumZoomScale = 5.0
+        scrollView.minimumZoomScale = 1.0
+        scrollView.bouncesZoom = true
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.backgroundColor = UIColor.clear
+        
+        // 创建承载SwiftUI内容的视图控制器
+        let hostedView = context.coordinator.hostingController.view!
+        hostedView.translatesAutoresizingMaskIntoConstraints = true
+        hostedView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        hostedView.frame = scrollView.bounds
+        hostedView.backgroundColor = UIColor.clear
+        scrollView.addSubview(hostedView)
+        
+        // 添加滑动手势识别器
+        let leftSwipeGesture = UISwipeGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleLeftSwipe))
+        leftSwipeGesture.direction = .left
+        leftSwipeGesture.delegate = context.coordinator
+        scrollView.addGestureRecognizer(leftSwipeGesture)
+        
+        let rightSwipeGesture = UISwipeGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleRightSwipe))
+        rightSwipeGesture.direction = .right
+        rightSwipeGesture.delegate = context.coordinator
+        scrollView.addGestureRecognizer(rightSwipeGesture)
+        
+        // 添加双击手势
+        let doubleTapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleDoubleTap(_:)))
+        doubleTapGesture.numberOfTapsRequired = 2
+        doubleTapGesture.delegate = context.coordinator
+        scrollView.addGestureRecognizer(doubleTapGesture)
+        
+        return scrollView
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(hostingController: UIHostingController(rootView: self.content), onSwipeLeft: onSwipeLeft, onSwipeRight: onSwipeRight)
+    }
+    
+    func updateUIView(_ uiView: UIScrollView, context: Context) {
+        context.coordinator.hostingController.rootView = self.content
+        assert(context.coordinator.hostingController.view.superview == uiView)
+    }
+    
+    class Coordinator: NSObject, UIScrollViewDelegate, UIGestureRecognizerDelegate {
+        var hostingController: UIHostingController<Content>
+        private let onSwipeLeft: (() -> Void)?
+        private let onSwipeRight: (() -> Void)?
+        
+        init(hostingController: UIHostingController<Content>, onSwipeLeft: (() -> Void)?, onSwipeRight: (() -> Void)?) {
+            self.hostingController = hostingController
+            self.onSwipeLeft = onSwipeLeft
+            self.onSwipeRight = onSwipeRight
+        }
+        
+        func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+            return hostingController.view
+        }
+        
+        func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+            // 缩放结束后的处理
+        }
+        
+        @objc func handleLeftSwipe() {
+            // 只有在未缩放状态下才响应滑动
+            if let scrollView = hostingController.view.superview as? UIScrollView,
+               scrollView.zoomScale <= scrollView.minimumZoomScale {
+                onSwipeLeft?()
+            }
+        }
+        
+        @objc func handleRightSwipe() {
+            // 只有在未缩放状态下才响应滑动
+            if let scrollView = hostingController.view.superview as? UIScrollView,
+               scrollView.zoomScale <= scrollView.minimumZoomScale {
+                onSwipeRight?()
+            }
+        }
+        
+        @objc func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
+            guard let scrollView = hostingController.view.superview as? UIScrollView else { return }
+            
+            if scrollView.zoomScale > scrollView.minimumZoomScale {
+                // 如果已经缩放，则重置到原始大小
+                scrollView.setZoomScale(scrollView.minimumZoomScale, animated: true)
+            } else {
+                // 如果未缩放，则放大到双击位置
+                let location = gesture.location(in: hostingController.view)
+                let zoomRect = zoomRectForScale(scrollView.maximumZoomScale / 2, center: location, scrollView: scrollView)
+                scrollView.zoom(to: zoomRect, animated: true)
+            }
+        }
+        
+        private func zoomRectForScale(_ scale: CGFloat, center: CGPoint, scrollView: UIScrollView) -> CGRect {
+            let size = CGSize(
+                width: scrollView.frame.size.width / scale,
+                height: scrollView.frame.size.height / scale
+            )
+            let origin = CGPoint(
+                x: center.x - size.width / 2,
+                y: center.y - size.height / 2
+            )
+            return CGRect(origin: origin, size: size)
+        }
+        
+        // 手势识别器代理方法，允许同时识别多个手势
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+            return false
+        }
+        
+        // 只有在未缩放状态下才允许滑动手势
+        func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+            if gestureRecognizer is UISwipeGestureRecognizer {
+                if let scrollView = hostingController.view.superview as? UIScrollView {
+                    return scrollView.zoomScale <= scrollView.minimumZoomScale
+                }
+            }
+            return true
+        }
     }
 }
 
