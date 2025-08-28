@@ -30,13 +30,3 @@ struct AppColors {
     static let secondaryText = Color.secondary
     static let clearColor = Color.clear
 }
-
-// MARK: - Color Extension for Group Colors
-extension Color {
-    static let appPink = AppColors.primaryPink
-    static let appBlue = AppColors.primaryBlue
-    static let appPinkBackground = AppColors.pinkBackground
-    static let appLightPinkBackground = AppColors.lightPinkBackground
-    static let appGrayBackground = AppColors.grayBackground
-    static let appBlackOverlay = AppColors.blackOverlay
-}
