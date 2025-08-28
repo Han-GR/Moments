@@ -20,6 +20,11 @@ struct MomentsView: View {
         self.initialSelectedBaby = selectedBaby
     }
     
+    private func deleteMoment(_ moment: Moment) {
+        modelContext.delete(moment)
+        try? modelContext.save()
+    }
+    
     var moments: [Moment] {
         if let selectedBaby = selectedBaby, let moments = selectedBaby.moments {
             return moments.sorted(by: { $0.date > $1.date })
@@ -106,6 +111,11 @@ struct MomentsView: View {
                         ForEach(moments) { moment in
                             NavigationLink(destination: MomentDetailView(moment: moment)) {
                                 MomentListItem(moment: moment)
+                            }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button("删除", role: .destructive) {
+                                    deleteMoment(moment)
+                                }
                             }
                         }
                     }
