@@ -110,36 +110,31 @@ struct BabyDetailView: View {
                     }
                     .padding(.horizontal)
                     
-                    if !moments.isEmpty {
-                        ForEach(moments) { moment in
-                            NavigationLink(destination: MomentDetailView(moment: moment)) {
-                                MomentRow(moment: moment)
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    } else {
-                        VStack(spacing: 16) {
-                            Image(systemName: "book.closed")
-                                .font(.system(size: 48))
-                                .foregroundColor(.secondary)
-                            
-                            VStack(spacing: 8) {
-                                Text("暂无生活瞬间")
-                                    .font(.headline)
+                    // 瞬间数量提示和跳转按钮
+                    NavigationLink(destination: MomentsView(selectedBaby: baby)) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("共有 \(moments.count) 条瞬间")
+                                    .font(.subheadline)
                                     .foregroundColor(.primary)
                                 
-                                Text("点击添加按钮记录阿贝贝的生活点滴")
-                                    .font(.subheadline)
+                                Text("点击查看所有瞬间")
+                                    .font(.caption)
                                     .foregroundColor(.secondary)
-                                    .multilineTextAlignment(.center)
                             }
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 40)
+                        .padding()
                         .background(Color(.secondarySystemBackground))
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .padding(.horizontal)
                     }
+                    .buttonStyle(.plain)
                 }
             }
             .padding(.bottom, 30)

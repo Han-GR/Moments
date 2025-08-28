@@ -14,6 +14,12 @@ struct MomentsView: View {
     @State private var selectedBaby: Baby? = nil
     @State private var isAddingMoment = false
     
+    private let initialSelectedBaby: Baby?
+    
+    init(selectedBaby: Baby? = nil) {
+        self.initialSelectedBaby = selectedBaby
+    }
+    
     var moments: [Moment] {
         if let selectedBaby = selectedBaby, let moments = selectedBaby.moments {
             return moments.sorted(by: { $0.date > $1.date })
@@ -124,6 +130,11 @@ struct MomentsView: View {
             .sheet(isPresented: $isAddingMoment) {
                 NavigationStack {
                     MomentEditView(baby: selectedBaby)
+                }
+            }
+            .onAppear {
+                if let initialBaby = initialSelectedBaby {
+                    selectedBaby = initialBaby
                 }
             }
         }
