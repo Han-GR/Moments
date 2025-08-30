@@ -37,6 +37,15 @@ struct MomentDetailView: View {
                     }
                     .buttonStyle(PlainButtonStyle())
                     .padding(.horizontal)
+                } else {
+                    // 没有阿贝贝时只显示日期
+                    HStack {
+                        Text(moment.date, style: .date)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                    }
+                    .padding(.horizontal)
                 }
                 
                 // 内容

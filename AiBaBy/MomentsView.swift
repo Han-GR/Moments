@@ -11,6 +11,7 @@ import SwiftData
 struct MomentsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var babies: [Baby]
+    @Query private var allMoments: [Moment]
     @State private var selectedBaby: Baby? = nil
     @State private var isAddingMoment = false
     
@@ -29,13 +30,7 @@ struct MomentsView: View {
         if let selectedBaby = selectedBaby, let moments = selectedBaby.moments {
             return moments.sorted(by: { $0.date > $1.date })
         } else {
-            // 获取所有阿贝贝的所有瞬间，并按日期排序
-            var allMoments: [Moment] = []
-            for baby in babies {
-                if let moments = baby.moments {
-                    allMoments.append(contentsOf: moments)
-                }
-            }
+            // 获取所有瞬间，包括没有绑定阿贝贝的瞬间，并按日期排序
             return allMoments.sorted(by: { $0.date > $1.date })
         }
     }
@@ -112,7 +107,6 @@ struct MomentsView: View {
                     }) {
                         Label("添加瞬间", systemImage: "plus")
                     }
-                    .disabled(babies.isEmpty)
                 }
             }
             .sheet(isPresented: $isAddingMoment) {

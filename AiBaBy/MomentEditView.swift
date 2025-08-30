@@ -36,7 +36,7 @@ struct MomentEditView: View {
         let isIPad = UIDevice.current.userInterfaceIdiom == .pad
         
         Form {
-            Section("阿贝贝") {
+            Section("阿贝贝（可选）") {
                 HStack {
                     if let selectedBaby = selectedBaby {
                         HStack {
@@ -46,7 +46,7 @@ struct MomentEditView: View {
                                 .font(.headline)
                         }
                     } else {
-                        Text("选择阿贝贝")
+                        Text("无阿贝贝")
                             .foregroundColor(.secondary)
                     }
                     
@@ -132,11 +132,11 @@ struct MomentEditView: View {
                 Button("保存") {
                     saveMoment()
                 }
-                .disabled(selectedBaby == nil || (content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && selectedPhotosData.isEmpty))
+                .disabled(content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && selectedPhotosData.isEmpty)
             }
         }
         .onAppear {
-            // 如果是编辑模式，初始化现有数据
+            // 如果是编辑模式，加载现有数据
             if let moment = moment {
                 content = moment.content
                 date = moment.date
@@ -145,13 +145,11 @@ struct MomentEditView: View {
                     selectedPhotosData = photos
                 }
             } else {
-                // 如果传入了特定的阿贝贝，则默认选择该阿贝贝
+                // 新建模式：如果传入了特定阿贝贝则选择，否则保持为nil
                 if let baby = baby {
                     selectedBaby = baby
-                } else if let firstBaby = allBabies.first {
-                    // 如果没有传入特定的阿贝贝，则默认选择第一个阿贝贝
-                    selectedBaby = firstBaby
                 }
+                // 不再自动选择第一个阿贝贝，让用户自主选择
             }
         }
 
@@ -216,26 +214,56 @@ struct MomentEditView: View {
         }
         .sheet(isPresented: $isShowingBabyPicker) {
             NavigationStack {
-                List(allBabies) { baby in
+                List {
+                    // 无阿贝贝选项
                     Button(action: {
-                        selectedBaby = baby
+                        selectedBaby = nil
                         isShowingBabyPicker = false
                     }) {
                         HStack {
-                            BabyAvatarView.medium(baby: baby)
+                            Image(systemName: "person.slash")
+                                .foregroundColor(.gray)
+                                .frame(width: 40, height: 40)
+                                .background(Color.gray.opacity(0.2))
+                                .clipShape(Circle())
                             
-                            Text(baby.name)
+                            Text("无阿贝贝")
                                 .font(.headline)
+                                .foregroundColor(.primary)
                             
                             Spacer()
                             
-                            if selectedBaby?.id == baby.id {
+                            if selectedBaby == nil {
                                 Image(systemName: "checkmark")
                                     .foregroundColor(.blue)
                             }
                         }
                     }
                     .padding(.vertical, 4)
+                    
+                    // 阿贝贝列表
+                    ForEach(allBabies) { baby in
+                        Button(action: {
+                            selectedBaby = baby
+                            isShowingBabyPicker = false
+                        }) {
+                            HStack {
+                                BabyAvatarView.medium(baby: baby)
+                                
+                                Text(baby.name)
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                                
+                                Spacer()
+                                
+                                if selectedBaby?.id == baby.id {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.blue)
+                                }
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
                 }
                 .navigationTitle("选择阿贝贝")
                 .navigationBarTitleDisplayMode(.inline)
@@ -252,13 +280,11 @@ struct MomentEditView: View {
     }
     
     private func saveMoment() {
-        guard let selectedBaby = selectedBaby else { return }
-        
         if let existingMoment = moment {
             // 编辑模式：更新现有瞬间
             existingMoment.content = content
             existingMoment.date = date
-            existingMoment.baby = selectedBaby
+            existingMoment.baby = selectedBaby // 可以为nil
             existingMoment.photos = selectedPhotosData.isEmpty ? nil : selectedPhotosData
         } else {
             // 新建模式：创建新瞬间
@@ -268,7 +294,7 @@ struct MomentEditView: View {
                 photos: selectedPhotosData.isEmpty ? nil : selectedPhotosData
             )
             
-            // 设置关系
+            // 设置关系（可以为nil）
             newMoment.baby = selectedBaby
             
             // 添加到数据库
