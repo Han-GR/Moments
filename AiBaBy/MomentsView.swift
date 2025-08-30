@@ -12,13 +12,11 @@ struct MomentsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var babies: [Baby]
     @Query private var allMoments: [Moment]
-    @State private var selectedBaby: Baby? = nil
+    @State private var selectedBaby: Baby?
     @State private var isAddingMoment = false
     
-    private let initialSelectedBaby: Baby?
-    
     init(selectedBaby: Baby? = nil) {
-        self.initialSelectedBaby = selectedBaby
+        self._selectedBaby = State(initialValue: selectedBaby)
     }
     
     private func deleteMoment(_ moment: Moment) {
@@ -40,42 +38,64 @@ struct MomentsView: View {
             VStack {
                 // 阿贝贝选择器
                 if !babies.isEmpty {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 15) {
-                            Button(action: { selectedBaby = nil }) {
-                                VStack {
-                                    Image(systemName: "rectangle.grid.2x2.fill")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 30, height: 30)
-                                        .padding(10)
-                                        .background(selectedBaby == nil ? AppColors.selectedBlue : AppColors.lightGrayBackground)
-                                        .clipShape(Circle())
-                                        .foregroundColor(.white)
-                                    
-                                    Text("全部")
-                                        .font(.caption)
+                    ScrollViewReader { proxy in
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 15) {
+                                Button(action: { selectedBaby = nil }) {
+                                    VStack {
+                                        Image(systemName: "rectangle.grid.2x2.fill")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 30, height: 30)
+                                            .padding(10)
+                                            .background(selectedBaby == nil ? AppColors.selectedBlue : AppColors.lightGrayBackground)
+                                            .clipShape(Circle())
+                                            .foregroundColor(.white)
+                                        
+                                        Text("全部")
+                                            .font(.caption)
+                                    }
+                                }
+                                .id("all")
+                                
+                                ForEach(babies) { baby in
+                                    Button(action: { selectedBaby = baby }) {
+                                        VStack {
+                                            BabyAvatarView.large(
+                                                baby: baby,
+                                                showBorder: true,
+                                                borderColor: selectedBaby?.id == baby.id ? AppColors.selectedBlue : AppColors.strokeClear
+                                            )
+                                            
+                                            Text(baby.name)
+                                                .font(.caption)
+                                                .lineLimit(1)
+                                        }
+                                        .frame(width: 60)
+                                    }
+                                    .id(baby.id)
                                 }
                             }
-                            
-                            ForEach(babies) { baby in
-                                Button(action: { selectedBaby = baby }) {
-                                    VStack {
-                                        BabyAvatarView.large(
-                                            baby: baby,
-                                            showBorder: true,
-                                            borderColor: selectedBaby?.id == baby.id ? AppColors.selectedBlue : AppColors.strokeClear
-                                        )
-                                        
-                                        Text(baby.name)
-                                            .font(.caption)
-                                            .lineLimit(1)
-                                    }
-                                    .frame(width: 60)
+                            .padding(.horizontal)
+                        }
+                        .onAppear {
+                            if let selectedBaby = selectedBaby {
+                                withAnimation(.easeInOut(duration: 0.5)) {
+                                    proxy.scrollTo(selectedBaby.id, anchor: .center)
                                 }
                             }
                         }
-                        .padding(.horizontal)
+                        .onChange(of: selectedBaby) { _, newValue in
+                            if let newBaby = newValue {
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    proxy.scrollTo(newBaby.id, anchor: .center)
+                                }
+                            } else {
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    proxy.scrollTo("all", anchor: .center)
+                                }
+                            }
+                        }
                     }
                     .padding(.vertical, 10)
                     .background(Color(.secondarySystemBackground))
@@ -114,11 +134,7 @@ struct MomentsView: View {
                     MomentEditView(baby: selectedBaby)
                 }
             }
-            .onAppear {
-                if let initialBaby = initialSelectedBaby {
-                    selectedBaby = initialBaby
-                }
-            }
+
         }
     }
 }
