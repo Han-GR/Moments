@@ -74,14 +74,17 @@ struct MomentEditView: View {
             
             Section("照片") {
                 Button(action: {
-                    isShowingPhotoPicker = true
+                    if selectedPhotosData.count < 9 {
+                        isShowingPhotoPicker = true
+                    }
                 }) {
-                    Label("添加照片", systemImage: "plus.circle.fill")
+                    Label(selectedPhotosData.count >= 9 ? "已达到最大数量(9张)" : "添加照片 (\(selectedPhotosData.count)/9)", systemImage: "plus.circle.fill")
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .foregroundColor(.blue)
+                        .foregroundColor(selectedPhotosData.count >= 9 ? .gray : .blue)
                         .cornerRadius(8)
                 }
+                .disabled(selectedPhotosData.count >= 9)
                 
                 if !selectedPhotosData.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -153,14 +156,19 @@ struct MomentEditView: View {
         }
 
         .onChange(of: selectedImages) { _, newImages in
-            // 等待所有图片异步加载完成后再处理
+            // 只有当有新图片且不在处理中时才处理
             if !newImages.isEmpty && !isProcessingImages {
                 isProcessingImages = true
                 
-                // 延迟处理，等待PHPickerViewController异步加载完所有图片
+                // 延迟处理以等待所有图片加载完成
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    // 处理所有新图片
+                    // 遍历所有选中的图片并添加到数据数组，但限制总数不超过9张
                     for image in self.selectedImages {
+                        // 检查是否已达到最大数量限制
+                        if self.selectedPhotosData.count >= 9 {
+                            break
+                        }
+                        
                         if let data = image.jpegData(compressionQuality: 0.8) {
                             // 检查是否已存在相同的图片数据，避免重复添加
                             if !self.selectedPhotosData.contains(data) {
@@ -169,7 +177,7 @@ struct MomentEditView: View {
                         }
                     }
                     
-                    // 清空临时数组并重置状态
+                    // 清空临时图片数组并重置处理状态
                     self.selectedImages.removeAll()
                     self.isProcessingImages = false
                 }
