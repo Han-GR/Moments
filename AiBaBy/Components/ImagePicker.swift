@@ -23,7 +23,6 @@ struct ImagePicker: UIViewControllerRepresentable {
             picker.delegate = context.coordinator
             picker.allowsEditing = false
             picker.cameraFlashMode = .off  // 禁用闪光灯
-            picker.
             return picker
         } else {
             var config = PHPickerConfiguration()
