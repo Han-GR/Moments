@@ -51,7 +51,7 @@ struct BabyAvatarView: View {
                     .fill(AppColors.lightGrayBackground)
                     .frame(width: size, height: size)
                     .overlay(
-                        Image(systemName: "person.fill")
+                        Image(systemName: "bubbles.and.sparkles")
                             .foregroundColor(.secondary)
                             .font(.system(size: size * 0.4))
                     )

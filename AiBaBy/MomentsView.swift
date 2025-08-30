@@ -25,8 +25,15 @@ struct MomentsView: View {
     }
     
     var moments: [Moment] {
-        if let selectedBaby = selectedBaby, let moments = selectedBaby.moments {
-            return moments.sorted(by: { $0.date > $1.date })
+        if let selectedBaby = selectedBaby {
+            if selectedBaby.id.uuidString == "00000000-0000-0000-0000-000000000000" {
+                // 显示自由瞬间
+                return allMoments.filter { $0.baby == nil }.sorted(by: { $0.date > $1.date })
+            } else if let moments = selectedBaby.moments {
+                return moments.sorted(by: { $0.date > $1.date })
+            } else {
+                return []
+            }
         } else {
             // 获取所有瞬间，包括没有绑定阿贝贝的瞬间，并按日期排序
             return allMoments.sorted(by: { $0.date > $1.date })
@@ -58,6 +65,28 @@ struct MomentsView: View {
                                 }
                                 .id("all")
                                 
+                                // 自由瞬间选项
+                                Button(action: { 
+                                    let unboundBaby = Baby(name: "自由瞬间", birthDate: nil, notes: "")
+                                    unboundBaby.id = UUID(uuidString: "00000000-0000-0000-0000-000000000000") ?? UUID()
+                                    selectedBaby = unboundBaby
+                                }) {
+                                    VStack {
+                                        Image(systemName: "bubbles.and.sparkles")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 30, height: 30)
+                                            .padding(10)
+                                            .background(selectedBaby?.id.uuidString == "00000000-0000-0000-0000-000000000000" ? AppColors.selectedBlue : AppColors.lightGrayBackground)
+                                            .clipShape(Circle())
+                                            .foregroundColor(.white)
+                                        
+                                        Text("自由瞬间")
+                                            .font(.caption)
+                                    }
+                                }
+                                .id("unbound")
+                                
                                 ForEach(babies) { baby in
                                     Button(action: { selectedBaby = baby }) {
                                         VStack {
@@ -88,7 +117,11 @@ struct MomentsView: View {
                         .onChange(of: selectedBaby) { _, newValue in
                             if let newBaby = newValue {
                                 withAnimation(.easeInOut(duration: 0.3)) {
-                                    proxy.scrollTo(newBaby.id, anchor: .center)
+                                    if newBaby.id.uuidString == "00000000-0000-0000-0000-000000000000" {
+                                        proxy.scrollTo("unbound", anchor: .center)
+                                    } else {
+                                        proxy.scrollTo(newBaby.id, anchor: .center)
+                                    }
                                 }
                             } else {
                                 withAnimation(.easeInOut(duration: 0.3)) {
