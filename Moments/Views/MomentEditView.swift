@@ -14,7 +14,7 @@ struct MomentEditView: View {
     
     @Query private var allBabies: [Baby]
     
-    // 如果传入了特定的阿贝贝，则默认选择该阿贝贝
+    // 如果传入了特定的物品，则默认选择该物品
     var baby: Baby?
     // 如果传入了moment，则为编辑模式
     var moment: Moment?
@@ -36,7 +36,7 @@ struct MomentEditView: View {
         let isIPad = UIDevice.current.userInterfaceIdiom == .pad
         
         Form {
-            Section("阿贝贝（可选）") {
+            Section("物品（可选）") {
                 HStack {
                     if let selectedBaby = selectedBaby {
                         HStack {
@@ -46,7 +46,7 @@ struct MomentEditView: View {
                                 .font(.headline)
                         }
                     } else {
-                        Text("无阿贝贝")
+                        Text("无物品")
                             .foregroundColor(.secondary)
                     }
                     
@@ -145,11 +145,11 @@ struct MomentEditView: View {
                     selectedPhotosData = photos
                 }
             } else {
-                // 新建模式：如果传入了特定阿贝贝则选择，否则保持为nil
+                // 新建模式：如果传入了特定物品则选择，否则保持为nil
                 if let baby = baby {
                     selectedBaby = baby
                 }
-                // 不再自动选择第一个阿贝贝，让用户自主选择
+                // 不再自动选择第一个物品，让用户自主选择
             }
         }
 
@@ -215,7 +215,7 @@ struct MomentEditView: View {
         .sheet(isPresented: $isShowingBabyPicker) {
             NavigationStack {
                 List {
-                    // 无阿贝贝选项
+                    // 无物品选项
                     Button(action: {
                         selectedBaby = nil
                         isShowingBabyPicker = false
@@ -227,7 +227,7 @@ struct MomentEditView: View {
                                 .background(Color.gray.opacity(0.2))
                                 .clipShape(Circle())
                             
-                            Text("无阿贝贝")
+                            Text("无物品")
                                 .font(.headline)
                                 .foregroundColor(.primary)
                             
@@ -241,7 +241,7 @@ struct MomentEditView: View {
                     }
                     .padding(.vertical, 4)
                     
-                    // 阿贝贝列表
+                    // 物品列表
                     ForEach(allBabies) { baby in
                         Button(action: {
                             selectedBaby = baby
@@ -265,7 +265,7 @@ struct MomentEditView: View {
                         .padding(.vertical, 4)
                     }
                 }
-                .navigationTitle("选择阿贝贝")
+                .navigationTitle("选择物品")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {

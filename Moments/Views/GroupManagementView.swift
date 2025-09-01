@@ -81,7 +81,7 @@ struct GroupRowView: View {
                 Text(group.name)
                     .font(.headline)
                 
-                Text("\(group.babies?.count ?? 0) 个阿贝贝")
+                Text("\(group.babies?.count ?? 0) 个物品")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -340,7 +340,7 @@ struct GroupSelectionView: View {
                                     .font(.headline)
                                     .foregroundColor(.primary)
                                 
-                                Text("\(group.babies?.count ?? 0) 个阿贝贝")
+                                Text("\(group.babies?.count ?? 0) 个物品")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }

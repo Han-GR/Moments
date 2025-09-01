@@ -19,7 +19,7 @@ struct MomentDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                // 阿贝贝信息
+                // 物品信息
                 if let baby = moment.baby {
                     NavigationLink(destination: BabyDetailView(baby: baby)) {
                         HStack {
@@ -38,7 +38,7 @@ struct MomentDetailView: View {
                     .buttonStyle(PlainButtonStyle())
                     .padding(.horizontal)
                 } else {
-                    // 没有阿贝贝时只显示日期
+                    // 没有物品时只显示日期
                     HStack {
                         Text(moment.date, style: .date)
                             .font(.subheadline)

@@ -193,8 +193,8 @@ Moments/
 │   ├── Views/                   # 视图文件夹
 │   │   ├── MainTabView.swift    # 主标签导航
 │   │   ├── HomeView.swift       # 主页
-│   │   ├── BabyDetailView.swift # 阿贝贝详情页
-│   │   ├── BabyEditView.swift   # 阿贝贝编辑页
+│   │   ├── BabyDetailView.swift # 物品详情页
+│   │   ├── BabyEditView.swift   # 物品编辑页
 │   │   ├── MomentsView.swift    # 记事本列表
 │   │   ├── MomentDetailView.swift # 记事详情页
 │   │   ├── MomentEditView.swift # 记事编辑页
@@ -220,7 +220,7 @@ Moments/
 - [x] 基础项目架构搭建
 - [x] 数据模型设计与实现
 - [x] 主要页面UI实现
-- [x] 阿贝贝管理功能
+- [x] 物品管理功能
 - [x] 生活记录功能
 - [x] 分组管理功能
 - [x] 图片上传与显示

@@ -35,7 +35,7 @@ struct MomentsView: View {
                 return []
             }
         } else {
-            // 获取所有瞬间，包括没有绑定阿贝贝的瞬间，并按日期排序
+            // 获取所有瞬间，包括没有绑定物品的瞬间，并按日期排序
             return allMoments.sorted(by: { $0.date > $1.date })
         }
     }
@@ -43,7 +43,7 @@ struct MomentsView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                // 阿贝贝选择器
+                // 物品选择器
                 if !babies.isEmpty {
                     ScrollViewReader { proxy in
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -135,7 +135,7 @@ struct MomentsView: View {
                 }
                 
                 if moments.isEmpty {
-                    ContentUnavailableView("暂无生活瞬间", systemImage: "book.closed", description: Text("点击添加按钮记录阿贝贝的生活点滴"))
+                    ContentUnavailableView("暂无生活瞬间", systemImage: "book.closed", description: Text("点击添加按钮记录物品的生活点滴"))
                 } else {
                     List {
                         ForEach(moments) { moment in
@@ -178,7 +178,7 @@ struct MomentListItem: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .top) {
-                // 阿贝贝头像
+                // 物品头像
                 BabyAvatarView.medium(baby: moment.baby)
                 
                 VStack(alignment: .leading, spacing: 4) {

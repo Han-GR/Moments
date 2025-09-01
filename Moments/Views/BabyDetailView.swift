@@ -176,7 +176,7 @@ struct BabyDetailView: View {
                 MomentEditView(baby: baby)
             }
         }
-        .alert("删除阿贝贝", isPresented: $showDeleteConfirmation) {
+        .alert("删除物品", isPresented: $showDeleteConfirmation) {
              Button("取消", role: .cancel) { }
              Button("删除", role: .destructive) {
                  deleteBaby()
@@ -187,12 +187,12 @@ struct BabyDetailView: View {
      }
      
      private func deleteBaby() {
-          // 删除与该阿贝贝相关的所有瞬间
+          // 删除与该物品相关的所有瞬间
           for moment in moments {
               modelContext.delete(moment)
           }
           
-          // 删除阿贝贝
+          // 删除物品
           modelContext.delete(baby)
           
           // 保存更改
@@ -201,7 +201,7 @@ struct BabyDetailView: View {
               // 删除成功后返回上一页
               dismiss()
           } catch {
-              print("删除阿贝贝时出错: \(error)")
+              print("删除物品时出错: \(error)")
           }
       }
  }

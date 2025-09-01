@@ -49,7 +49,7 @@ struct SettingsView: View {
             
             Section("统计") {
                 HStack {
-                    Label("阿贝贝数量", systemImage: "person.2.fill")
+                    Label("物品数量", systemImage: "person.2.fill")
                     Spacer()
                     Text("\(babies.count)")
                         .foregroundColor(.secondary)
@@ -92,7 +92,7 @@ struct SettingsView: View {
                 deleteAllData()
             }
         } message: {
-            Text("确定要删除所有阿贝贝和生活瞬间数据吗？此操作无法撤销。")
+            Text("确定要删除所有物品和生活瞬间数据吗？此操作无法撤销。")
         }
         .sheet(isPresented: $showingAbout) {
             AboutView()
@@ -108,7 +108,7 @@ struct SettingsView: View {
             modelContext.delete(moment)
         }
         
-        // 再删除所有阿贝贝
+        // 再删除所有物品
         for baby in babies {
             modelContext.delete(baby)
         }
@@ -144,7 +144,7 @@ struct AboutView: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 
-                Text("记录阿贝贝的美好时光")
+                Text("记录物品的美好时光")
                     .font(.headline)
                     .foregroundColor(.secondary)
                 
@@ -152,16 +152,16 @@ struct AboutView: View {
                     .frame(height: 30)
                 
                 VStack(alignment: .leading, spacing: 15) {
-                    Text("Moments是一款专为记录和管理您的阿贝贝而设计的应用。您可以在这里记录与您有关的任何事物,不要错过任何瞬间。")
+                    Text("Moments是一款专为记录和管理您的物品而设计的应用。您可以在这里记录与您有关的任何事物,不要错过任何瞬间。")
                     
                     Text("功能特点：")
                         .fontWeight(.bold)
                         .padding(.top, 10)
                     
-                    FeatureRow(icon: "camera.fill", text: "拍照并上传阿贝贝的照片")
-                    FeatureRow(icon: "pencil", text: "编辑阿贝贝的基本信息")
-                    FeatureRow(icon: "heart.text.square.fill", text: "记录阿贝贝的生活瞬间")
-                    FeatureRow(icon: "house.fill", text: "在主页查看所有阿贝贝")
+                    FeatureRow(icon: "camera.fill", text: "拍照并上传物品的照片")
+                    FeatureRow(icon: "pencil", text: "编辑物品的基本信息")
+                    FeatureRow(icon: "heart.text.square.fill", text: "记录物品的生活瞬间")
+                    FeatureRow(icon: "house.fill", text: "在主页查看所有物品")
                 }
                 .padding()
                 .background(Color(.secondarySystemBackground))

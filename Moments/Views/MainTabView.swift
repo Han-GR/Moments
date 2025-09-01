@@ -10,7 +10,7 @@ import SwiftUI
 struct MainTabView: View {
     var body: some View {
         TabView {
-            // 首页 - 展示所有阿贝贝
+            // 首页 - 展示所有物品
             NavigationStack {
                 HomeView()
             }

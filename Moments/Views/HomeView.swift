@@ -95,9 +95,9 @@ struct HomeView: View {
                 // 主内容区域
                 ZStack {
                     if babies.isEmpty {
-                        ContentUnavailableView("没有阿贝贝", systemImage: "bubbles.and.sparkles", description: Text("点击加号添加您的第一个阿贝贝"))
+                        ContentUnavailableView("没有物品", systemImage: "bubbles.and.sparkles", description: Text("点击加号添加您的第一个物品"))
                     } else if filteredBabies.isEmpty {
-                        ContentUnavailableView("没有找到阿贝贝", systemImage: "magnifyingglass", description: Text("尝试调整搜索条件或分组筛选"))
+                        ContentUnavailableView("没有找到物品", systemImage: "magnifyingglass", description: Text("尝试调整搜索条件或分组筛选"))
                     } else {
                         ScrollView {
                             LazyVStack(spacing: 20) {
@@ -110,8 +110,8 @@ struct HomeView: View {
                     }
                 }
             }
-            .navigationTitle("我的阿贝贝")
-            .searchable(text: $searchText, prompt: "搜索阿贝贝")
+            .navigationTitle("我的物品")
+            .searchable(text: $searchText, prompt: "搜索物品")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { showingGroupManagement = true }) {
@@ -121,7 +121,7 @@ struct HomeView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { isAddingNewBaby = true }) {
-                        Label("添加阿贝贝", systemImage: "plus")
+                        Label("添加物品", systemImage: "plus")
                     }
                 }
             }
@@ -205,7 +205,7 @@ struct GroupSectionView: View {
                     .foregroundColor(.secondary)
             }
             
-            // 阿贝贝网格
+            // 物品网格
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 160))], spacing: 16) {
                 ForEach(babies) { baby in
                     NavigationLink(destination: BabyDetailView(baby: baby)) {

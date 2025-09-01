@@ -177,7 +177,7 @@ struct BabyEditView: View {
             
 
         }
-        .navigationTitle(isEditing ? "编辑阿贝贝" : "添加阿贝贝")
+        .navigationTitle(isEditing ? "编辑物品" : "添加物品")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -261,14 +261,14 @@ struct BabyEditView: View {
     
     private func saveBaby() {
         if let baby = baby {
-            // 更新现有的阿贝贝
+            // 更新现有的物品
             baby.name = name
             baby.birthDate = birthDate
             baby.notes = notes
             baby.photo = photoData
             baby.group = selectedGroup
         } else {
-            // 创建新的阿贝贝
+            // 创建新的物品
             let newBaby = Baby(name: name, birthDate: birthDate, photo: photoData, notes: notes)
             newBaby.group = selectedGroup
             modelContext.insert(newBaby)
