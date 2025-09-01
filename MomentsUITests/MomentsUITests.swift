@@ -1,13 +1,13 @@
 //
-//  AiBaByUITests.swift
-//  AiBaByUITests
+//  MomentsUITests.swift
+//  MomentsUITests
 //
 //  Created by han han on 2025/8/24.
 //
 
 import XCTest
 
-final class AiBaByUITests: XCTestCase {
+final class MomentsUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

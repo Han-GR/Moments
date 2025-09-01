@@ -6,7 +6,7 @@
 	<string>development</string>
 	<key>com.apple.developer.icloud-container-identifiers</key>
 	<array>
-		<string>iCloud.com.han.AiBaBy</string>
+		<string>iCloud.com.han.Moments</string>
 	</array>
 	<key>com.apple.developer.icloud-services</key>
 	<array>

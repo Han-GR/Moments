@@ -12,37 +12,37 @@
 			containerPortal = AAB520762E5B13B400E9AE71 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = AAB5207D2E5B13B400E9AE71;
-			remoteInfo = AiBaBy;
+			remoteInfo = Moments;
 		};
 		AAB520982E5B13B500E9AE71 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AAB520762E5B13B400E9AE71 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = AAB5207D2E5B13B400E9AE71;
-			remoteInfo = AiBaBy;
+			remoteInfo = Moments;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		AAB5207E2E5B13B400E9AE71 /* AiBaBy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AiBaBy.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		AAB5208D2E5B13B500E9AE71 /* AiBaByTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AiBaByTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AAB520972E5B13B500E9AE71 /* AiBaByUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AiBaByUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AAB5207E2E5B13B400E9AE71 /* Moments.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moments.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AAB5208D2E5B13B500E9AE71 /* MomentsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MomentsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AAB520972E5B13B500E9AE71 /* MomentsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MomentsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		AAB520802E5B13B400E9AE71 /* AiBaBy */ = {
+		AAB520802E5B13B400E9AE71 /* Moments */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AiBaBy;
+			path = Moments;
 			sourceTree = "<group>";
 		};
-		AAB520902E5B13B500E9AE71 /* AiBaByTests */ = {
+		AAB520902E5B13B500E9AE71 /* MomentsTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AiBaByTests;
+			path = MomentsTests;
 			sourceTree = "<group>";
 		};
-		AAB5209A2E5B13B500E9AE71 /* AiBaByUITests */ = {
+		AAB5209A2E5B13B500E9AE71 /* MomentsUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AiBaByUITests;
+			path = MomentsUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +75,9 @@
 		AAB520752E5B13B400E9AE71 = {
 			isa = PBXGroup;
 			children = (
-				AAB520802E5B13B400E9AE71 /* AiBaBy */,
-				AAB520902E5B13B500E9AE71 /* AiBaByTests */,
-				AAB5209A2E5B13B500E9AE71 /* AiBaByUITests */,
+				AAB520802E5B13B400E9AE71 /* Moments */,
+				AAB520902E5B13B500E9AE71 /* MomentsTests */,
+				AAB5209A2E5B13B500E9AE71 /* MomentsUITests */,
 				AAB5207F2E5B13B400E9AE71 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,9 +85,9 @@
 		AAB5207F2E5B13B400E9AE71 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AAB5207E2E5B13B400E9AE71 /* AiBaBy.app */,
-				AAB5208D2E5B13B500E9AE71 /* AiBaByTests.xctest */,
-				AAB520972E5B13B500E9AE71 /* AiBaByUITests.xctest */,
+				AAB5207E2E5B13B400E9AE71 /* Moments.app */,
+				AAB5208D2E5B13B500E9AE71 /* MomentsTests.xctest */,
+				AAB520972E5B13B500E9AE71 /* MomentsUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		AAB5207D2E5B13B400E9AE71 /* AiBaBy */ = {
+		AAB5207D2E5B13B400E9AE71 /* Moments */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AAB520A12E5B13B500E9AE71 /* Build configuration list for PBXNativeTarget "AiBaBy" */;
+			buildConfigurationList = AAB520A12E5B13B500E9AE71 /* Build configuration list for PBXNativeTarget "Moments" */;
 			buildPhases = (
 				AAB5207A2E5B13B400E9AE71 /* Sources */,
 				AAB5207B2E5B13B400E9AE71 /* Frameworks */,
@@ -108,18 +108,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				AAB520802E5B13B400E9AE71 /* AiBaBy */,
+				AAB520802E5B13B400E9AE71 /* Moments */,
 			);
-			name = AiBaBy;
+			name = Moments;
 			packageProductDependencies = (
 			);
-			productName = AiBaBy;
-			productReference = AAB5207E2E5B13B400E9AE71 /* AiBaBy.app */;
+			productName = Moments;
+			productReference = AAB5207E2E5B13B400E9AE71 /* Moments.app */;
 			productType = "com.apple.product-type.application";
 		};
-		AAB5208C2E5B13B500E9AE71 /* AiBaByTests */ = {
+		AAB5208C2E5B13B500E9AE71 /* MomentsTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AAB520A42E5B13B500E9AE71 /* Build configuration list for PBXNativeTarget "AiBaByTests" */;
+			buildConfigurationList = AAB520A42E5B13B500E9AE71 /* Build configuration list for PBXNativeTarget "MomentsTests" */;
 			buildPhases = (
 				AAB520892E5B13B500E9AE71 /* Sources */,
 				AAB5208A2E5B13B500E9AE71 /* Frameworks */,
@@ -131,18 +131,18 @@
 				AAB5208F2E5B13B500E9AE71 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				AAB520902E5B13B500E9AE71 /* AiBaByTests */,
+				AAB520902E5B13B500E9AE71 /* MomentsTests */,
 			);
-			name = AiBaByTests;
+			name = MomentsTests;
 			packageProductDependencies = (
 			);
-			productName = AiBaByTests;
-			productReference = AAB5208D2E5B13B500E9AE71 /* AiBaByTests.xctest */;
+			productName = MomentsTests;
+			productReference = AAB5208D2E5B13B500E9AE71 /* MomentsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		AAB520962E5B13B500E9AE71 /* AiBaByUITests */ = {
+		AAB520962E5B13B500E9AE71 /* MomentsUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AAB520A72E5B13B500E9AE71 /* Build configuration list for PBXNativeTarget "AiBaByUITests" */;
+			buildConfigurationList = AAB520A72E5B13B500E9AE71 /* Build configuration list for PBXNativeTarget "MomentsUITests" */;
 			buildPhases = (
 				AAB520932E5B13B500E9AE71 /* Sources */,
 				AAB520942E5B13B500E9AE71 /* Frameworks */,
@@ -154,13 +154,13 @@
 				AAB520992E5B13B500E9AE71 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				AAB5209A2E5B13B500E9AE71 /* AiBaByUITests */,
+				AAB5209A2E5B13B500E9AE71 /* MomentsUITests */,
 			);
-			name = AiBaByUITests;
+			name = MomentsUITests;
 			packageProductDependencies = (
 			);
-			productName = AiBaByUITests;
-			productReference = AAB520972E5B13B500E9AE71 /* AiBaByUITests.xctest */;
+			productName = MomentsUITests;
+			productReference = AAB520972E5B13B500E9AE71 /* MomentsUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -186,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = AAB520792E5B13B400E9AE71 /* Build configuration list for PBXProject "AiBaBy" */;
+			buildConfigurationList = AAB520792E5B13B400E9AE71 /* Build configuration list for PBXProject "Moments" */;
 			developmentRegion = "zh-Hans";
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -201,9 +201,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				AAB5207D2E5B13B400E9AE71 /* AiBaBy */,
-				AAB5208C2E5B13B500E9AE71 /* AiBaByTests */,
-				AAB520962E5B13B500E9AE71 /* AiBaByUITests */,
+				AAB5207D2E5B13B400E9AE71 /* Moments */,
+				AAB5208C2E5B13B500E9AE71 /* MomentsTests */,
+				AAB520962E5B13B500E9AE71 /* MomentsUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -259,12 +259,12 @@
 /* Begin PBXTargetDependency section */
 		AAB5208F2E5B13B500E9AE71 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = AAB5207D2E5B13B400E9AE71 /* AiBaBy */;
+			target = AAB5207D2E5B13B400E9AE71 /* Moments */;
 			targetProxy = AAB5208E2E5B13B500E9AE71 /* PBXContainerItemProxy */;
 		};
 		AAB520992E5B13B500E9AE71 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = AAB5207D2E5B13B400E9AE71 /* AiBaBy */;
+			target = AAB5207D2E5B13B400E9AE71 /* Moments */;
 			targetProxy = AAB520982E5B13B500E9AE71 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -396,14 +396,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Moments/Moments.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NYS89H56PL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "AiBaBy需要访问相机来拍照";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "AiBaBy需要保存照片到相册";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "AiBaBy需要访问相册来选择照片";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Moments需要访问相机来拍照";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Moments需要保存照片到相册";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Moments需要访问相册来选择照片";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -432,15 +433,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = AiBaBy/AiBaByRelease.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Moments/MomentsRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NYS89H56PL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "AiBaBy需要访问相机来拍照";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "AiBaBy需要保存照片到相册";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "AiBaBy需要访问相册来选择照片";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Moments需要访问相机来拍照";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Moments需要保存照片到相册";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Moments需要访问相册来选择照片";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -474,12 +475,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.han.AiBaByTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.han.MomentsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AiBaBy.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AiBaBy";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Moments.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Moments";
 			};
 			name = Debug;
 		};
@@ -493,12 +494,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.han.AiBaByTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.han.MomentsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AiBaBy.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AiBaBy";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Moments.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Moments";
 			};
 			name = Release;
 		};
@@ -510,12 +511,12 @@
 				DEVELOPMENT_TEAM = NYS89H56PL;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.han.AiBaByUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.han.MomentsUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = AiBaBy;
+				TEST_TARGET_NAME = Moments;
 			};
 			name = Debug;
 		};
@@ -527,19 +528,19 @@
 				DEVELOPMENT_TEAM = NYS89H56PL;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.han.AiBaByUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.han.MomentsUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = AiBaBy;
+				TEST_TARGET_NAME = Moments;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		AAB520792E5B13B400E9AE71 /* Build configuration list for PBXProject "AiBaBy" */ = {
+		AAB520792E5B13B400E9AE71 /* Build configuration list for PBXProject "Moments" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AAB5209F2E5B13B500E9AE71 /* Debug */,
@@ -548,7 +549,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AAB520A12E5B13B500E9AE71 /* Build configuration list for PBXNativeTarget "AiBaBy" */ = {
+		AAB520A12E5B13B500E9AE71 /* Build configuration list for PBXNativeTarget "Moments" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AAB520A22E5B13B500E9AE71 /* Debug */,
@@ -557,7 +558,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AAB520A42E5B13B500E9AE71 /* Build configuration list for PBXNativeTarget "AiBaByTests" */ = {
+		AAB520A42E5B13B500E9AE71 /* Build configuration list for PBXNativeTarget "MomentsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AAB520A52E5B13B500E9AE71 /* Debug */,
@@ -566,7 +567,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AAB520A72E5B13B500E9AE71 /* Build configuration list for PBXNativeTarget "AiBaByUITests" */ = {
+		AAB520A72E5B13B500E9AE71 /* Build configuration list for PBXNativeTarget "MomentsUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AAB520A82E5B13B500E9AE71 /* Debug */,

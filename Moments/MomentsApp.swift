@@ -1,6 +1,6 @@
 //
-//  AiBaByApp.swift
-//  AiBaBy
+//  MomentsApp.swift
+//  Moments
 //
 //  Created by han han on 2025/8/24.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct AiBaByApp: App {
+struct MomentsApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Baby.self,

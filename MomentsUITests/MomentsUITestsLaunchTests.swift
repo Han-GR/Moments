@@ -1,13 +1,13 @@
 //
-//  AiBaByUITestsLaunchTests.swift
-//  AiBaByUITests
+//  MomentsUITestsLaunchTests.swift
+//  MomentsUITests
 //
 //  Created by han han on 2025/8/24.
 //
 
 import XCTest
 
-final class AiBaByUITestsLaunchTests: XCTestCase {
+final class MomentsUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

@@ -74,27 +74,27 @@
 ### 核心导航层
 | 页面/视图名称 | 用途 | 核心功能 | 技术实现 | 导航/用户流程 | 文件路径 |
 |:--------:|:----:|:--------:|:--------:|:--------:|:--------:|
-| 应用入口 | 应用生命周期管理 | 初始化Swift Data容器，设置全局环境 | SwiftUI App, Swift Data | 应用启动入口点 | `AiBaBy/AiBaByApp.swift` |
-| 主标签视图 | 底部标签导航容器 | 管理主要功能模块的标签切换 | SwiftUI TabView | 主导航容器，包含所有主要页面 | `AiBaBy/Views/MainTabView.swift` |
+| 应用入口 | 应用生命周期管理 | 初始化Swift Data容器，设置全局环境 | SwiftUI App, Swift Data | 应用启动入口点 | `Moments/MomentsApp.swift` |
+| 主标签视图 | 底部标签导航容器 | 管理主要功能模块的标签切换 | SwiftUI TabView | 主导航容器，包含所有主要页面 | `Moments/Views/MainTabView.swift` |
 
 ### 档案管理模块
 | 页面/视图名称 | 用途 | 核心功能 | 技术实现 | 导航/用户流程 | 文件路径 |
 |:--------:|:----:|:--------:|:--------:|:--------:|:--------:|
-| 首页 | 展示所有档案 | 网格/列表展示，搜索筛选，快速添加 | SwiftUI List/LazyVGrid, Swift Data | 标签栏首页，点击卡片进入详情 | `AiBaBy/Views/HomeView.swift` |
-| 详情页 | 档案详细信息展示 | 照片轮播，基本信息，生活记录预览 | SwiftUI ScrollView, Swift Data | 从首页进入，可跳转编辑和记事 | `AiBaBy/Views/BabyDetailView.swift` |
-| 编辑页 | 添加/编辑档案 | 照片选择，信息表单，数据验证 | SwiftUI Form, PhotosPicker | 从详情页或首页添加按钮进入 | `AiBaBy/Views/BabyEditView.swift` |
+| 首页 | 展示所有档案 | 网格/列表展示，搜索筛选，快速添加 | SwiftUI List/LazyVGrid, Swift Data | 标签栏首页，点击卡片进入详情 | `Moments/Views/HomeView.swift` |
+| 详情页 | 档案详细信息展示 | 照片轮播，基本信息，生活记录预览 | SwiftUI ScrollView, Swift Data | 从首页进入，可跳转编辑和记事 | `Moments/Views/BabyDetailView.swift` |
+| 编辑页 | 添加/编辑档案 | 照片选择，信息表单，数据验证 | SwiftUI Form, PhotosPicker | 从详情页或首页添加按钮进入 | `Moments/Views/BabyEditView.swift` |
 
 ### 生活记录模块
 | 页面/视图名称 | 用途 | 核心功能 | 技术实现 | 导航/用户流程 | 文件路径 |
 |:--------:|:----:|:--------:|:--------:|:--------:|:--------:|
-| 记事列表 | 展示所有生活记录 | 时间线展示，分类筛选，搜索功能 | SwiftUI List, Swift Data | 从标签栏或详情页进入 | `AiBaBy/Views/MomentsView.swift` |
-| 记事详情页 | 单条记录详细展示 | 图文详情，时间信息，关联档案 | SwiftUI ScrollView | 从记事列表点击进入 | `AiBaBy/Views/MomentDetailView.swift` |
-| 记事编辑页 | 添加/编辑生活记录 | 多图上传，富文本编辑，标签管理 | SwiftUI Form, PhotosPicker | 从记事详情或列表添加按钮进入 | `AiBaBy/Views/MomentEditView.swift` |
+| 记事列表 | 展示所有生活记录 | 时间线展示，分类筛选，搜索功能 | SwiftUI List, Swift Data | 从标签栏或详情页进入 | `Moments/Views/MomentsView.swift` |
+| 记事详情页 | 单条记录详细展示 | 图文详情，时间信息，关联档案 | SwiftUI ScrollView | 从记事列表点击进入 | `Moments/Views/MomentDetailView.swift` |
+| 记事编辑页 | 添加/编辑生活记录 | 多图上传，富文本编辑，标签管理 | SwiftUI Form, PhotosPicker | 从记事详情或列表添加按钮进入 | `Moments/Views/MomentEditView.swift` |
 
 ### 系统功能模块
 | 页面/视图名称 | 用途 | 核心功能 | 技术实现 | 导航/用户流程 | 文件路径 |
 |:--------:|:----:|:--------:|:--------:|:--------:|:--------:|
-| 设置页 | 应用设置中心 | 主题切换，数据备份，通知设置，隐私管理 | SwiftUI Form, UserDefaults | 从标签栏或首页设置按钮进入 | `AiBaBy/Views/SettingsView.swift` |
+| 设置页 | 应用设置中心 | 主题切换，数据备份，通知设置，隐私管理 | SwiftUI Form, UserDefaults | 从标签栏或首页设置按钮进入 | `Moments/Views/SettingsView.swift` |
 
 ## 🗄️ 数据模型
 
@@ -187,9 +187,9 @@ Group (分组管理)
 ## 项目结构
 
 ```
-AiBaBy/
-├── AiBaBy/
-│   ├── AiBaByApp.swift          # 应用入口
+Moments/
+├── Moments/
+│   ├── MomentsApp.swift          # 应用入口
 │   ├── Views/                   # 视图文件夹
 │   │   ├── MainTabView.swift    # 主标签导航
 │   │   ├── HomeView.swift       # 主页
@@ -209,8 +209,8 @@ AiBaBy/
 │   │   └── AppColors.swift      # 颜色主题
 │   ├── Extensions/              # 扩展文件夹
 │   └── Assets.xcassets/         # 资源文件
-├── AiBaByTests/                 # 单元测试
-├── AiBaByUITests/               # UI测试
+├── MomentsTests/                 # 单元测试
+├── MomentsUITests/               # UI测试
 └── README.md                    # 项目说明
 ```
 
