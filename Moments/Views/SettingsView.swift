@@ -1,6 +1,6 @@
 //
 //  SettingsView.swift
-//  Moments
+//  每事每刻
 //
 //  Created by han han on 2025/8/24.
 //
@@ -31,7 +31,7 @@ struct SettingsView: View {
                         .clipShape(Circle())
                     
                     VStack(alignment: .leading) {
-                        Text("Moments")
+                        Text("每事每刻")
                             .font(.headline)
                         Text("版本 \(appVersion)")
                             .font(.caption)
@@ -140,7 +140,7 @@ struct AboutView: View {
                     .padding(20)
                     .clipShape(Circle())
                 
-                Text("Moments")
+                Text("每事每刻")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 
@@ -152,7 +152,7 @@ struct AboutView: View {
                     .frame(height: 30)
                 
                 VStack(alignment: .leading, spacing: 15) {
-                    Text("Moments是一款专为记录和管理您的物品而设计的应用。您可以在这里记录与您有关的任何事物,不要错过任何瞬间。")
+                    Text("每事每刻是一款专为记录和管理您的物品而设计的应用。您可以在这里记录与您有关的任何事物,不要错过任何瞬间。")
                     
                     Text("功能特点：")
                         .fontWeight(.bold)
@@ -175,7 +175,7 @@ struct AboutView: View {
                     .foregroundColor(.secondary)
             }
             .padding()
-            .navigationTitle("关于Moments")
+            .navigationTitle("关于每事每刻")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
