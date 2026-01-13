@@ -12,12 +12,16 @@ import UIKit
 struct MomentDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("isWipingData") private var isWipingData = false
     
     let moment: Moment
     @State private var isEditing = false
     @State private var showDeleteConfirmation = false
     
     var body: some View {
+        if isWipingData {
+            ContentUnavailableView("数据已清理", systemImage: "trash", description: Text("该内容已被删除"))
+        } else {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // 物品信息
@@ -100,6 +104,7 @@ struct MomentDetailView: View {
             }
         } message: {
             Text("确定要删除这条生活瞬间吗？此操作无法撤销。")
+        }
         }
     }
     

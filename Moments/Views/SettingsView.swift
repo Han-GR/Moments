@@ -13,6 +13,7 @@ struct SettingsView: View {
     @Query private var babies: [Baby]
     @Query private var moments: [Moment]
     @Query private var groups: [Group]
+    @AppStorage("isWipingData") private var isWipingData = false
     
     @State private var showingDeleteAllConfirmation = false
     @State private var showingAbout = false
@@ -103,18 +104,25 @@ struct SettingsView: View {
     }
     
     private func deleteAllData() {
+        isWipingData = true
+        
+        // 创建快照，避免在迭代过程中 Query 动态变化导致的访问问题
+        let momentsToDelete = Array(moments)
+        let babiesToDelete = Array(babies)
+        let groupsToDelete = Array(groups)
+        
         // 先删除所有瞬间
-        for moment in moments {
+        for moment in momentsToDelete {
             modelContext.delete(moment)
         }
         
         // 再删除所有物品
-        for baby in babies {
+        for baby in babiesToDelete {
             modelContext.delete(baby)
         }
 
         // 最后删除所有分组
-        for group in groups {
+        for group in groupsToDelete {
             modelContext.delete(group)
         }
         
@@ -124,6 +132,14 @@ struct SettingsView: View {
         } catch {
                 // 删除失败，静默处理
             }
+        
+        // 清空本地所有媒体文件（原图与缩略图）
+        MediaStore.deleteAllImages()
+        
+        // 略微延迟，等待视图响应数据变化，避免其他 Tab 在删除瞬间读取已删除对象属性
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            isWipingData = false
+        }
     }
 }
 

@@ -15,6 +15,7 @@ struct BabyAvatarView: View {
     let showBorder: Bool
     let borderColor: Color
     let borderWidth: CGFloat
+    @AppStorage("isWipingData") private var isWipingData = false
     
     init(
         baby: Baby?,
@@ -32,7 +33,16 @@ struct BabyAvatarView: View {
     
     var body: some View {
         ZStack {
-            if let baby = baby {
+            if isWipingData {
+                Circle()
+                    .fill(AppColors.lightGrayBackground)
+                    .frame(width: size, height: size)
+                    .overlay(
+                        Image(systemName: "bubbles.and.sparkles")
+                            .foregroundColor(.secondary)
+                            .font(.system(size: size * 0.4))
+                    )
+            } else if let baby = baby {
                 if let path = baby.photoPath, let uiImage = MediaStore.loadImage(from: path, preferThumbnail: true) {
                     Image(uiImage: uiImage)
                         .resizable()

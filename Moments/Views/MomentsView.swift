@@ -14,6 +14,7 @@ struct MomentsView: View {
     @Query private var allMoments: [Moment]
     @State private var selectedBaby: Baby?
     @State private var isAddingMoment = false
+    @AppStorage("isWipingData") private var isWipingData = false
     
     init(selectedBaby: Baby? = nil) {
         self._selectedBaby = State(initialValue: selectedBaby)
@@ -43,120 +44,39 @@ struct MomentsView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                // 物品选择器
-                if !babies.isEmpty {
-                    ScrollViewReader { proxy in
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 15) {
-                                Button(action: { selectedBaby = nil }) {
-                                    VStack {
-                                        Image(systemName: "rectangle.grid.2x2.fill")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: 30, height: 30)
-                                            .padding(10)
-                                            .background(selectedBaby == nil ? AppColors.selectedBlue : AppColors.lightGrayBackground)
-                                            .clipShape(Circle())
-                                            .foregroundColor(.white)
-                                        
-                                        Text("全部")
-                                            .font(.caption)
-                                    }
-                                }
-                                .id("all")
-                                
-                                // 自由瞬间选项
-                                Button(action: { 
-                                    let unboundBaby = Baby(name: "自由瞬间", birthDate: nil, notes: "")
-                                    unboundBaby.id = UUID(uuidString: "00000000-0000-0000-0000-000000000000") ?? UUID()
-                                    selectedBaby = unboundBaby
-                                }) {
-                                    VStack {
-                                        Image(systemName: "bubbles.and.sparkles")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: 30, height: 30)
-                                            .padding(10)
-                                            .background(selectedBaby?.id.uuidString == "00000000-0000-0000-0000-000000000000" ? AppColors.selectedBlue : AppColors.lightGrayBackground)
-                                            .clipShape(Circle())
-                                            .foregroundColor(.white)
-                                        
-                                        Text("自由瞬间")
-                                            .font(.caption)
-                                    }
-                                }
-                                .id("unbound")
-                                
-                                ForEach(babies) { baby in
-                                    Button(action: { selectedBaby = baby }) {
-                                        VStack {
-                                            BabyAvatarView.large(
-                                                baby: baby,
-                                                showBorder: true,
-                                                borderColor: selectedBaby?.id == baby.id ? AppColors.selectedBlue : AppColors.strokeClear
-                                            )
-                                            
-                                            Text(baby.name)
-                                                .font(.caption)
-                                                .lineLimit(1)
-                                        }
-                                        .frame(width: 60)
-                                    }
-                                    .id(baby.id)
-                                }
-                            }
-                            .padding(.horizontal)
-                        }
-                        .onAppear {
-                            if let selectedBaby = selectedBaby {
-                                withAnimation(.easeInOut(duration: 0.5)) {
-                                    proxy.scrollTo(selectedBaby.id, anchor: .center)
-                                }
-                            }
-                        }
-                        .onChange(of: selectedBaby) { _, newValue in
-                            if let newBaby = newValue {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    if newBaby.id.uuidString == "00000000-0000-0000-0000-000000000000" {
-                                        proxy.scrollTo("unbound", anchor: .center)
-                                    } else {
-                                        proxy.scrollTo(newBaby.id, anchor: .center)
-                                    }
-                                }
-                            } else {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    proxy.scrollTo("all", anchor: .center)
-                                }
-                            }
-                        }
-                    }
-                    .padding(.vertical, 10)
-                    .background(Color(.secondarySystemBackground))
-                }
-                
-                if moments.isEmpty {
-                    ContentUnavailableView("暂无生活瞬间", systemImage: "book.closed", description: Text("点击添加按钮记录物品的生活点滴"))
+                if isWipingData {
+                    ContentUnavailableView("正在清理数据", systemImage: "trash", description: Text("请稍候…"))
                 } else {
-                    List {
-                        ForEach(moments) { moment in
-                            NavigationLink(destination: MomentDetailView(moment: moment)) {
-                                MomentListItem(moment: moment)
-                            }
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button("删除", role: .destructive) {
-                                    deleteMoment(moment)
+                    if !babies.isEmpty {
+                        BabySelectorView(babies: babies, selectedBaby: $selectedBaby)
+                    }
+                    
+                    if moments.isEmpty {
+                        ContentUnavailableView("暂无生活瞬间", systemImage: "book.closed", description: Text("点击添加按钮记录物品的生活点滴"))
+                    } else {
+                        List {
+                            ForEach(moments) { moment in
+                                NavigationLink(destination: MomentDetailView(moment: moment)) {
+                                    MomentListItem(moment: moment)
+                                }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button("删除", role: .destructive) {
+                                        deleteMoment(moment)
+                                    }
                                 }
                             }
                         }
+                        .listStyle(.plain)
                     }
-                    .listStyle(.plain)
                 }
             }
             .navigationTitle("生活瞬间")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        isAddingMoment = true
+                        if !isWipingData {
+                            isAddingMoment = true
+                        }
                     }) {
                         Label("添加瞬间", systemImage: "plus")
                     }
@@ -167,8 +87,105 @@ struct MomentsView: View {
                     MomentEditView(baby: selectedBaby)
                 }
             }
-
         }
+    }
+}
+
+struct BabySelectorView: View {
+    let babies: [Baby]
+    @Binding var selectedBaby: Baby?
+    
+    var body: some View {
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 15) {
+                    Button(action: {
+                        selectedBaby = nil
+                    }) {
+                        VStack {
+                            Image(systemName: "rectangle.grid.2x2.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 30, height: 30)
+                                .padding(10)
+                                .background(selectedBaby == nil ? AppColors.selectedBlue : AppColors.lightGrayBackground)
+                                .clipShape(Circle())
+                                .foregroundColor(.white)
+                            
+                            Text("全部")
+                                .font(.caption)
+                        }
+                    }
+                    .id("all")
+                    
+                    Button(action: {
+                        let unboundBaby = Baby(name: "自由瞬间", birthDate: nil, notes: "")
+                        unboundBaby.id = UUID(uuidString: "00000000-0000-0000-0000-000000000000") ?? UUID()
+                        selectedBaby = unboundBaby
+                    }) {
+                        VStack {
+                            Image(systemName: "bubbles.and.sparkles")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 30, height: 30)
+                                .padding(10)
+                                .background(selectedBaby?.id.uuidString == "00000000-0000-0000-0000-000000000000" ? AppColors.selectedBlue : AppColors.lightGrayBackground)
+                                .clipShape(Circle())
+                                .foregroundColor(.white)
+                            
+                            Text("自由瞬间")
+                                .font(.caption)
+                        }
+                    }
+                    .id("unbound")
+                    
+                    ForEach(babies) { baby in
+                        Button(action: {
+                            selectedBaby = baby
+                        }) {
+                            VStack {
+                                BabyAvatarView.large(
+                                    baby: baby,
+                                    showBorder: true,
+                                    borderColor: selectedBaby?.id == baby.id ? AppColors.selectedBlue : AppColors.strokeClear
+                                )
+                                
+                                Text(baby.name)
+                                    .font(.caption)
+                                    .lineLimit(1)
+                            }
+                            .frame(width: 60)
+                        }
+                        .id(baby.id)
+                    }
+                }
+                .padding(.horizontal)
+            }
+            .onAppear {
+                if let selectedBaby = selectedBaby {
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        proxy.scrollTo(selectedBaby.id, anchor: .center)
+                    }
+                }
+            }
+            .onChange(of: selectedBaby) { _, newValue in
+                if let newBaby = newValue {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        if newBaby.id.uuidString == "00000000-0000-0000-0000-000000000000" {
+                            proxy.scrollTo("unbound", anchor: .center)
+                        } else {
+                            proxy.scrollTo(newBaby.id, anchor: .center)
+                        }
+                    }
+                } else {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        proxy.scrollTo("all", anchor: .center)
+                    }
+                }
+            }
+        }
+        .padding(.vertical, 10)
+        .background(Color(.secondarySystemBackground))
     }
 }
 

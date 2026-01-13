@@ -11,6 +11,20 @@ struct MediaStore {
         return dir
     }
     
+    static func deleteAllImages() {
+        let dir = imagesDirectoryURL()
+        if FileManager.default.fileExists(atPath: dir.path) {
+            do {
+                let contents = try FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)
+                for url in contents {
+                    try? FileManager.default.removeItem(at: url)
+                }
+            } catch {
+                // ignore
+            }
+        }
+    }
+
     static func saveImage(_ image: UIImage, filename: String? = nil, quality: CGFloat = 0.85) -> String? {
         let name = filename ?? "\(UUID().uuidString).jpg"
         let url = imagesDirectoryURL().appendingPathComponent(name)
