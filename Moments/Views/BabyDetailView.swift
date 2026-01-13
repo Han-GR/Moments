@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import UIKit
 
 struct BabyDetailView: View {
     @Environment(\.modelContext) private var modelContext
@@ -33,7 +34,7 @@ struct BabyDetailView: View {
                     let iconSize: CGFloat = isIPad ? 140 : 100
                     let cornerRadius: CGFloat = isIPad ? 25 : 20
                     
-                    if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
+                    if let path = baby.photoPath, let uiImage = MediaStore.loadImage(from: path) {
                         Image(uiImage: uiImage)
                             .resizable()
                             .aspectRatio(contentMode: .fit)

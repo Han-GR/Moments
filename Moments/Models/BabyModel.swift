@@ -14,18 +14,18 @@ final class Baby {
     var id: UUID
     var name: String
     var birthDate: Date?
-    var photo: Data?
+    var photoPath: String?
     var createdAt: Date
     var notes: String
     
     @Relationship var moments: [Moment]? = []
     @Relationship(inverse: \Group.babies) var group: Group?
     
-    init(name: String, birthDate: Date? = nil, photo: Data? = nil, notes: String = "") {
+    init(name: String, birthDate: Date? = nil, photoPath: String? = nil, notes: String = "") {
         self.id = UUID()
         self.name = name
         self.birthDate = birthDate
-        self.photo = photo
+        self.photoPath = photoPath
         self.createdAt = Date()
         self.notes = notes
         self.moments = []
@@ -37,15 +37,15 @@ final class Moment {
     var id: UUID
     var content: String
     var date: Date
-    var photos: [Data]?
+    var photoPaths: [String]
     
     @Relationship(inverse: \Baby.moments) var baby: Baby?
     
-    init(content: String, date: Date = Date(), photos: [Data]? = nil) {
+    init(content: String, date: Date = Date(), photoPaths: [String] = []) {
         self.id = UUID()
         self.content = content
         self.date = date
-        self.photos = photos
+        self.photoPaths = photoPaths
     }
 }
 

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import UIKit
 
 struct MomentEditView: View {
     @Environment(\.modelContext) private var modelContext
@@ -23,7 +24,6 @@ struct MomentEditView: View {
     @State private var content = ""
     @State private var date = Date()
     @State private var selectedBaby: Baby?
-    @State private var selectedPhotosData: [Data] = []
     @State private var selectedImages: [UIImage] = []
     @State private var isProcessingImages = false
     @State private var isShowingBabyPicker = false
@@ -74,42 +74,41 @@ struct MomentEditView: View {
             
             Section("照片") {
                 Button(action: {
-                    if selectedPhotosData.count < 9 {
+                    if selectedImages.count < 9 {
                         isShowingPhotoPicker = true
                     }
                 }) {
-                    Label(selectedPhotosData.count >= 9 ? "已达到最大数量(9张)" : "添加照片 (\(selectedPhotosData.count)/9)", systemImage: "plus.circle.fill")
+                    Label(selectedImages.count >= 9 ? "已达到最大数量(9张)" : "添加照片 (\(selectedImages.count)/9)", systemImage: "plus.circle.fill")
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .foregroundColor(selectedPhotosData.count >= 9 ? .gray : .blue)
+                        .foregroundColor(selectedImages.count >= 9 ? .gray : .blue)
                         .cornerRadius(8)
                 }
-                .disabled(selectedPhotosData.count >= 9)
+                .disabled(selectedImages.count >= 9)
                 
-                if !selectedPhotosData.isEmpty {
+                if !selectedImages.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: isIPad ? 15 : 10) {
-                            ForEach(0..<selectedPhotosData.count, id: \.self) { index in
-                                if let uiImage = UIImage(data: selectedPhotosData[index]) {
-                                    let imageSize: CGFloat = isIPad ? 140 : 100
-                                    let cornerRadius: CGFloat = isIPad ? 12 : 8
+                            ForEach(0..<selectedImages.count, id: \.self) { index in
+                                let uiImage = selectedImages[index]
+                                let imageSize: CGFloat = isIPad ? 140 : 100
+                                let cornerRadius: CGFloat = isIPad ? 12 : 8
+                                
+                                ZStack(alignment: .topTrailing) {
+                                    Image(uiImage: uiImage)
+                                        .resizable()
+                                        .aspectRatio(1, contentMode: .fill)
+                                        .frame(width: imageSize, height: imageSize)
+                                        .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                                     
-                                    ZStack(alignment: .topTrailing) {
-                                        Image(uiImage: uiImage)
-                                            .resizable()
-                                            .aspectRatio(1, contentMode: .fill)
-                                            .frame(width: imageSize, height: imageSize)
-                                            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-                                        
-                                        Button(action: {
-                                            selectedPhotosData.remove(at: index)
-                                        }) {
-                                            Image(systemName: "xmark.circle.fill")
-                                                .foregroundColor(.white)
-                                                .background(AppColors.blackOverlay)
-                                                .clipShape(Circle())
-                                                .padding(isIPad ? 6 : 4)
-                                        }
+                                    Button(action: {
+                                        selectedImages.remove(at: index)
+                                    }) {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .foregroundColor(.white)
+                                            .background(AppColors.blackOverlay)
+                                            .clipShape(Circle())
+                                            .padding(isIPad ? 6 : 4)
                                     }
                                 }
                             }
@@ -132,7 +131,7 @@ struct MomentEditView: View {
                 Button("保存") {
                     saveMoment()
                 }
-                .disabled(content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && selectedPhotosData.isEmpty)
+                .disabled(content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && selectedImages.isEmpty)
             }
         }
         .onAppear {
@@ -141,8 +140,8 @@ struct MomentEditView: View {
                 content = moment.content
                 date = moment.date
                 selectedBaby = moment.baby
-                if let photos = moment.photos {
-                    selectedPhotosData = photos
+                if !moment.photoPaths.isEmpty {
+                    selectedImages = moment.photoPaths.compactMap { MediaStore.loadImage(from: $0) }
                 }
             } else {
                 // 新建模式：如果传入了特定物品则选择，否则保持为nil
@@ -153,34 +152,7 @@ struct MomentEditView: View {
             }
         }
 
-        .onChange(of: selectedImages) { _, newImages in
-            // 只有当有新图片且不在处理中时才处理
-            if !newImages.isEmpty && !isProcessingImages {
-                isProcessingImages = true
-                
-                // 延迟处理以等待所有图片加载完成
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    // 遍历所有选中的图片并添加到数据数组，但限制总数不超过9张
-                    for image in self.selectedImages {
-                        // 检查是否已达到最大数量限制
-                        if self.selectedPhotosData.count >= 9 {
-                            break
-                        }
-                        
-                        if let data = image.jpegData(compressionQuality: 0.8) {
-                            // 检查是否已存在相同的图片数据，避免重复添加
-                            if !self.selectedPhotosData.contains(data) {
-                                self.selectedPhotosData.append(data)
-                            }
-                        }
-                    }
-                    
-                    // 清空临时图片数组并重置处理状态
-                    self.selectedImages.removeAll()
-                    self.isProcessingImages = false
-                }
-            }
-        }
+        .onChange(of: selectedImages) { _, _ in }
         .confirmationDialog("选择照片", isPresented: $isShowingPhotoPicker, titleVisibility: .visible) {
             Button("拍照") {
                 if UIImagePickerController.isSourceTypeAvailable(.camera) {
@@ -285,14 +257,28 @@ struct MomentEditView: View {
             existingMoment.content = content
             existingMoment.date = date
             existingMoment.baby = selectedBaby // 可以为nil
-            existingMoment.photos = selectedPhotosData.isEmpty ? nil : selectedPhotosData
+            if selectedImages.isEmpty {
+                existingMoment.photoPaths = existingMoment.photoPaths
+            } else {
+                let paths = selectedImages.compactMap { img -> String? in
+                    let saved = MediaStore.saveImage(img, quality: 0.85)
+                    if let name = saved {
+                        _ = MediaStore.saveThumbnail(of: img, basedOn: name)
+                    }
+                    return saved
+                }
+                existingMoment.photoPaths = paths
+            }
         } else {
             // 新建模式：创建新瞬间
-            let newMoment = Moment(
-                content: content,
-                date: date,
-                photos: selectedPhotosData.isEmpty ? nil : selectedPhotosData
-            )
+            let paths = selectedImages.compactMap { img -> String? in
+                let saved = MediaStore.saveImage(img, quality: 0.85)
+                if let name = saved {
+                    _ = MediaStore.saveThumbnail(of: img, basedOn: name)
+                }
+                return saved
+            }
+            let newMoment = Moment(content: content, date: date, photoPaths: paths)
             
             // 设置关系（可以为nil）
             newMoment.baby = selectedBaby

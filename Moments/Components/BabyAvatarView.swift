@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import UIKit
+ 
 
 struct BabyAvatarView: View {
     let baby: Baby?
@@ -31,7 +33,7 @@ struct BabyAvatarView: View {
     var body: some View {
         ZStack {
             if let baby = baby {
-                if let photoData = baby.photo, let uiImage = UIImage(data: photoData) {
+                if let path = baby.photoPath, let uiImage = MediaStore.loadImage(from: path, preferThumbnail: true) {
                     Image(uiImage: uiImage)
                         .resizable()
                         .aspectRatio(1, contentMode: .fill)

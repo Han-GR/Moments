@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import UIKit
 
 struct BabyEditView: View {
     @Environment(\.modelContext) private var modelContext
@@ -16,7 +17,7 @@ struct BabyEditView: View {
     @State private var name = ""
     @State private var birthDate: Date? = nil
     @State private var notes = ""
-    @State private var photoData: Data? = nil
+    @State private var photoPath: String? = nil
     @State private var selectedImage: UIImage? = nil
     @State private var showDatePicker = false
     @State private var isShowingPhotoPicker = false
@@ -43,7 +44,13 @@ struct BabyEditView: View {
                     let iconSize: CGFloat = isIPad ? 120 : 80
                     let cornerRadius: CGFloat = isIPad ? 20 : 15
                     
-                    if let photoData = photoData, let uiImage = UIImage(data: photoData) {
+                    if let selectedImage = selectedImage {
+                        Image(uiImage: selectedImage)
+                            .resizable()
+                            .aspectRatio(1, contentMode: .fill)
+                            .frame(width: photoSize, height: photoSize)
+                            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+                    } else if let path = photoPath, let uiImage = MediaStore.loadImage(from: path, preferThumbnail: true) {
                         Image(uiImage: uiImage)
                             .resizable()
                             .aspectRatio(1, contentMode: .fill)
@@ -199,17 +206,12 @@ struct BabyEditView: View {
                 name = baby.name
                 birthDate = baby.birthDate
                 notes = baby.notes
-                photoData = baby.photo
+                photoPath = baby.photoPath
                 selectedGroup = baby.group
             }
         }
 
-        .onChange(of: selectedImage) { _, newImage in
-            if let image = newImage {
-                photoData = image.jpegData(compressionQuality: 0.8)
-                selectedImage = nil
-            }
-        }
+        .onChange(of: selectedImage) { _, _ in }
         .confirmationDialog("选择照片", isPresented: $isShowingPhotoPicker, titleVisibility: .visible) {
             Button("拍照") {
                 if UIImagePickerController.isSourceTypeAvailable(.camera) {
@@ -265,11 +267,23 @@ struct BabyEditView: View {
             baby.name = name
             baby.birthDate = birthDate
             baby.notes = notes
-            baby.photo = photoData
             baby.group = selectedGroup
+            if let selectedImage = selectedImage {
+                if let filename = MediaStore.saveImage(selectedImage, quality: 0.85) {
+                    _ = MediaStore.saveThumbnail(of: selectedImage, basedOn: filename)
+                    baby.photoPath = filename
+                }
+            }
         } else {
             // 创建新的物品
-            let newBaby = Baby(name: name, birthDate: birthDate, photo: photoData, notes: notes)
+            var finalPath: String? = nil
+            if let selectedImage = selectedImage {
+                finalPath = MediaStore.saveImage(selectedImage, quality: 0.85)
+                if let name = finalPath {
+                    _ = MediaStore.saveThumbnail(of: selectedImage, basedOn: name)
+                }
+            }
+            let newBaby = Baby(name: name, birthDate: birthDate, photoPath: finalPath, notes: notes)
             newBaby.group = selectedGroup
             modelContext.insert(newBaby)
         }
@@ -277,8 +291,8 @@ struct BabyEditView: View {
         do {
             try modelContext.save()
         } catch {
-            // 保存失败，静默处理
-        }
+                // 保存失败，静默处理
+            }
     }
 }
 

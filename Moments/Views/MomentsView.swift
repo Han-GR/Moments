@@ -203,28 +203,27 @@ struct MomentListItem: View {
                         .lineLimit(2)
                         .padding(.top, 2)
 
-                    // 照片预览
-                    if let photos = moment.photos, !photos.isEmpty {
+                    if !moment.photoPaths.isEmpty {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 8) {
-                                ForEach(0..<min(photos.count, 3), id: \.self) { index in
-                                    if let uiImage = UIImage(data: photos[index]) {
+                                ForEach(0..<min(moment.photoPaths.count, 3), id: \.self) { index in
+                                    if let uiImage = MediaStore.loadImage(from: moment.photoPaths[index], preferThumbnail: true) {
                                         Image(uiImage: uiImage)
                                             .resizable()
                                             .aspectRatio(1, contentMode: .fill)
                                             .frame(width: 80, height: 80)
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                         }
                         
-                        if photos.count > 3 {
+                        if moment.photoPaths.count > 3 {
                             ZStack {
                                 Rectangle()
                                     .fill(AppColors.grayBackground)
                                     .frame(width: 80, height: 80)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                                 
-                                Text("+\(photos.count - 3)")
+                                Text("+\(moment.photoPaths.count - 3)")
                                     .font(.title2)
                                     .fontWeight(.bold)
                                     .foregroundColor(.secondary)
