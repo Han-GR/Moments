@@ -89,7 +89,7 @@ struct MomentsView: View {
                 }
             }
             .navigationTitle("瞬间")
-            .searchable(text: $searchText, prompt: "搜索瞬间")
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "搜索瞬间")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {

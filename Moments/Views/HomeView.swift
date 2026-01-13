@@ -111,7 +111,7 @@ struct HomeView: View {
                 }
             }
             .navigationTitle("物品")
-            .searchable(text: $searchText, prompt: "搜索物品")
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "搜索物品")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { showingGroupManagement = true }) {
