@@ -27,7 +27,15 @@ struct ImagePicker: UIViewControllerRepresentable {
         } else {
             var config = PHPickerConfiguration()
             config.filter = .images
-            config.selectionLimit = allowsMultipleSelection ? 0 : 1
+            
+            if allowsMultipleSelection {
+                let maxSelection = 9
+                let currentCount = selectedImages.count
+                let remainingSlots = max(0, maxSelection - currentCount)
+                config.selectionLimit = remainingSlots > 0 ? remainingSlots : 1
+            } else {
+                config.selectionLimit = 1
+            }
             
             let picker = PHPickerViewController(configuration: config)
             picker.delegate = context.coordinator
@@ -53,11 +61,15 @@ struct ImagePicker: UIViewControllerRepresentable {
             var imageToSave: UIImage?
             
             if let editedImage = info[.editedImage] as? UIImage {
-                parent.selectedImages.append(editedImage)
-                imageToSave = editedImage
+                if parent.selectedImages.count < 9 {
+                    parent.selectedImages.append(editedImage)
+                    imageToSave = editedImage
+                }
             } else if let originalImage = info[.originalImage] as? UIImage {
-                parent.selectedImages.append(originalImage)
-                imageToSave = originalImage
+                if parent.selectedImages.count < 9 {
+                    parent.selectedImages.append(originalImage)
+                    imageToSave = originalImage
+                }
             }
             
             // 保存照片到相册（仅当使用相机拍照时）
@@ -76,11 +88,20 @@ struct ImagePicker: UIViewControllerRepresentable {
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             parent.presentationMode.wrappedValue.dismiss()
             
-            for result in results {
+            let maxSelection = 9
+            let currentCount = parent.selectedImages.count
+            let remainingSlots = max(0, maxSelection - currentCount)
+            guard remainingSlots > 0 else { return }
+            
+            let limitedResults = results.prefix(remainingSlots)
+            
+            for result in limitedResults {
                 result.itemProvider.loadObject(ofClass: UIImage.self) { image, error in
                     if let image = image as? UIImage {
                         DispatchQueue.main.async {
-                            self.parent.selectedImages.append(image)
+                            if self.parent.selectedImages.count < maxSelection {
+                                self.parent.selectedImages.append(image)
+                            }
                         }
                     }
                 }
