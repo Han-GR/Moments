@@ -15,6 +15,7 @@ struct MomentsView: View {
     @State private var selectedBaby: Baby?
     @State private var isAddingMoment = false
     @AppStorage("isWipingData") private var isWipingData = false
+    @State private var searchText = ""
     
     init(selectedBaby: Baby? = nil) {
         self._selectedBaby = State(initialValue: selectedBaby)
@@ -41,6 +42,21 @@ struct MomentsView: View {
         }
     }
     
+    var filteredMoments: [Moment] {
+        var result = moments
+        if !searchText.isEmpty {
+            let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !query.isEmpty {
+                result = result.filter { m in
+                    let contentHit = m.content.localizedCaseInsensitiveContains(query)
+                    let babyHit = m.baby?.name.localizedCaseInsensitiveContains(query) ?? false
+                    return contentHit || babyHit
+                }
+            }
+        }
+        return result
+    }
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -53,9 +69,11 @@ struct MomentsView: View {
                     
                     if moments.isEmpty {
                         ContentUnavailableView("", systemImage: "bubbles.and.sparkles", description: Text("点击加号添加您的第一个瞬间"))
+                    } else if filteredMoments.isEmpty {
+                        ContentUnavailableView("没有找到瞬间", systemImage: "magnifyingglass", description: Text("尝试调整搜索条件"))
                     } else {
                         List {
-                            ForEach(moments) { moment in
+                            ForEach(filteredMoments) { moment in
                                 NavigationLink(destination: MomentDetailView(moment: moment)) {
                                     MomentListItem(moment: moment)
                                 }
@@ -71,6 +89,7 @@ struct MomentsView: View {
                 }
             }
             .navigationTitle("瞬间")
+            .searchable(text: $searchText, prompt: "搜索瞬间")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
