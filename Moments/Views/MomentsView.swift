@@ -52,7 +52,7 @@ struct MomentsView: View {
                     }
                     
                     if moments.isEmpty {
-                        ContentUnavailableView("暂无生活瞬间", systemImage: "book.closed", description: Text("点击添加按钮记录物品的生活点滴"))
+                        ContentUnavailableView("", systemImage: "bubbles.and.sparkles", description: Text("点击加号添加您的第一个瞬间"))
                     } else {
                         List {
                             ForEach(moments) { moment in
@@ -70,7 +70,7 @@ struct MomentsView: View {
                     }
                 }
             }
-            .navigationTitle("生活瞬间")
+            .navigationTitle("瞬间")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {

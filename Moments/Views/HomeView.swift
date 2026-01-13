@@ -95,7 +95,7 @@ struct HomeView: View {
                 // 主内容区域
                 ZStack {
                     if babies.isEmpty {
-                        ContentUnavailableView("没有物品", systemImage: "bubbles.and.sparkles", description: Text("点击加号添加您的第一个物品"))
+                        ContentUnavailableView("", systemImage: "bubbles.and.sparkles", description: Text("点击加号添加您的第一个物品"))
                     } else if filteredBabies.isEmpty {
                         ContentUnavailableView("没有找到物品", systemImage: "magnifyingglass", description: Text("尝试调整搜索条件或分组筛选"))
                     } else {
@@ -110,7 +110,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .navigationTitle("我的物品")
+            .navigationTitle("物品")
             .searchable(text: $searchText, prompt: "搜索物品")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
