@@ -27,6 +27,7 @@ struct MomentsView: View {
     }
     
     var moments: [Moment] {
+        if isWipingData { return [] }
         if let selectedBaby = selectedBaby {
             if selectedBaby.id.uuidString == "00000000-0000-0000-0000-000000000000" {
                 // 显示自由瞬间
@@ -210,6 +211,7 @@ struct BabySelectorView: View {
 
 struct MomentListItem: View {
     let moment: Moment
+    @AppStorage("isWipingData") private var isWipingData = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -239,7 +241,7 @@ struct MomentListItem: View {
                         .lineLimit(2)
                         .padding(.top, 2)
 
-                    if !moment.photoPaths.isEmpty {
+                    if !isWipingData && !moment.photoPaths.isEmpty {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 8) {
                                 ForEach(0..<min(moment.photoPaths.count, 3), id: \.self) { index in

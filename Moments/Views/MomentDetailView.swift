@@ -117,8 +117,12 @@ struct MomentDetailView: View {
 struct PhotoGallery: View {
     let photoPaths: [String]
     @State private var selectedPhotoIndex: Int? = nil
+    @AppStorage("isWipingData") private var isWipingData = false
     
     var body: some View {
+        if isWipingData {
+            AppColors.clearColor
+        } else {
         GeometryReader { geometry in
             let screenWidth = geometry.size.width - 32 // 减去左右padding
             let isIPad = UIDevice.current.userInterfaceIdiom == .pad
@@ -152,6 +156,7 @@ struct PhotoGallery: View {
             if let index = selectedPhotoIndex {
                 PhotoDetailView(photoPaths: photoPaths, initialIndex: index)
             }
+        }
         }
     }
     
