@@ -247,11 +247,26 @@ struct MomentListItem: View {
                                 let limited = Array(items.prefix(3))
                                 ForEach(limited, id: \.id) { item in
                                     if let uiImage = MediaStore.loadImage(from: item.thumbnailPath ?? item.originalPath, preferThumbnail: true) {
-                                        Image(uiImage: uiImage)
-                                            .resizable()
-                                            .aspectRatio(1, contentMode: .fill)
-                                            .frame(width: 80, height: 80)
-                                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                                        ZStack(alignment: .center) {
+                                            Image(uiImage: uiImage)
+                                                .resizable()
+                                                .aspectRatio(1, contentMode: .fill)
+                                                .frame(width: 80, height: 80)
+                                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                            
+                                            if item.type == .video {
+                                                Image(systemName: "play.circle.fill")
+                                                    .foregroundColor(.white)
+                                                    .shadow(radius: 2)
+                                            } else if item.type == .livePhoto {
+                                                Image(systemName: "livephoto")
+                                                    .font(.caption)
+                                                    .foregroundColor(.white)
+                                                    .shadow(radius: 2)
+                                                    .padding(4)
+                                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                                            }
+                                        }
                             }
                         }
                         if let items = moment.mediaItems, items.count > 3 {

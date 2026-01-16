@@ -118,6 +118,7 @@ struct SettingsView: View {
         
         // 清空本地所有媒体文件（原图与缩略图）
         MediaStore.deleteAllImages()
+        MediaStore.deleteAllVideos()
         
         // 短暂延迟后恢复 UI
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {

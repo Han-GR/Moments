@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import UIKit
+import AVKit
 
 struct MomentDetailView: View {
     @Environment(\.modelContext) private var modelContext
@@ -131,8 +132,10 @@ struct PhotoGallery: View {
             let spacing: CGFloat = isIPad ? 12 : 8
             
             // 计算每行可以放置的图片数量
-            let itemsPerRow = max(2, Int(screenWidth / (minItemWidth + spacing)))
-            let actualItemWidth = (screenWidth - CGFloat(itemsPerRow - 1) * spacing) / CGFloat(itemsPerRow)
+            let safeWidth = max(screenWidth, minItemWidth * 2 + spacing)
+            let itemsPerRow = max(2, Int(safeWidth / (minItemWidth + spacing)))
+            let rawItemWidth = (safeWidth - CGFloat(itemsPerRow - 1) * spacing) / CGFloat(itemsPerRow)
+            let actualItemWidth = max(minItemWidth, rawItemWidth)
             let finalItemWidth = min(maxItemWidth, actualItemWidth)
             
             LazyVGrid(columns: Array(repeating: GridItem(.fixed(finalItemWidth), spacing: spacing), count: itemsPerRow), spacing: spacing) {
@@ -186,7 +189,10 @@ struct PhotoDetailView: View {
             TabView(selection: $currentIndex) {
                 ForEach(0..<mediaItems.count, id: \.self) { index in
                     let item = mediaItems[index]
-                    if let uiImage = MediaStore.loadImage(from: item.originalPath) {
+                    if item.type == .video {
+                        VideoPlayerItemView(url: MediaStore.videoURL(for: item.originalPath), isPlaying: currentIndex == index)
+                            .tag(index)
+                    } else if let uiImage = MediaStore.loadImage(from: item.originalPath) {
                         ZoomableScrollView(
                             onSwipeLeft: {
                                 withAnimation {

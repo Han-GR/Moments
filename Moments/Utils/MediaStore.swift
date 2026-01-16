@@ -1,10 +1,22 @@
 import Foundation
 import UIKit
+import AVFoundation
 
 struct MediaStore {
+    // MARK: - Image Management
     static func imagesDirectoryURL() -> URL {
         let base = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let dir = base.appendingPathComponent("Images", isDirectory: true)
+        if !FileManager.default.fileExists(atPath: dir.path) {
+            try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        }
+        return dir
+    }
+    
+    // MARK: - Video Management
+    static func videosDirectoryURL() -> URL {
+        let base = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let dir = base.appendingPathComponent("Videos", isDirectory: true)
         if !FileManager.default.fileExists(atPath: dir.path) {
             try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         }
@@ -70,7 +82,68 @@ struct MediaStore {
         } else if filename.hasSuffix(".png") {
             return filename.replacingOccurrences(of: ".png", with: "_thumb.jpg")
         } else {
-            return "\(filename)_thumb"
+            return "\(filename)_thumb.jpg"
         }
+    }
+    
+    // MARK: - Video Helpers
+    
+    static func saveVideo(from sourceURL: URL, filename: String? = nil) -> String? {
+        let name = filename ?? "\(UUID().uuidString).mov"
+        let destinationURL = videosDirectoryURL().appendingPathComponent(name)
+        
+        // If source is already there (unlikely but possible), return name
+        if sourceURL == destinationURL { return name }
+        
+        do {
+            if FileManager.default.fileExists(atPath: destinationURL.path) {
+                try FileManager.default.removeItem(at: destinationURL)
+            }
+            try FileManager.default.copyItem(at: sourceURL, to: destinationURL)
+            return name
+        } catch {
+            print("Failed to save video: \(error)")
+            return nil
+        }
+    }
+    
+    static func generateVideoThumbnail(for videoFilename: String) -> String? {
+        let videoURL = videosDirectoryURL().appendingPathComponent(videoFilename)
+        let asset = AVAsset(url: videoURL)
+        let imageGenerator = AVAssetImageGenerator(asset: asset)
+        imageGenerator.appliesPreferredTrackTransform = true
+        
+        do {
+            let time = CMTime(seconds: 0.0, preferredTimescale: 600) // First frame
+            let cgImage = try imageGenerator.copyCGImage(at: time, actualTime: nil)
+            let image = UIImage(cgImage: cgImage)
+            
+            // Generate thumbnail name using the same convention
+            let thumbName = thumbnailName(for: videoFilename)
+            // Save using existing image saving logic (which saves to Images directory)
+            // Note: saveImage saves to Images directory, which is what we want for thumbnails
+            return saveImage(image, filename: thumbName, quality: 0.6)
+        } catch {
+            print("Error generating thumbnail: \(error)")
+            return nil
+        }
+    }
+    
+    static func deleteAllVideos() {
+        let dir = videosDirectoryURL()
+        if FileManager.default.fileExists(atPath: dir.path) {
+            do {
+                let contents = try FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)
+                for url in contents {
+                    try? FileManager.default.removeItem(at: url)
+                }
+            } catch {
+                // ignore
+            }
+        }
+    }
+    
+    static func videoURL(for filename: String) -> URL {
+        return videosDirectoryURL().appendingPathComponent(filename)
     }
 }
