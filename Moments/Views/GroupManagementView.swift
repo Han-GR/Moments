@@ -157,7 +157,7 @@ struct AddGroupView: View {
                 }
             }
         }
-        .alert("分组名称重复", isPresented: $showingDuplicateAlert) {
+        .alert("分组名称已存在", isPresented: $showingDuplicateAlert) {
             Button("确定", role: .cancel) { }
         }
     }
@@ -265,7 +265,7 @@ struct EditGroupView: View {
                 }
             }
         }
-        .alert("分组名称重复", isPresented: $showingDuplicateAlert) {
+        .alert("分组名称已存在", isPresented: $showingDuplicateAlert) {
             Button("确定", role: .cancel) { }
         }
     }

@@ -249,10 +249,8 @@ struct BabyEditView: View {
         } message: {
             Text("此设备不支持相机功能")
         }
-        .alert("名字重复", isPresented: $showingDuplicateAlert) {
+        .alert("物品名字已存在", isPresented: $showingDuplicateAlert) {
             Button("确定", role: .cancel) { }
-        } message: {
-            Text("该物品名字已存在，请使用其他名字。")
         }
         .sheet(isPresented: $showingAddGroup) {
             AddGroupView { newGroup in

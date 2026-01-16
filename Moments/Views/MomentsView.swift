@@ -16,6 +16,7 @@ struct MomentsView: View {
     @State private var isAddingMoment = false
     @AppStorage("isWipingData") private var isWipingData = false
     @State private var searchText = ""
+    @State private var showUnboundOnly = false
     
     init(selectedBaby: Baby? = nil) {
         self._selectedBaby = State(initialValue: selectedBaby)
@@ -28,17 +29,11 @@ struct MomentsView: View {
     
     var moments: [Moment] {
         if isWipingData { return [] }
-        if let selectedBaby = selectedBaby {
-            if selectedBaby.id.uuidString == "00000000-0000-0000-0000-000000000000" {
-                // 显示自由瞬间
-                return allMoments.filter { $0.baby == nil }.sorted(by: { $0.date > $1.date })
-            } else if let moments = selectedBaby.moments {
-                return moments.sorted(by: { $0.date > $1.date })
-            } else {
-                return []
-            }
+        if showUnboundOnly {
+            return allMoments.filter { $0.baby == nil }.sorted(by: { $0.date > $1.date })
+        } else if let selectedBaby = selectedBaby {
+            return (selectedBaby.moments ?? []).sorted(by: { $0.date > $1.date })
         } else {
-            // 获取所有瞬间，包括没有绑定物品的瞬间，并按日期排序
             return allMoments.sorted(by: { $0.date > $1.date })
         }
     }
@@ -65,7 +60,7 @@ struct MomentsView: View {
                     ContentUnavailableView("正在清理数据", systemImage: "trash", description: Text("请稍候…"))
                 } else {
                     if !babies.isEmpty {
-                        BabySelectorView(babies: babies, selectedBaby: $selectedBaby)
+                        BabySelectorView(babies: babies, selectedBaby: $selectedBaby, showUnboundOnly: $showUnboundOnly)
                     }
                     
                     if moments.isEmpty {
@@ -104,7 +99,7 @@ struct MomentsView: View {
             }
             .sheet(isPresented: $isAddingMoment) {
                 NavigationStack {
-                    MomentEditView(baby: selectedBaby)
+                    MomentEditView(baby: showUnboundOnly ? nil : selectedBaby)
                 }
             }
         }
@@ -114,6 +109,7 @@ struct MomentsView: View {
 struct BabySelectorView: View {
     let babies: [Baby]
     @Binding var selectedBaby: Baby?
+    @Binding var showUnboundOnly: Bool
     
     var body: some View {
         ScrollViewReader { proxy in
@@ -121,6 +117,7 @@ struct BabySelectorView: View {
                 HStack(spacing: 15) {
                     Button(action: {
                         selectedBaby = nil
+                        showUnboundOnly = false
                     }) {
                         VStack {
                             Image(systemName: "rectangle.grid.2x2.fill")
@@ -128,7 +125,7 @@ struct BabySelectorView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 30, height: 30)
                                 .padding(10)
-                                .background(selectedBaby == nil ? AppColors.selectedBlue : AppColors.lightGrayBackground)
+                                .background((selectedBaby == nil && !showUnboundOnly) ? AppColors.selectedBlue : AppColors.lightGrayBackground)
                                 .clipShape(Circle())
                                 .foregroundColor(.white)
                             
@@ -139,9 +136,8 @@ struct BabySelectorView: View {
                     .id("all")
                     
                     Button(action: {
-                        let unboundBaby = Baby(name: "自由瞬间", birthDate: nil, notes: "")
-                        unboundBaby.id = UUID(uuidString: "00000000-0000-0000-0000-000000000000") ?? UUID()
-                        selectedBaby = unboundBaby
+                        selectedBaby = nil
+                        showUnboundOnly = true
                     }) {
                         VStack {
                             Image(systemName: "bubbles.and.sparkles")
@@ -149,7 +145,7 @@ struct BabySelectorView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 30, height: 30)
                                 .padding(10)
-                                .background(selectedBaby?.id.uuidString == "00000000-0000-0000-0000-000000000000" ? AppColors.selectedBlue : AppColors.lightGrayBackground)
+                                .background(showUnboundOnly ? AppColors.selectedBlue : AppColors.lightGrayBackground)
                                 .clipShape(Circle())
                                 .foregroundColor(.white)
                             
@@ -162,6 +158,7 @@ struct BabySelectorView: View {
                     ForEach(babies) { baby in
                         Button(action: {
                             selectedBaby = baby
+                            showUnboundOnly = false
                         }) {
                             VStack {
                                 BabyAvatarView.large(
