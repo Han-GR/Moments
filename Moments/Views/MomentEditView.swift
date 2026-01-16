@@ -97,12 +97,11 @@ struct MomentEditView: View {
     }
     
     private var formContent: some View {
-        let isIPad = UIDevice.current.userInterfaceIdiom == .pad
-        return Form {
+        Form {
             babySection
             dateSection
             contentSection
-            photosSection(isIPad: isIPad)
+            photosSection()
         }
     }
 
@@ -179,7 +178,7 @@ struct MomentEditView: View {
         }
     }
     
-    private func photosSection(isIPad: Bool) -> some View {
+    private func photosSection() -> some View {
         Section("照片") {
             Button(action: {
                 if selectedMedia.count < 9 {
@@ -199,10 +198,10 @@ struct MomentEditView: View {
             
             if !selectedMedia.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: isIPad ? 15 : 10) {
+                    HStack(spacing: 10) {
                         ForEach(selectedMedia) { item in
-                            let imageSize: CGFloat = isIPad ? 140 : 100
-                            let cornerRadius: CGFloat = isIPad ? 12 : 8
+                            let imageSize: CGFloat = 100
+                            let cornerRadius: CGFloat = 8
                             
                             ZStack(alignment: .topTrailing) {
                                 Image(uiImage: item.image)
@@ -236,8 +235,8 @@ struct MomentEditView: View {
                                         .foregroundColor(.white)
                                         .background(AppColors.blackOverlay)
                                         .clipShape(Circle())
-                                        .padding(isIPad ? 6 : 4)
-                                    }
+                                        .padding(4)
+                                }
                             }
                             .onTapGesture {
                                 if item.type == .video {
@@ -252,7 +251,7 @@ struct MomentEditView: View {
                             }
                         }
                     }
-                    .padding(.vertical, isIPad ? 8 : 5)
+                    .padding(.vertical, 5)
                 }
             }
         }

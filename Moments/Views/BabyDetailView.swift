@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-import UIKit
 
 struct BabyDetailView: View {
     @Environment(\.modelContext) private var modelContext
@@ -27,12 +26,10 @@ struct BabyDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                // 头部照片区域
                 ZStack(alignment: .bottom) {
-                    let isIPad = UIDevice.current.userInterfaceIdiom == .pad
-                    let headerHeight: CGFloat = isIPad ? 400 : 300
-                    let iconSize: CGFloat = isIPad ? 140 : 100
-                    let cornerRadius: CGFloat = isIPad ? 25 : 20
+                    let headerHeight: CGFloat = 300
+                    let iconSize: CGFloat = 100
+                    let cornerRadius: CGFloat = 20
                     
                     if let path = baby.photoPath, let uiImage = MediaStore.loadImage(from: path) {
                         Image(uiImage: uiImage)

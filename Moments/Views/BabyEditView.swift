@@ -37,14 +37,12 @@ struct BabyEditView: View {
     }
     
     var body: some View {
-        let isIPad = UIDevice.current.userInterfaceIdiom == .pad
-        
         Form {
             Section("照片") {
                 VStack {
-                    let photoSize: CGFloat = isIPad ? 280 : 200
-                    let iconSize: CGFloat = isIPad ? 120 : 80
-                    let cornerRadius: CGFloat = isIPad ? 20 : 15
+                    let photoSize: CGFloat = 200
+                    let iconSize: CGFloat = 80
+                    let cornerRadius: CGFloat = 15
                     
                     if let selectedImage = selectedImage {
                         Image(uiImage: selectedImage)
@@ -75,11 +73,11 @@ struct BabyEditView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
-                    .controlSize(isIPad ? .large : .large)
-                    .padding(.top, isIPad ? 12 : 8)
+                    .controlSize(.large)
+                    .padding(.top, 8)
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, isIPad ? 12 : 8)
+                .padding(.vertical, 8)
             }
             
             Section("基本信息") {

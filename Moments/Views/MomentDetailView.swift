@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-import UIKit
 import AVKit
 
 struct MomentDetailView: View {
@@ -125,13 +124,11 @@ struct PhotoGallery: View {
             AppColors.clearColor
         } else {
         GeometryReader { geometry in
-            let screenWidth = geometry.size.width - 32 // 减去左右padding
-            let isIPad = UIDevice.current.userInterfaceIdiom == .pad
-            let minItemWidth: CGFloat = isIPad ? 150 : 100
-            let maxItemWidth: CGFloat = isIPad ? 200 : 150
-            let spacing: CGFloat = isIPad ? 12 : 8
+            let screenWidth = geometry.size.width - 32
+            let minItemWidth: CGFloat = 100
+            let maxItemWidth: CGFloat = 150
+            let spacing: CGFloat = 8
             
-            // 计算每行可以放置的图片数量
             let safeWidth = max(screenWidth, minItemWidth * 2 + spacing)
             let itemsPerRow = max(2, Int(safeWidth / (minItemWidth + spacing)))
             let rawItemWidth = (safeWidth - CGFloat(itemsPerRow - 1) * spacing) / CGFloat(itemsPerRow)
@@ -161,7 +158,7 @@ struct PhotoGallery: View {
                             }
                         }
                         .frame(width: finalItemWidth, height: finalItemWidth)
-                        .clipShape(RoundedRectangle(cornerRadius: isIPad ? 12 : 8))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                         .onTapGesture {
                             selectedPhotoIndex = index
                         }
@@ -180,11 +177,10 @@ struct PhotoGallery: View {
     }
     
     private func calculateGridHeight() -> CGFloat {
-        let isIPad = UIDevice.current.userInterfaceIdiom == .pad
-        let itemsPerRow = isIPad ? 4 : 3 // 估算值
+        let itemsPerRow = 3
         let rows = ceil(Double(mediaItems.count) / Double(itemsPerRow))
-        let itemHeight: CGFloat = isIPad ? 200 : 150
-        let spacing: CGFloat = isIPad ? 12 : 8
+        let itemHeight: CGFloat = 150
+        let spacing: CGFloat = 8
         return CGFloat(rows) * itemHeight + CGFloat(max(0, rows - 1)) * spacing
     }
 }
