@@ -187,7 +187,7 @@
 				};
 			};
 			buildConfigurationList = AAB520792E5B13B400E9AE71 /* Build configuration list for PBXProject "Moments" */;
-			developmentRegion = "zh-Hans";
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
