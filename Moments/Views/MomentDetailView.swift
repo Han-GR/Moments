@@ -141,14 +141,30 @@ struct PhotoGallery: View {
             LazyVGrid(columns: Array(repeating: GridItem(.fixed(finalItemWidth), spacing: spacing), count: itemsPerRow), spacing: spacing) {
                 ForEach(Array(mediaItems.enumerated()), id: \.element.id) { index, item in
                     if let uiImage = MediaStore.loadImage(from: item.thumbnailPath ?? item.originalPath, preferThumbnail: true) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .aspectRatio(1, contentMode: .fill)
-                            .frame(width: finalItemWidth, height: finalItemWidth)
-                            .clipShape(RoundedRectangle(cornerRadius: isIPad ? 12 : 8))
-                            .onTapGesture {
-                                selectedPhotoIndex = index
+                        ZStack(alignment: .center) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .aspectRatio(1, contentMode: .fill)
+                            
+                            if item.type == .video {
+                                Image(systemName: "play.circle.fill")
+                                    .font(.title2)
+                                    .foregroundColor(.white)
+                                    .shadow(radius: 2)
+                            } else if item.type == .livePhoto {
+                                Image(systemName: "livephoto")
+                                    .font(.title2)
+                                    .foregroundColor(.white)
+                                    .shadow(radius: 2)
+                                    .padding(4)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                             }
+                        }
+                        .frame(width: finalItemWidth, height: finalItemWidth)
+                        .clipShape(RoundedRectangle(cornerRadius: isIPad ? 12 : 8))
+                        .onTapGesture {
+                            selectedPhotoIndex = index
+                        }
                     }
                 }
             }
