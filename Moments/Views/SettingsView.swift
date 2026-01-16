@@ -42,18 +42,6 @@ struct SettingsView: View {
                             )
                                 .font(.headline)
                                 .foregroundColor(.primary)
-                            Text(
-                                String(
-                                    format: NSLocalizedString(
-                                        "version_format",
-                                        value: "版本 %@",
-                                        comment: ""
-                                    ),
-                                    appVersion
-                                )
-                            )
-                            .font(.caption)
-                            .foregroundColor(.secondary)
                         }
                         
                         Spacer()
