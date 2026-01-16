@@ -107,6 +107,7 @@ struct SettingsView: View {
         isWipingData = true
         // 直接按模型类型暴力删除（不加载对象，避免 UI 访问已删除对象属性）
         do {
+            try modelContext.delete(model: MomentMedia.self)
             try modelContext.delete(model: Moment.self)
             try modelContext.delete(model: Baby.self)
             try modelContext.delete(model: Group.self)

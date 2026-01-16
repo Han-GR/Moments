@@ -241,11 +241,12 @@ struct MomentListItem: View {
                         .lineLimit(2)
                         .padding(.top, 2)
 
-                    if !isWipingData && !moment.photoPaths.isEmpty {
+                    if !isWipingData, let items = moment.mediaItems, !items.isEmpty {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 8) {
-                                ForEach(0..<min(moment.photoPaths.count, 3), id: \.self) { index in
-                                    if let uiImage = MediaStore.loadImage(from: moment.photoPaths[index], preferThumbnail: true) {
+                                let limited = Array(items.prefix(3))
+                                ForEach(limited, id: \.id) { item in
+                                    if let uiImage = MediaStore.loadImage(from: item.thumbnailPath ?? item.originalPath, preferThumbnail: true) {
                                         Image(uiImage: uiImage)
                                             .resizable()
                                             .aspectRatio(1, contentMode: .fill)
@@ -253,15 +254,14 @@ struct MomentListItem: View {
                                         .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                         }
-                        
-                        if moment.photoPaths.count > 3 {
+                        if let items = moment.mediaItems, items.count > 3 {
                             ZStack {
                                 Rectangle()
                                     .fill(AppColors.grayBackground)
                                     .frame(width: 80, height: 80)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                                 
-                                Text("+\(moment.photoPaths.count - 3)")
+                                Text("+\(items.count - 3)")
                                     .font(.title2)
                                     .fontWeight(.bold)
                                     .foregroundColor(.secondary)

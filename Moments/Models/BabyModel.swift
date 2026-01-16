@@ -33,19 +33,47 @@ final class Baby {
 }
 
 @Model
+final class MomentMedia {
+    enum MediaType: Int, Codable {
+        case photo
+        case video
+        case livePhoto
+    }
+    
+    var id: UUID
+    var type: MediaType
+    var originalPath: String
+    var thumbnailPath: String?
+    var duration: Double?
+    
+    @Relationship var moment: Moment?
+    
+    init(type: MediaType,
+         originalPath: String,
+         thumbnailPath: String? = nil,
+         duration: Double? = nil) {
+        self.id = UUID()
+        self.type = type
+        self.originalPath = originalPath
+        self.thumbnailPath = thumbnailPath
+        self.duration = duration
+    }
+}
+
+@Model
 final class Moment {
     var id: UUID
     var content: String
     var date: Date
-    var photoPaths: [String]
     
     @Relationship(inverse: \Baby.moments) var baby: Baby?
+    @Relationship(inverse: \MomentMedia.moment) var mediaItems: [MomentMedia]? = []
     
-    init(content: String, date: Date = Date(), photoPaths: [String] = []) {
+    init(content: String, date: Date = Date()) {
         self.id = UUID()
         self.content = content
         self.date = date
-        self.photoPaths = photoPaths
+        self.mediaItems = []
     }
 }
 

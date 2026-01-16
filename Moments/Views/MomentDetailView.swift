@@ -58,13 +58,13 @@ struct MomentDetailView: View {
                     .font(.body)
                     .padding(.horizontal)
                 
-                if !moment.photoPaths.isEmpty {
+                if let items = moment.mediaItems, !items.isEmpty {
                     VStack(alignment: .leading) {
                         Text("照片")
                             .font(.headline)
                             .padding(.horizontal)
                         
-                        PhotoGallery(photoPaths: moment.photoPaths)
+                        PhotoGallery(mediaItems: items)
                     }
                 }
             }
@@ -115,7 +115,7 @@ struct MomentDetailView: View {
 }
 
 struct PhotoGallery: View {
-    let photoPaths: [String]
+    let mediaItems: [MomentMedia]
     @State private var selectedPhotoIndex: Int? = nil
     @AppStorage("isWipingData") private var isWipingData = false
     
@@ -136,8 +136,8 @@ struct PhotoGallery: View {
             let finalItemWidth = min(maxItemWidth, actualItemWidth)
             
             LazyVGrid(columns: Array(repeating: GridItem(.fixed(finalItemWidth), spacing: spacing), count: itemsPerRow), spacing: spacing) {
-                ForEach(0..<photoPaths.count, id: \.self) { index in
-                    if let uiImage = MediaStore.loadImage(from: photoPaths[index], preferThumbnail: true) {
+                ForEach(Array(mediaItems.enumerated()), id: \.element.id) { index, item in
+                    if let uiImage = MediaStore.loadImage(from: item.thumbnailPath ?? item.originalPath, preferThumbnail: true) {
                         Image(uiImage: uiImage)
                             .resizable()
                             .aspectRatio(1, contentMode: .fill)
@@ -154,7 +154,7 @@ struct PhotoGallery: View {
         .padding(.horizontal)
         .navigationDestination(isPresented: Binding(get: { selectedPhotoIndex != nil }, set: { if !$0 { selectedPhotoIndex = nil } })) {
             if let index = selectedPhotoIndex {
-                PhotoDetailView(photoPaths: photoPaths, initialIndex: index)
+                PhotoDetailView(mediaItems: mediaItems, initialIndex: index)
             }
         }
         }
@@ -163,7 +163,7 @@ struct PhotoGallery: View {
     private func calculateGridHeight() -> CGFloat {
         let isIPad = UIDevice.current.userInterfaceIdiom == .pad
         let itemsPerRow = isIPad ? 4 : 3 // 估算值
-        let rows = ceil(Double(photoPaths.count) / Double(itemsPerRow))
+        let rows = ceil(Double(mediaItems.count) / Double(itemsPerRow))
         let itemHeight: CGFloat = isIPad ? 200 : 150
         let spacing: CGFloat = isIPad ? 12 : 8
         return CGFloat(rows) * itemHeight + CGFloat(max(0, rows - 1)) * spacing
@@ -171,11 +171,11 @@ struct PhotoGallery: View {
 }
 
 struct PhotoDetailView: View {
-    let photoPaths: [String]
+    let mediaItems: [MomentMedia]
     @State private var currentIndex: Int
     
-    init(photoPaths: [String], initialIndex: Int) {
-        self.photoPaths = photoPaths
+    init(mediaItems: [MomentMedia], initialIndex: Int) {
+        self.mediaItems = mediaItems
         _currentIndex = State(initialValue: initialIndex)
     }
     
@@ -184,12 +184,13 @@ struct PhotoDetailView: View {
             AppColors.blackOverlay.edgesIgnoringSafeArea(.all)
             
             TabView(selection: $currentIndex) {
-                ForEach(0..<photoPaths.count, id: \.self) { index in
-                    if let uiImage = MediaStore.loadImage(from: photoPaths[index]) {
+                ForEach(0..<mediaItems.count, id: \.self) { index in
+                    let item = mediaItems[index]
+                    if let uiImage = MediaStore.loadImage(from: item.originalPath) {
                         ZoomableScrollView(
                             onSwipeLeft: {
                                 withAnimation {
-                                    if currentIndex < photoPaths.count - 1 {
+                                    if currentIndex < mediaItems.count - 1 {
                                         currentIndex += 1
                                     }
                                 }
@@ -215,7 +216,7 @@ struct PhotoDetailView: View {
             VStack {
                 Spacer()
                 
-                Text("\(currentIndex + 1) / \(photoPaths.count)")
+                Text("\(currentIndex + 1) / \(mediaItems.count)")
                     .foregroundColor(.white)
                     .padding(8)
                     .background(Capsule().fill(AppColors.lightBlackOverlay))
@@ -364,7 +365,7 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
 
 #Preview {
     NavigationStack {
-        MomentDetailView(moment: Moment(content: "示例内容", date: Date(), photoPaths: []))
+        MomentDetailView(moment: Moment(content: "示例内容", date: Date()))
     }
     .modelContainer(for: [Baby.self, Moment.self], inMemory: true)
 }

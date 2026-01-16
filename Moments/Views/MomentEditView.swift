@@ -140,8 +140,9 @@ struct MomentEditView: View {
                 content = moment.content
                 date = moment.date
                 selectedBaby = moment.baby
-                if !moment.photoPaths.isEmpty {
-                    selectedImages = moment.photoPaths.compactMap { MediaStore.loadImage(from: $0) }
+                if let items = moment.mediaItems {
+                    let photos = items.filter { $0.type == .photo || $0.type == .livePhoto }
+                    selectedImages = photos.compactMap { MediaStore.loadImage(from: $0.originalPath) }
                 }
             } else {
                 // 新建模式：如果传入了特定物品则选择，否则保持为nil
@@ -257,31 +258,35 @@ struct MomentEditView: View {
             existingMoment.content = content
             existingMoment.date = date
             existingMoment.baby = selectedBaby // 可以为nil
-            if selectedImages.isEmpty {
-                existingMoment.photoPaths = existingMoment.photoPaths
-            } else {
-                let paths = selectedImages.compactMap { img -> String? in
-                    let saved = MediaStore.saveImage(img, quality: 0.85)
-                    if let name = saved {
-                        _ = MediaStore.saveThumbnail(of: img, basedOn: name)
-                    }
-                    return saved
+            if let items = existingMoment.mediaItems {
+                for item in items {
+                    modelContext.delete(item)
                 }
-                existingMoment.photoPaths = paths
+                existingMoment.mediaItems = []
             }
+            let newItems: [MomentMedia] = selectedImages.compactMap { img in
+                guard let filename = MediaStore.saveImage(img, quality: 0.85) else { return nil }
+                let thumb = MediaStore.saveThumbnail(of: img, basedOn: filename)
+                let media = MomentMedia(type: .photo, originalPath: filename, thumbnailPath: thumb)
+                media.moment = existingMoment
+                return media
+            }
+            existingMoment.mediaItems = newItems
         } else {
             // 新建模式：创建新瞬间
-            let paths = selectedImages.compactMap { img -> String? in
-                let saved = MediaStore.saveImage(img, quality: 0.85)
-                if let name = saved {
-                    _ = MediaStore.saveThumbnail(of: img, basedOn: name)
-                }
-                return saved
-            }
-            let newMoment = Moment(content: content, date: date, photoPaths: paths)
+            let newMoment = Moment(content: content, date: date)
             
             // 设置关系（可以为nil）
             newMoment.baby = selectedBaby
+            
+            let newItems: [MomentMedia] = selectedImages.compactMap { img in
+                guard let filename = MediaStore.saveImage(img, quality: 0.85) else { return nil }
+                let thumb = MediaStore.saveThumbnail(of: img, basedOn: filename)
+                let media = MomentMedia(type: .photo, originalPath: filename, thumbnailPath: thumb)
+                media.moment = newMoment
+                return media
+            }
+            newMoment.mediaItems = newItems
             
             // 添加到数据库
             modelContext.insert(newMoment)
