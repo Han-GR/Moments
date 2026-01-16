@@ -1,69 +1,114 @@
+/* Top tabs and main menu */
 "tab_items" = "Items";
 "tab_moments" = "Moments";
 "tab_settings" = "Settings";
 "menu_group_management" = "Group Management";
+
+/* Item list (Items tab and empty states) */
 "action_add_item" = "Add Item";
 "search_items_placeholder" = "Search Items";
 "empty_items_hint_tap_plus" = "Tap plus to add your first item";
 "empty_items_title_no_results" = "No items found";
 "empty_items_subtitle_try_adjust_filters" = "Try adjusting search or group filters";
+
+/* Moment list (Moments tab and empty states) */
 "action_add_moment" = "Add Moment";
 "search_moments_placeholder" = "Search Moments";
+"empty_moments_hint_tap_plus" = "Tap plus to add your first moment";
+"empty_moments_title_no_results" = "No moments found";
+"empty_moments_subtitle_try_adjust_filters" = "Try adjusting search filters";
+
+/* Common actions */
 "action_delete" = "Delete";
+"action_edit" = "Edit";
+"action_change" = "Change";
+"action_done" = "Done";
+"action_save" = "Save";
+"action_cancel" = "Cancel";
+"action_close" = "Close";
+"action_ok" = "OK";
+"action_add_group" = "Add Group";
+"action_new_group" = "New Group";
+"action_see_more_groups" = "See more groups...";
+"action_select" = "Select";
+
+/* Media / camera / photo picker */
 "error_video_unable_to_load" = "Unable to load video";
 "dialog_select_photo_title" = "Choose Photo";
 "action_take_photo" = "Take Photo";
 "action_choose_from_library" = "Choose from Library";
-"action_cancel" = "Cancel";
 "camera_unavailable_title" = "Camera Unavailable";
 "camera_not_supported_message" = "This device does not support camera";
 "section_photos" = "Photos";
 "action_add_photo" = "Add Photo";
+"max_photos_reached" = "Maximum reached (9)";
+"add_photos_videos_count_format" = "Add Photos/Videos (%d/9)";
+
+/* Item basic info / statistics */
 "section_basic_info" = "Basic Info";
 "field_name" = "Name";
 "field_birthday" = "Birthday";
 "field_select_birthday" = "Select Birthday";
 "section_notes" = "Notes";
-"label_select_group" = "Select Group";
-"label_no_group" = "No Group";
-"action_new_group" = "New Group";
-"action_see_more_groups" = "See more groups...";
-"action_edit" = "Edit";
-"action_change" = "Change";
-"field_date" = "Date";
-"field_select_date" = "Select Date";
-"field_moment_content" = "Moment Content";
 "field_item_optional" = "Item (Optional)";
 "label_no_item" = "No Item";
-"title_record_moment" = "Record a Moment";
-"title_edit_moment" = "Edit Moment";
-"title_photo_preview" = "Photo Preview";
-"action_about_moments" = "About Moments";
-"section_app_info" = "App Info";
-"section_statistics" = "Statistics";
+"label_not_set" = "Not Set";
+"no_notes" = "No notes";
 "label_items_count" = "Item Count";
 "label_moments_count" = "Moment Count";
 "label_groups_count" = "Group Count";
+"delete_baby_confirmation" = "Are you sure you want to delete %@? This action cannot be undone.";
+"error_item_name_exists" = "Item name already exists";
+"title_edit_item" = "Edit Item";
+"title_delete_item" = "Delete Item";
+"group_items_count_format" = "%d items";
+
+/* Group management */
+"section_group" = "Group";
+"label_select_group" = "Select Group";
+"label_no_group" = "No Group";
+"section_group_info" = "Group Info";
+"field_group_name" = "Group Name";
+"section_select_color" = "Select Color";
+"section_group_members" = "Group Members";
+"label_no_members" = "No members";
+"title_edit_group" = "Edit Group";
+"error_group_name_exists" = "Group name already exists";
+"filter_all" = "All";
+"filter_unbound" = "Unbound";
+
+/* Moment creation / detail */
+"field_date" = "Date";
+"field_select_date" = "Select Date";
+"field_moment_content" = "Moment Content";
+"title_record_moment" = "Record a Moment";
+"title_edit_moment" = "Edit Moment";
+"title_photo_preview" = "Photo Preview";
+"title_moment_detail" = "Moment Detail";
+"delete_moment_confirmation" = "Delete this moment? This cannot be undone.";
+"moments_section_title" = "Moments";
+"moments_count_format" = "Total %d moments";
+"tap_to_view_all_moments" = "Tap to view all moments";
+"title_select_item" = "Select Item";
+
+/* Settings and data management */
+"section_app_info" = "App Info";
+"section_statistics" = "Statistics";
 "section_data_management" = "Data Management";
 "action_clear_all_data" = "Clear All Data";
 "title_confirm_delete" = "Confirm Delete";
-"title_about_full" = "About Moments";
-"action_close" = "Close";
-"action_add_group" = "Add Group";
-"title_delete_item" = "Delete Item";
-"title_data_cleared" = "Data Cleared";
-"message_content_deleted" = "This content has been deleted";
-"max_photos_reached" = "Maximum reached (9)";
-"add_photos_videos_count_format" = "Add Photos/Videos (%d/9)";
-"moments_count_format" = "Total %d moments";
-"tap_to_view_all_moments" = "Tap to view all moments";
-"version_format" = "Version %@";
-"app_name_cn" = "Moments";
 "confirm_delete_all_message" = "Delete all items and moments data? This cannot be undone.";
 "confirm_delete" = "Confirm Delete";
-"no_notes" = "No notes";
-"moments_section_title" = "Moments";
-"delete_baby_confirmation" = "Are you sure you want to delete %@? This action cannot be undone.";
+"title_cleaning_data" = "Cleaning Data";
+"message_please_wait" = "Please wait…";
+"title_data_cleared" = "Data Cleared";
+"message_content_deleted" = "This content has been deleted";
+
+/* About Moments */
+"app_name_cn" = "Moments";
+"version_format" = "Version %@";
+"action_about_moments" = "About Moments";
+"title_about_full" = "About Moments";
 "about_tagline" = "Record the beautiful moments of your items";
 "about_description" = "Moments is designed to record and manage your items. Capture anything related to you—don’t miss any moment.";
 "about_features_title" = "Features:";
@@ -71,31 +116,3 @@
 "about_feature_edit_info" = "Edit basic item information";
 "about_feature_record_moments" = "Record life moments for items";
 "about_feature_view_all_items" = "View all items on the home page";
-"title_moment_detail" = "Moment Detail";
-"delete_moment_confirmation" = "Delete this moment? This cannot be undone.";
-"action_done" = "Done";
-"group_items_count_format" = "%d items";
-"section_group_info" = "Group Info";
-"field_group_name" = "Group Name";
-"section_select_color" = "Select Color";
-"error_group_name_exists" = "Group name already exists";
-"action_ok" = "OK";
-"section_group_members" = "Group Members";
-"label_no_members" = "No members";
-"title_edit_group" = "Edit Group";
-"action_save" = "Save";
-"filter_all" = "All";
-"filter_unbound" = "Unbound";
-"field_select_date" = "Select Date";
-"action_select" = "Select";
-"label_not_set" = "Not Set";
-"title_cleaning_data" = "Cleaning Data";
-"message_please_wait" = "Please wait…";
-"empty_moments_hint_tap_plus" = "Tap plus to add your first moment";
-"empty_moments_title_no_results" = "No moments found";
-"empty_moments_subtitle_try_adjust_filters" = "Try adjusting search filters";
-
-"section_group" = "Group";
-"error_item_name_exists" = "Item name already exists";
-"title_edit_item" = "Edit Item";
-"title_select_item" = "Select Item";
