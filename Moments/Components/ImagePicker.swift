@@ -104,9 +104,13 @@ struct ImagePicker: UIViewControllerRepresentable {
         
         // UIImagePickerController delegate (for camera)
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            // TODO: 处理相机拍摄的视频
             if let mediaType = info[.mediaType] as? String {
                 if mediaType == "public.movie", let url = info[.mediaURL] as? URL {
+                     // 保存视频到相册
+                     if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(url.path) {
+                        UISaveVideoAtPathToSavedPhotosAlbum(url.path, nil, nil, nil)
+                     }
+                     
                      // 生成缩略图
                      if let thumbnail = generateThumbnail(for: url) {
                         let item = PickerMediaItem(image: thumbnail, type: .video, videoURL: url, originalFilename: nil)

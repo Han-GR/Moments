@@ -407,6 +407,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Moments需要访问相机来拍照";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Moments需要访问麦克风来录制视频";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Moments需要保存照片到相册";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Moments需要访问相册来选择照片";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -444,6 +445,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Moments需要访问相机来拍照";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Moments需要访问麦克风来录制视频";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Moments需要保存照片到相册";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Moments需要访问相册来选择照片";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
