@@ -38,7 +38,9 @@ struct BabyEditView: View {
     
     var body: some View {
         Form {
-            Section("照片") {
+            Section(
+                NSLocalizedString("section_photos", value: "照片", comment: "")
+            ) {
                 VStack {
                     let photoSize: CGFloat = 200
                     let iconSize: CGFloat = 80
@@ -69,7 +71,9 @@ struct BabyEditView: View {
                     Button(action: {
                         isShowingPhotoPicker = true
                     }) {
-                        Text("添加照片")
+                        Text(
+                            NSLocalizedString("action_add_photo", value: "添加照片", comment: "")
+                        )
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
@@ -80,17 +84,26 @@ struct BabyEditView: View {
                 .padding(.vertical, 8)
             }
             
-            Section("基本信息") {
-                TextField("名字", text: $name)
+            Section(
+                NSLocalizedString("section_basic_info", value: "基本信息", comment: "")
+            ) {
+                TextField(
+                    NSLocalizedString("field_name", value: "名字", comment: ""),
+                    text: $name
+                )
                 
                 HStack {
-                    Text("生日")
+                    Text(
+                        NSLocalizedString("field_birthday", value: "生日", comment: "")
+                    )
                     Spacer()
                     if let birthDate = birthDate {
                         Text(birthDate, style: .date)
                             .foregroundColor(.secondary)
                     } else {
-                        Text("未设置")
+                        Text(
+                            NSLocalizedString("label_not_set", value: "未设置", comment: "")
+                        )
                             .foregroundColor(.secondary)
                     }
                     Button(action: { showDatePicker.toggle() }) {
@@ -100,7 +113,7 @@ struct BabyEditView: View {
                 
                 if showDatePicker {
                     DatePicker(
-                        "选择生日",
+                        NSLocalizedString("field_select_birthday", value: "选择生日", comment: ""),
                         selection: Binding(
                             get: { birthDate ?? Date() },
                             set: { birthDate = $0 }
@@ -111,14 +124,20 @@ struct BabyEditView: View {
                 }
             }
             
-            Section("笔记") {
+            Section(
+                NSLocalizedString("section_notes", value: "笔记", comment: "")
+            ) {
                 TextEditor(text: $notes)
                     .frame(minHeight: 100)
             }
             
-            Section("分组") {
+            Section(
+                NSLocalizedString("section_group", value: "分组", comment: "")
+            ) {
                 Menu {
-                    Button("无分组") {
+                    Button(
+                        NSLocalizedString("label_no_group", value: "无分组", comment: "")
+                    ) {
                         selectedGroup = nil
                     }
                     
@@ -141,7 +160,9 @@ struct BabyEditView: View {
                         }
                         
                         if groups.count > 5 {
-                            Button("查看更多分组...") {
+                            Button(
+                                NSLocalizedString("action_see_more_groups", value: "查看更多分组...", comment: "")
+                            ) {
                                 showingGroupManagement = true
                             }
                             .foregroundColor(.secondary)
@@ -155,12 +176,16 @@ struct BabyEditView: View {
                     }) {
                         HStack {
                             Image(systemName: "plus.circle.fill")
-                            Text("新建分组")
+                            Text(
+                                NSLocalizedString("action_new_group", value: "新建分组", comment: "")
+                            )
                         }
                     }
                 } label: {
                     HStack {
-                        Text("选择分组")
+                        Text(
+                            NSLocalizedString("label_select_group", value: "选择分组", comment: "")
+                        )
                             .foregroundColor(.primary)
                         Spacer()
                         if let selectedGroup = selectedGroup {
@@ -171,30 +196,40 @@ struct BabyEditView: View {
                                 Text(selectedGroup.name)
                                     .foregroundColor(.secondary)
                             }
-                        } else {
-                            Text("无分组")
+                            } else {
+                            Text(
+                                NSLocalizedString("label_no_group", value: "无分组", comment: "")
+                            )
                                 .foregroundColor(.secondary)
-                        }
+                            }
                         Image(systemName: "chevron.up.chevron.down")
                             .foregroundColor(.secondary)
                             .font(.caption)
                     }
                 }
             }
-            
 
+        
         }
-        .navigationTitle(isEditing ? "编辑物品" : "添加物品")
+        .navigationTitle(
+            isEditing
+                ? NSLocalizedString("title_edit_item", value: "编辑物品", comment: "")
+                : NSLocalizedString("action_add_item", value: "添加物品", comment: "")
+        )
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button("取消") {
+                Button(
+                    NSLocalizedString("action_cancel", value: "取消", comment: "")
+                ) {
                     dismiss()
                 }
             }
             
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button("保存") {
+                Button(
+                    NSLocalizedString("action_save", value: "保存", comment: "")
+                ) {
                     saveBaby()
                 }
                 .disabled(name.isEmpty)
@@ -211,8 +246,14 @@ struct BabyEditView: View {
         }
 
         .onChange(of: selectedImage) { _, _ in }
-        .confirmationDialog("选择照片", isPresented: $isShowingPhotoPicker, titleVisibility: .visible) {
-            Button("拍照") {
+        .confirmationDialog(
+            NSLocalizedString("dialog_select_photo_title", value: "选择照片", comment: ""),
+            isPresented: $isShowingPhotoPicker,
+            titleVisibility: .visible
+        ) {
+            Button(
+                NSLocalizedString("action_take_photo", value: "拍照", comment: "")
+            ) {
                 if UIImagePickerController.isSourceTypeAvailable(.camera) {
                     sourceType = .camera
                     showingImagePicker = true
@@ -221,12 +262,17 @@ struct BabyEditView: View {
                 }
             }
             
-            Button("从相册选择") {
+            Button(
+                NSLocalizedString("action_choose_from_library", value: "从相册选择", comment: "")
+            ) {
                 sourceType = .photoLibrary
                 showingImagePicker = true
             }
             
-            Button("取消", role: .cancel) {
+            Button(
+                NSLocalizedString("action_cancel", value: "取消", comment: ""),
+                role: .cancel
+            ) {
                 isShowingPhotoPicker = false
             }
         }
@@ -242,13 +288,31 @@ struct BabyEditView: View {
                 allowsMultipleSelection: false
             )
         }
-        .alert("相机不可用", isPresented: $showingCameraAlert) {
-            Button("确定", role: .cancel) { }
+        .alert(
+            NSLocalizedString("camera_unavailable_title", value: "相机不可用", comment: ""),
+            isPresented: $showingCameraAlert
+        ) {
+            Button(
+                NSLocalizedString("action_ok", value: "确定", comment: ""),
+                role: .cancel
+            ) { }
         } message: {
-            Text("此设备不支持相机功能")
+            Text(
+                NSLocalizedString(
+                    "camera_not_supported_message",
+                    value: "此设备不支持相机功能",
+                    comment: ""
+                )
+            )
         }
-        .alert("物品名字已存在", isPresented: $showingDuplicateAlert) {
-            Button("确定", role: .cancel) { }
+        .alert(
+            NSLocalizedString("error_item_name_exists", value: "物品名字已存在", comment: ""),
+            isPresented: $showingDuplicateAlert
+        ) {
+            Button(
+                NSLocalizedString("action_ok", value: "确定", comment: ""),
+                role: .cancel
+            ) { }
         }
         .sheet(isPresented: $showingAddGroup) {
             AddGroupView { newGroup in

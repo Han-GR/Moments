@@ -15,7 +15,10 @@ struct MainTabView: View {
                 HomeView()
             }
             .tabItem {
-                Label("物品", systemImage: "rectangle.stack.fill")
+                Label(
+                    NSLocalizedString("tab_items", value: "物品", comment: ""),
+                    systemImage: "rectangle.stack.fill"
+                )
             }
             .tag(0)
             
@@ -24,7 +27,10 @@ struct MainTabView: View {
                 MomentsView()
             }
             .tabItem {
-                Label("瞬间", systemImage: "heart.text.square.fill")
+                Label(
+                    NSLocalizedString("tab_moments", value: "瞬间", comment: ""),
+                    systemImage: "heart.text.square.fill"
+                )
             }
             .tag(1)
             
@@ -33,7 +39,10 @@ struct MainTabView: View {
                 SettingsView()
             }
             .tabItem {
-                Label("设置", systemImage: "gear")
+                Label(
+                    NSLocalizedString("tab_settings", value: "设置", comment: ""),
+                    systemImage: "gear"
+                )
             }
             .tag(2)
         }

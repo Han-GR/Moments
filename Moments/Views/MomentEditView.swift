@@ -36,25 +36,33 @@ struct MomentEditView: View {
     
     var body: some View {
         formContent
-            .navigationTitle(moment != nil ? "编辑生活瞬间" : "记录生活瞬间")
+            .navigationTitle(
+                moment != nil
+                ? NSLocalizedString("title_edit_moment", value: "编辑生活瞬间", comment: "")
+                : NSLocalizedString("title_record_moment", value: "记录生活瞬间", comment: "")
+            )
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("取消") {
+                    Button(NSLocalizedString("action_cancel", value: "取消", comment: "")) {
                         dismiss()
                     }
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("保存") {
+                    Button(NSLocalizedString("action_save", value: "保存", comment: "")) {
                         saveMoment()
                     }
                     .disabled(content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && selectedMedia.isEmpty)
                 }
             }
             .onAppear(perform: loadData)
-            .confirmationDialog("选择照片", isPresented: $isShowingPhotoPicker, titleVisibility: .visible) {
-                Button("拍照") {
+            .confirmationDialog(
+                NSLocalizedString("dialog_select_photo_title", value: "选择照片", comment: ""),
+                isPresented: $isShowingPhotoPicker,
+                titleVisibility: .visible
+            ) {
+                Button(NSLocalizedString("action_take_photo", value: "拍照", comment: "")) {
                     if UIImagePickerController.isSourceTypeAvailable(.camera) {
                         sourceType = .camera
                         showingImagePicker = true
@@ -63,12 +71,12 @@ struct MomentEditView: View {
                     }
                 }
                 
-                Button("从相册选择") {
+                Button(NSLocalizedString("action_choose_from_library", value: "从相册选择", comment: "")) {
                     sourceType = .photoLibrary
                     showingImagePicker = true
                 }
                 
-                Button("取消", role: .cancel) {
+                Button(NSLocalizedString("action_cancel", value: "取消", comment: ""), role: .cancel) {
                     isShowingPhotoPicker = false
                 }
             }
@@ -79,10 +87,10 @@ struct MomentEditView: View {
                     allowsMultipleSelection: sourceType == .photoLibrary
                 )
             }
-            .alert("相机不可用", isPresented: $showingCameraAlert) {
-                Button("确定", role: .cancel) { }
+            .alert(NSLocalizedString("camera_unavailable_title", value: "相机不可用", comment: ""), isPresented: $showingCameraAlert) {
+                Button(NSLocalizedString("action_ok", value: "确定", comment: ""), role: .cancel) { }
             } message: {
-                Text("此设备不支持相机功能")
+                Text(NSLocalizedString("camera_not_supported_message", value: "此设备不支持相机功能", comment: ""))
             }
             .sheet(isPresented: $isShowingBabyPicker) {
                 BabyPickerSheet(selectedBaby: $selectedBaby, isPresented: $isShowingBabyPicker, allBabies: allBabies)
@@ -91,7 +99,7 @@ struct MomentEditView: View {
                 if let url = previewVideoURL {
                     VideoPlayerItemView(url: url)
                 } else {
-                    Text("无法加载视频")
+                    Text(NSLocalizedString("error_video_unable_to_load", value: "无法加载视频", comment: ""))
                 }
             }
     }
@@ -139,7 +147,7 @@ struct MomentEditView: View {
     }
     
     private var babySection: some View {
-        Section("物品（可选）") {
+        Section(NSLocalizedString("field_item_optional", value: "物品（可选）", comment: "")) {
             HStack {
                 if let selectedBaby = selectedBaby {
                     HStack {
@@ -149,7 +157,7 @@ struct MomentEditView: View {
                             .font(.headline)
                     }
                 } else {
-                    Text("无物品")
+                    Text(NSLocalizedString("label_no_item", value: "无物品", comment: ""))
                         .foregroundColor(.secondary)
                 }
                 
@@ -158,41 +166,47 @@ struct MomentEditView: View {
                 Button(action: {
                     isShowingBabyPicker = true
                 }) {
-                    Text(selectedBaby == nil ? "选择" : "更改")
+                    Text(selectedBaby == nil
+                         ? NSLocalizedString("action_select", value: "选择", comment: "")
+                         : NSLocalizedString("action_change", value: "更改", comment: ""))
                 }
             }
         }
     }
     
     private var dateSection: some View {
-        Section("日期") {
-            DatePicker("选择日期", selection: $date, displayedComponents: [.date])
+        Section(NSLocalizedString("field_date", value: "日期", comment: "")) {
+            DatePicker(NSLocalizedString("field_select_date", value: "选择日期", comment: ""), selection: $date, displayedComponents: [.date])
                 .datePickerStyle(.compact)
         }
     }
     
     private var contentSection: some View {
-        Section("瞬间内容") {
+        Section(NSLocalizedString("field_moment_content", value: "瞬间内容", comment: "")) {
             TextEditor(text: $content)
                 .frame(minHeight: 100)
         }
     }
     
     private func photosSection() -> some View {
-        Section("照片") {
+        let labelText: String = selectedMedia.count >= 9
+            ? NSLocalizedString("max_photos_reached", value: "已达到最大数量(9张)", comment: "")
+            : String(
+                format: NSLocalizedString("add_photos_videos_count_format", value: "添加照片/视频 (%d/9)", comment: ""),
+                selectedMedia.count
+            )
+        
+        return Section(NSLocalizedString("section_photos", value: "照片", comment: "")) {
             Button(action: {
                 if selectedMedia.count < 9 {
                     isShowingPhotoPicker = true
                 }
             }) {
-                Label(
-                    selectedMedia.count >= 9 ? "已达到最大数量(9张)" : "添加照片/视频 (\(selectedMedia.count)/9)",
-                    systemImage: "plus.circle.fill"
-                )
-                .frame(maxWidth: .infinity)
-                .padding()
-                .foregroundColor(selectedMedia.count >= 9 ? .gray : .blue)
-                .cornerRadius(8)
+                Label(labelText, systemImage: "plus.circle.fill")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .foregroundColor(selectedMedia.count >= 9 ? .gray : .blue)
+                    .cornerRadius(8)
             }
             .disabled(selectedMedia.count >= 9)
             
@@ -353,7 +367,7 @@ struct BabyPickerSheet: View {
                     isPresented = false
                 }) {
                     HStack {
-                        Text("无物品")
+                        Text(NSLocalizedString("label_no_item", value: "无物品", comment: ""))
                             .foregroundColor(.primary)
                         Spacer()
                         if selectedBaby == nil {
@@ -381,11 +395,11 @@ struct BabyPickerSheet: View {
                     }
                 }
             }
-            .navigationTitle("选择物品")
+            .navigationTitle(NSLocalizedString("title_select_item", value: "选择物品", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("取消") {
+                    Button(NSLocalizedString("action_cancel", value: "取消", comment: "")) {
                         isPresented = false
                     }
                 }

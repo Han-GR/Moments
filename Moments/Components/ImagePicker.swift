@@ -248,8 +248,12 @@ struct PhotoPickerSheet: View {
     
     var body: some View {
         AppColors.clearColor
-            .confirmationDialog("选择照片", isPresented: $isPresented, titleVisibility: .visible) {
-                Button("拍照") {
+            .confirmationDialog(
+                NSLocalizedString("dialog_select_photo_title", value: "选择照片", comment: ""),
+                isPresented: $isPresented,
+                titleVisibility: .visible
+            ) {
+                Button(NSLocalizedString("action_take_photo", value: "拍照", comment: "")) {
                     if UIImagePickerController.isSourceTypeAvailable(.camera) {
                         sourceType = .camera
                         showingImagePicker = true
@@ -258,12 +262,12 @@ struct PhotoPickerSheet: View {
                     }
                 }
                 
-                Button("从相册选择") {
+                Button(NSLocalizedString("action_choose_from_library", value: "从相册选择", comment: "")) {
                     sourceType = .photoLibrary
                     showingImagePicker = true
                 }
                 
-                Button("取消", role: .cancel) {
+                Button(NSLocalizedString("action_cancel", value: "取消", comment: ""), role: .cancel) {
                     isPresented = false
                 }
             }
@@ -274,10 +278,10 @@ struct PhotoPickerSheet: View {
                     allowsMultipleSelection: sourceType == .photoLibrary
                 )
             }
-            .alert("相机不可用", isPresented: $showingCameraAlert) {
-                Button("确定", role: .cancel) { }
+            .alert(NSLocalizedString("camera_unavailable_title", value: "相机不可用", comment: ""), isPresented: $showingCameraAlert) {
+                Button(NSLocalizedString("action_ok", value: "确定", comment: ""), role: .cancel) { }
             } message: {
-                Text("此设备不支持相机功能")
+                Text(NSLocalizedString("camera_not_supported_message", value: "此设备不支持相机功能", comment: ""))
             }
     }
 }

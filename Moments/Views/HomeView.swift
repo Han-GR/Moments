@@ -58,7 +58,9 @@ struct HomeView: View {
                             Button(action: {
                                 selectedGroupFilter = nil
                             }) {
-                                Text("全部")
+                                Text(
+                                    NSLocalizedString("filter_all", value: "全部", comment: "")
+                                )
                                     .font(.subheadline)
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 8)
@@ -95,9 +97,33 @@ struct HomeView: View {
                 // 主内容区域
                 ZStack {
                     if babies.isEmpty {
-                        ContentUnavailableView("", systemImage: "bubbles.and.sparkles", description: Text("点击加号添加您的第一个物品"))
+                        ContentUnavailableView(
+                            "",
+                            systemImage: "bubbles.and.sparkles",
+                            description: Text(
+                                NSLocalizedString(
+                                    "empty_items_hint_tap_plus",
+                                    value: "点击加号添加您的第一个物品",
+                                    comment: ""
+                                )
+                            )
+                        )
                     } else if filteredBabies.isEmpty {
-                        ContentUnavailableView("没有找到物品", systemImage: "magnifyingglass", description: Text("尝试调整搜索条件或分组筛选"))
+                        ContentUnavailableView(
+                            NSLocalizedString(
+                                "empty_items_title_no_results",
+                                value: "没有找到物品",
+                                comment: ""
+                            ),
+                            systemImage: "magnifyingglass",
+                            description: Text(
+                                NSLocalizedString(
+                                    "empty_items_subtitle_try_adjust_filters",
+                                    value: "尝试调整搜索条件或分组筛选",
+                                    comment: ""
+                                )
+                            )
+                        )
                     } else {
                         ScrollView {
                             LazyVStack(spacing: 20) {
@@ -110,17 +136,27 @@ struct HomeView: View {
                     }
                 }
             }
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "搜索物品")
+            .searchable(
+                text: $searchText,
+                placement: .navigationBarDrawer(displayMode: .always),
+                prompt: NSLocalizedString("search_items_placeholder", value: "搜索物品", comment: "")
+            )
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { showingGroupManagement = true }) {
-                        Label("分组管理", systemImage: "folder")
+                        Label(
+                            NSLocalizedString("menu_group_management", value: "分组管理", comment: ""),
+                            systemImage: "folder"
+                        )
                     }
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { isAddingNewBaby = true }) {
-                        Label("添加物品", systemImage: "plus")
+                        Label(
+                            NSLocalizedString("action_add_item", value: "添加物品", comment: ""),
+                            systemImage: "plus"
+                        )
                     }
                 }
             }
@@ -191,7 +227,9 @@ struct GroupSectionView: View {
                 } else {
                     Image(systemName: "folder")
                         .foregroundColor(.gray)
-                    Text("未分组")
+                    Text(
+                        NSLocalizedString("label_no_group", value: "未分组", comment: "")
+                    )
                         .font(.headline)
                         .fontWeight(.semibold)
                         .foregroundColor(.gray)

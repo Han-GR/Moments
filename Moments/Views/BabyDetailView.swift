@@ -82,14 +82,16 @@ struct BabyDetailView: View {
                     .padding(.horizontal)
                 }
                 
-                // 笔记区域
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("笔记")
+                    // 笔记区域
+                    VStack(alignment: .leading, spacing: 10) {
+                    Text(
+                        NSLocalizedString("section_notes", value: "笔记", comment: "")
+                    )
                         .font(.headline)
                         .padding(.horizontal)
                     
                     if baby.notes.isEmpty {
-                        Text("暂无笔记")
+                        Text(NSLocalizedString("no_notes", value: "暂无笔记", comment: ""))
                             .foregroundColor(.secondary)
                             .padding(.horizontal)
                     } else {
@@ -98,16 +100,19 @@ struct BabyDetailView: View {
                     }
                 }
                 
-                // 生活瞬间区域
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        Text("生活瞬间")
+                    // 生活瞬间区域
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack {
+                        Text(NSLocalizedString("moments_section_title", value: "生活瞬间", comment: ""))
                             .font(.headline)
                         
                         Spacer()
                         
                         Button(action: { isAddingMoment = true }) {
-                            Label("添加瞬间", systemImage: "plus")
+                            Label(
+                                NSLocalizedString("action_add_moment", value: "添加瞬间", comment: ""),
+                                systemImage: "plus"
+                            )
                                 .font(.caption)
                         }
                         .buttonStyle(.bordered)
@@ -119,11 +124,17 @@ struct BabyDetailView: View {
                     NavigationLink(destination: MomentsView(selectedBaby: baby)) {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("共有 \(moments.count) 条瞬间")
+                                Text(String(format: NSLocalizedString("moments_count_format", value: "共有 %d 条瞬间", comment: ""), moments.count))
                                     .font(.subheadline)
                                     .foregroundColor(.primary)
                                 
-                                Text("点击查看所有瞬间")
+                                Text(
+                                    NSLocalizedString(
+                                        "tap_to_view_all_moments",
+                                        value: "点击查看所有瞬间",
+                                        comment: ""
+                                    )
+                                )
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
@@ -151,13 +162,19 @@ struct BabyDetailView: View {
                      Button(action: {
                          isEditing = true
                      }) {
-                         Label("编辑", systemImage: "pencil")
+                         Label(
+                             NSLocalizedString("action_edit", value: "编辑", comment: ""),
+                             systemImage: "pencil"
+                         )
                      }
                      
                      Button(role: .destructive, action: {
                          showDeleteConfirmation = true
                      }) {
-                         Label("删除", systemImage: "trash")
+                         Label(
+                             NSLocalizedString("action_delete", value: "删除", comment: ""),
+                             systemImage: "trash"
+                         )
                      }
                  } label: {
                      Image(systemName: "ellipsis.circle")
@@ -174,13 +191,22 @@ struct BabyDetailView: View {
                 MomentEditView(baby: baby)
             }
         }
-        .alert("删除物品", isPresented: $showDeleteConfirmation) {
-             Button("取消", role: .cancel) { }
-             Button("删除", role: .destructive) {
+        .alert(
+            NSLocalizedString("title_delete_item", value: "删除物品", comment: ""),
+            isPresented: $showDeleteConfirmation
+        ) {
+             Button(
+                NSLocalizedString("action_cancel", value: "取消", comment: ""),
+                role: .cancel
+             ) { }
+             Button(
+                NSLocalizedString("action_delete", value: "删除", comment: ""),
+                role: .destructive
+             ) {
                  deleteBaby()
              }
          } message: {
-             Text("确定要删除 \(baby.name) 吗？此操作无法撤销。")
+             Text(String(format: NSLocalizedString("delete_baby_confirmation", value: "确定要删除 %@ 吗？此操作无法撤销。", comment: ""), baby.name))
          }
      }
      

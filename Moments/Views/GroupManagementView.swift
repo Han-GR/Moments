@@ -23,17 +23,23 @@ struct GroupManagementView: View {
                 }
                 .onDelete(perform: deleteGroups)
             }
-            .navigationTitle("分组管理")
+            .navigationTitle(
+                NSLocalizedString("menu_group_management", value: "分组管理", comment: "")
+            )
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("完成") {
+                    Button(
+                        NSLocalizedString("action_done", value: "完成", comment: "")
+                    ) {
                         dismiss()
                     }
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("添加分组") {
+                    Button(
+                        NSLocalizedString("action_add_group", value: "添加分组", comment: "")
+                    ) {
                         showingAddGroup = true
                     }
                 }
@@ -81,7 +87,16 @@ struct GroupRowView: View {
                 Text(group.name)
                     .font(.headline)
                 
-                Text("\(group.babies?.count ?? 0) 个物品")
+                Text(
+                    String(
+                        format: NSLocalizedString(
+                            "group_items_count_format",
+                            value: "%d 个物品",
+                            comment: ""
+                        ),
+                        group.babies?.count ?? 0
+                    )
+                )
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -118,11 +133,18 @@ struct AddGroupView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section("分组信息") {
-                    TextField("分组名称", text: $groupName)
+                Section(
+                    NSLocalizedString("section_group_info", value: "分组信息", comment: "")
+                ) {
+                    TextField(
+                        NSLocalizedString("field_group_name", value: "分组名称", comment: ""),
+                        text: $groupName
+                    )
                 }
                 
-                Section("选择颜色") {
+                Section(
+                    NSLocalizedString("section_select_color", value: "选择颜色", comment: "")
+                ) {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), spacing: 10) {
                         ForEach(predefinedColors, id: \.self) { color in
                             Circle()
@@ -140,25 +162,37 @@ struct AddGroupView: View {
                     .padding(.vertical, 8)
                 }
             }
-            .navigationTitle("添加分组")
+            .navigationTitle(
+                NSLocalizedString("action_add_group", value: "添加分组", comment: "")
+            )
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("取消") {
+                    Button(
+                        NSLocalizedString("action_cancel", value: "取消", comment: "")
+                    ) {
                         dismiss()
                     }
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("保存") {
+                    Button(
+                        NSLocalizedString("action_save", value: "保存", comment: "")
+                    ) {
                         saveGroup()
                     }
                     .disabled(groupName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
         }
-        .alert("分组名称已存在", isPresented: $showingDuplicateAlert) {
-            Button("确定", role: .cancel) { }
+        .alert(
+            NSLocalizedString("error_group_name_exists", value: "分组名称已存在", comment: ""),
+            isPresented: $showingDuplicateAlert
+        ) {
+            Button(
+                NSLocalizedString("action_ok", value: "确定", comment: ""),
+                role: .cancel
+            ) { }
         }
     }
     
@@ -208,11 +242,18 @@ struct EditGroupView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section("分组信息") {
-                    TextField("分组名称", text: $groupName)
+                Section(
+                    NSLocalizedString("section_group_info", value: "分组信息", comment: "")
+                ) {
+                    TextField(
+                        NSLocalizedString("field_group_name", value: "分组名称", comment: ""),
+                        text: $groupName
+                    )
                 }
                 
-                Section("选择颜色") {
+                Section(
+                    NSLocalizedString("section_select_color", value: "选择颜色", comment: "")
+                ) {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), spacing: 10) {
                         ForEach(predefinedColors, id: \.self) { color in
                             Circle()
@@ -230,7 +271,9 @@ struct EditGroupView: View {
                     .padding(.vertical, 8)
                 }
                 
-                Section("分组成员") {
+                Section(
+                    NSLocalizedString("section_group_members", value: "分组成员", comment: "")
+                ) {
                     if let babies = group.babies, !babies.isEmpty {
                         ForEach(babies, id: \.id) { baby in
                             HStack {
@@ -243,30 +286,44 @@ struct EditGroupView: View {
                             }
                         }
                     } else {
-                        Text("暂无成员")
+                        Text(
+                            NSLocalizedString("label_no_members", value: "暂无成员", comment: "")
+                        )
                             .foregroundColor(.secondary)
                     }
                 }
             }
-            .navigationTitle("编辑分组")
+            .navigationTitle(
+                NSLocalizedString("title_edit_group", value: "编辑分组", comment: "")
+            )
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("取消") {
+                    Button(
+                        NSLocalizedString("action_cancel", value: "取消", comment: "")
+                    ) {
                         dismiss()
                     }
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("保存") {
+                    Button(
+                        NSLocalizedString("action_save", value: "保存", comment: "")
+                    ) {
                         saveChanges()
                     }
                     .disabled(groupName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
         }
-        .alert("分组名称已存在", isPresented: $showingDuplicateAlert) {
-            Button("确定", role: .cancel) { }
+        .alert(
+            NSLocalizedString("error_group_name_exists", value: "分组名称已存在", comment: ""),
+            isPresented: $showingDuplicateAlert
+        ) {
+            Button(
+                NSLocalizedString("action_ok", value: "确定", comment: ""),
+                role: .cancel
+            ) { }
         }
     }
     
@@ -313,7 +370,9 @@ struct GroupSelectionView: View {
                             .fill(AppColors.lightGrayBackground)
                             .frame(width: 20, height: 20)
                         
-                        Text("无分组")
+                        Text(
+                            NSLocalizedString("label_no_group", value: "无分组", comment: "")
+                        )
                             .foregroundColor(.primary)
                         
                         Spacer()
@@ -329,20 +388,29 @@ struct GroupSelectionView: View {
                     Button(action: {
                         onGroupSelected(group)
                         dismiss()
-                    }) {
-                        HStack {
+                        }) {
+                            HStack {
                             Circle()
                                 .fill(group.displayColor)
                                 .frame(width: 20, height: 20)
                             
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(group.name)
-                                    .font(.headline)
-                                    .foregroundColor(.primary)
-                                
-                                Text("\(group.babies?.count ?? 0) 个物品")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(group.name)
+                                        .font(.headline)
+                                        .foregroundColor(.primary)
+                                    
+                                    Text(
+                                        String(
+                                            format: NSLocalizedString(
+                                                "group_items_count_format",
+                                                value: "%d 个物品",
+                                                comment: ""
+                                            ),
+                                            group.babies?.count ?? 0
+                                        )
+                                    )
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
                             }
                             
                             Spacer()
@@ -355,11 +423,15 @@ struct GroupSelectionView: View {
                     }
                 }
             }
-            .navigationTitle("选择分组")
+            .navigationTitle(
+                NSLocalizedString("label_select_group", value: "选择分组", comment: "")
+            )
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("取消") {
+                    Button(
+                        NSLocalizedString("action_cancel", value: "取消", comment: "")
+                    ) {
                         dismiss()
                     }
                 }

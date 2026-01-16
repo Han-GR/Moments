@@ -57,16 +57,34 @@ struct MomentsView: View {
         NavigationStack {
             VStack {
                 if isWipingData {
-                    ContentUnavailableView("正在清理数据", systemImage: "trash", description: Text("请稍候…"))
+                    ContentUnavailableView(
+                        NSLocalizedString("title_cleaning_data", value: "正在清理数据", comment: ""),
+                        systemImage: "trash",
+                        description: Text(
+                            NSLocalizedString("message_please_wait", value: "请稍候…", comment: "")
+                        )
+                    )
                 } else {
                     if !babies.isEmpty {
                         BabySelectorView(babies: babies, selectedBaby: $selectedBaby, showUnboundOnly: $showUnboundOnly)
                     }
                     
                     if moments.isEmpty {
-                        ContentUnavailableView("", systemImage: "bubbles.and.sparkles", description: Text("点击加号添加您的第一个瞬间"))
+                        ContentUnavailableView(
+                            "",
+                            systemImage: "bubbles.and.sparkles",
+                            description: Text(
+                                NSLocalizedString("empty_moments_hint_tap_plus", value: "点击加号添加您的第一个瞬间", comment: "")
+                            )
+                        )
                     } else if filteredMoments.isEmpty {
-                        ContentUnavailableView("没有找到瞬间", systemImage: "magnifyingglass", description: Text("尝试调整搜索条件"))
+                        ContentUnavailableView(
+                            NSLocalizedString("empty_moments_title_no_results", value: "没有找到瞬间", comment: ""),
+                            systemImage: "magnifyingglass",
+                            description: Text(
+                                NSLocalizedString("empty_moments_subtitle_try_adjust_filters", value: "尝试调整搜索条件", comment: "")
+                            )
+                        )
                     } else {
                         List {
                             ForEach(filteredMoments) { moment in
@@ -74,7 +92,7 @@ struct MomentsView: View {
                                     MomentListItem(moment: moment)
                                 }
                                 .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    Button("删除", role: .destructive) {
+                                    Button(NSLocalizedString("action_delete", value: "删除", comment: ""), role: .destructive) {
                                         deleteMoment(moment)
                                     }
                                 }
@@ -84,7 +102,11 @@ struct MomentsView: View {
                     }
                 }
             }
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "搜索瞬间")
+            .searchable(
+                text: $searchText,
+                placement: .navigationBarDrawer(displayMode: .always),
+                prompt: NSLocalizedString("search_moments_placeholder", value: "搜索瞬间", comment: "")
+            )
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -92,7 +114,10 @@ struct MomentsView: View {
                             isAddingMoment = true
                         }
                     }) {
-                        Label("添加瞬间", systemImage: "plus")
+                        Label(
+                            NSLocalizedString("action_add_moment", value: "添加瞬间", comment: ""),
+                            systemImage: "plus"
+                        )
                     }
                 }
             }
@@ -128,7 +153,7 @@ struct BabySelectorView: View {
                                 .clipShape(Circle())
                                 .foregroundColor(.white)
                             
-                            Text("全部")
+                            Text(NSLocalizedString("filter_all", value: "全部", comment: ""))
                                 .font(.caption)
                         }
                     }
@@ -148,7 +173,7 @@ struct BabySelectorView: View {
                                 .clipShape(Circle())
                                 .foregroundColor(.white)
                             
-                            Text("自由瞬间")
+                            Text(NSLocalizedString("filter_unbound", value: "自由瞬间", comment: ""))
                                 .font(.caption)
                         }
                     }

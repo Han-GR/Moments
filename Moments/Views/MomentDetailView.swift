@@ -20,7 +20,13 @@ struct MomentDetailView: View {
     
     var body: some View {
         if isWipingData {
-            ContentUnavailableView("数据已清理", systemImage: "trash", description: Text("该内容已被删除"))
+            ContentUnavailableView(
+                NSLocalizedString("title_data_cleared", value: "数据已清理", comment: ""),
+                systemImage: "trash",
+                description: Text(
+                    NSLocalizedString("message_content_deleted", value: "该内容已被删除", comment: "")
+                )
+            )
         } else {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
@@ -60,7 +66,9 @@ struct MomentDetailView: View {
                 
                 if let items = moment.mediaItems, !items.isEmpty {
                     VStack(alignment: .leading) {
-                        Text("照片")
+                        Text(
+                            NSLocalizedString("section_photos", value: "照片", comment: "")
+                        )
                             .font(.headline)
                             .padding(.horizontal)
                         
@@ -71,7 +79,9 @@ struct MomentDetailView: View {
             .padding(.vertical)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .navigationTitle("瞬间详情")
+        .navigationTitle(
+            NSLocalizedString("title_moment_detail", value: "瞬间详情", comment: "")
+        )
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -79,13 +89,19 @@ struct MomentDetailView: View {
                     Button(action: {
                         isEditing = true
                     }) {
-                        Label("编辑", systemImage: "pencil")
+                        Label(
+                            NSLocalizedString("action_edit", value: "编辑", comment: ""),
+                            systemImage: "pencil"
+                        )
                     }
                     
                     Button(role: .destructive, action: {
                         showDeleteConfirmation = true
                     }) {
-                        Label("删除", systemImage: "trash")
+                        Label(
+                            NSLocalizedString("action_delete", value: "删除", comment: ""),
+                            systemImage: "trash"
+                        )
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
@@ -97,13 +113,28 @@ struct MomentDetailView: View {
                 MomentEditView(moment: moment)
             }
         }
-        .alert("确认删除", isPresented: $showDeleteConfirmation) {
-            Button("取消", role: .cancel) { }
-            Button("删除", role: .destructive) {
+        .alert(
+            NSLocalizedString("title_confirm_delete", value: "确认删除", comment: ""),
+            isPresented: $showDeleteConfirmation
+        ) {
+            Button(
+                NSLocalizedString("action_cancel", value: "取消", comment: ""),
+                role: .cancel
+            ) { }
+            Button(
+                NSLocalizedString("action_delete", value: "删除", comment: ""),
+                role: .destructive
+            ) {
                 deleteMoment()
             }
         } message: {
-            Text("确定要删除这条生活瞬间吗？此操作无法撤销。")
+            Text(
+                NSLocalizedString(
+                    "delete_moment_confirmation",
+                    value: "确定要删除这条生活瞬间吗？此操作无法撤销。",
+                    comment: ""
+                )
+            )
         }
         }
     }

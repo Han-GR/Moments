@@ -22,7 +22,9 @@ struct SettingsView: View {
     
     var body: some View {
         List {
-            Section("应用信息") {
+            Section(
+                NSLocalizedString("section_app_info", value: "应用信息", comment: "")
+            ) {
                 HStack {
                     Image(systemName: "bubbles.and.sparkles")
                         .resizable()
@@ -32,9 +34,20 @@ struct SettingsView: View {
                         .clipShape(Circle())
                     
                     VStack(alignment: .leading) {
-                        Text("每事每刻")
+                        Text(
+                            NSLocalizedString("app_name_cn", value: "每事每刻", comment: "")
+                        )
                             .font(.headline)
-                        Text("版本 \(appVersion)")
+                        Text(
+                            String(
+                                format: NSLocalizedString(
+                                    "version_format",
+                                    value: "版本 %@",
+                                    comment: ""
+                                ),
+                                appVersion
+                            )
+                        )
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -44,56 +57,88 @@ struct SettingsView: View {
                 Button(action: {
                     showingAbout = true
                 }) {
-                    Label("关于Moments", systemImage: "info.circle")
+                    Label(
+                        NSLocalizedString("action_about_moments", value: "关于每事每刻", comment: ""),
+                        systemImage: "info.circle"
+                    )
                 }
             }
             
-            Section("统计") {
+            Section(
+                NSLocalizedString("section_statistics", value: "统计", comment: "")
+            ) {
                 HStack {
-                    Label("物品数量", systemImage: "person.2.fill")
+                    Label(
+                        NSLocalizedString("label_items_count", value: "物品数量", comment: ""),
+                        systemImage: "person.2.fill"
+                    )
                     Spacer()
                     Text("\(babies.count)")
                         .foregroundColor(.secondary)
                 }
                 
                 HStack {
-                    Label("生活瞬间", systemImage: "heart.text.square.fill")
+                    Label(
+                        NSLocalizedString("label_moments_count", value: "生活瞬间", comment: ""),
+                        systemImage: "heart.text.square.fill"
+                    )
                     Spacer()
                     Text("\(moments.count)")
                         .foregroundColor(.secondary)
                 }
                 
                 HStack {
-                    Label("分组数量", systemImage: "folder.fill")
+                    Label(
+                        NSLocalizedString("label_groups_count", value: "分组数量", comment: ""),
+                        systemImage: "folder.fill"
+                    )
                     Spacer()
                     Text("\(groups.count)")
                         .foregroundColor(.secondary)
                 }
             }            
-            Section("数据管理") {
+            Section(
+                NSLocalizedString("section_data_management", value: "数据管理", comment: "")
+            ) {
                 Button(role: .destructive, action: {
                     showingDeleteAllConfirmation = true
                 }) {
-                    Label("清除所有数据", systemImage: "trash")
+                    Label(
+                        NSLocalizedString("action_clear_all_data", value: "清除所有数据", comment: ""),
+                        systemImage: "trash"
+                    )
                 }
             }
         }
-        .navigationTitle("设置")
         .onAppear {
-            // 获取应用版本
             if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
                 appVersion = version
             } else {
                 appVersion = "1.0"
             }
         }
-        .alert("确认删除", isPresented: $showingDeleteAllConfirmation) {
-            Button("取消", role: .cancel) { }
-            Button("删除", role: .destructive) {
+        .alert(
+            NSLocalizedString("title_confirm_delete", value: "确认删除", comment: ""),
+            isPresented: $showingDeleteAllConfirmation
+        ) {
+            Button(
+                NSLocalizedString("action_cancel", value: "取消", comment: ""),
+                role: .cancel
+            ) { }
+            Button(
+                NSLocalizedString("action_delete", value: "删除", comment: ""),
+                role: .destructive
+            ) {
                 deleteAllData()
             }
         } message: {
-            Text("确定要删除所有物品和生活瞬间数据吗？此操作无法撤销。")
+            Text(
+                NSLocalizedString(
+                    "confirm_delete_all_message",
+                    value: "确定要删除所有物品和生活瞬间数据吗？此操作无法撤销。",
+                    comment: ""
+                )
+            )
         }
         .sheet(isPresented: $showingAbout) {
             AboutView()
@@ -140,11 +185,15 @@ struct AboutView: View {
                     .padding(20)
                     .clipShape(Circle())
                 
-                Text("每事每刻")
+                Text(
+                    NSLocalizedString("app_name_cn", value: "每事每刻", comment: "")
+                )
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 
-                Text("记录物品的美好时光")
+                Text(
+                    NSLocalizedString("about_tagline", value: "记录物品的美好时光", comment: "")
+                )
                     .font(.headline)
                     .foregroundColor(.secondary)
                 
@@ -152,16 +201,52 @@ struct AboutView: View {
                     .frame(height: 30)
                 
                 VStack(alignment: .leading, spacing: 15) {
-                    Text("每事每刻是一款专为记录和管理您的物品而设计的应用。您可以在这里记录与您有关的任何事物,不要错过任何瞬间。")
+                    Text(
+                        NSLocalizedString(
+                            "about_description",
+                            value: "每事每刻是一款专为记录和管理您的物品而设计的应用。您可以在这里记录与您有关的任何事物,不要错过任何瞬间。",
+                            comment: ""
+                        )
+                    )
                     
-                    Text("功能特点：")
+                    Text(
+                        NSLocalizedString("about_features_title", value: "功能特点：", comment: "")
+                    )
                         .fontWeight(.bold)
                         .padding(.top, 10)
                     
-                    FeatureRow(icon: "camera.fill", text: "拍照并上传物品的照片")
-                    FeatureRow(icon: "pencil", text: "编辑物品的基本信息")
-                    FeatureRow(icon: "heart.text.square.fill", text: "记录物品的生活瞬间")
-                    FeatureRow(icon: "house.fill", text: "在主页查看所有物品")
+                    FeatureRow(
+                        icon: "camera.fill",
+                        text: NSLocalizedString(
+                            "about_feature_capture_photos",
+                            value: "拍照并上传物品的照片",
+                            comment: ""
+                        )
+                    )
+                    FeatureRow(
+                        icon: "pencil",
+                        text: NSLocalizedString(
+                            "about_feature_edit_info",
+                            value: "编辑物品的基本信息",
+                            comment: ""
+                        )
+                    )
+                    FeatureRow(
+                        icon: "heart.text.square.fill",
+                        text: NSLocalizedString(
+                            "about_feature_record_moments",
+                            value: "记录物品的生活瞬间",
+                            comment: ""
+                        )
+                    )
+                    FeatureRow(
+                        icon: "house.fill",
+                        text: NSLocalizedString(
+                            "about_feature_view_all_items",
+                            value: "在主页查看所有物品",
+                            comment: ""
+                        )
+                    )
                 }
                 .padding()
                 .background(Color(.secondarySystemBackground))
@@ -175,11 +260,15 @@ struct AboutView: View {
                     .foregroundColor(.secondary)
             }
             .padding()
-            .navigationTitle("关于每事每刻")
+            .navigationTitle(
+                NSLocalizedString("title_about_full", value: "关于每事每刻", comment: "")
+            )
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("关闭") {
+                    Button(
+                        NSLocalizedString("action_close", value: "关闭", comment: "")
+                    ) {
                         dismiss()
                     }
                 }
