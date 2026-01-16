@@ -15,7 +15,7 @@ struct MainTabView: View {
                 HomeView()
             }
             .tabItem {
-                Label("首页", systemImage: "house.fill")
+                Label("物品", systemImage: "rectangle.stack.fill")
             }
             .tag(0)
             
