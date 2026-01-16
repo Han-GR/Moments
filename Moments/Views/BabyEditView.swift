@@ -13,6 +13,7 @@ struct BabyEditView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Query private var groups: [Group]
+    @Query private var existingBabies: [Baby]
     
     @State private var name = ""
     @State private var birthDate: Date? = nil
@@ -24,6 +25,7 @@ struct BabyEditView: View {
     @State private var showingImagePicker = false
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State private var showingCameraAlert = false
+    @State private var showingDuplicateAlert = false
     @State private var selectedGroup: Group? = nil
     @State private var showingAddGroup = false
     @State private var showingGroupManagement = false
@@ -196,7 +198,6 @@ struct BabyEditView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("保存") {
                     saveBaby()
-                    dismiss()
                 }
                 .disabled(name.isEmpty)
             }
@@ -248,6 +249,11 @@ struct BabyEditView: View {
         } message: {
             Text("此设备不支持相机功能")
         }
+        .alert("名字重复", isPresented: $showingDuplicateAlert) {
+            Button("确定", role: .cancel) { }
+        } message: {
+            Text("该物品名字已存在，请使用其他名字。")
+        }
         .sheet(isPresented: $showingAddGroup) {
             AddGroupView { newGroup in
                 selectedGroup = newGroup
@@ -262,9 +268,26 @@ struct BabyEditView: View {
     }
     
     private func saveBaby() {
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // 检查名字是否重复
+        let isDuplicate: Bool
+        if let currentBaby = baby {
+            // 编辑模式：检查是否有其他物品使用了相同名字
+            isDuplicate = existingBabies.contains { $0.id != currentBaby.id && $0.name == trimmedName }
+        } else {
+            // 添加模式：检查是否有物品使用了相同名字
+            isDuplicate = existingBabies.contains { $0.name == trimmedName }
+        }
+        
+        if isDuplicate {
+            showingDuplicateAlert = true
+            return
+        }
+        
         if let baby = baby {
             // 更新现有的物品
-            baby.name = name
+            baby.name = trimmedName
             baby.birthDate = birthDate
             baby.notes = notes
             baby.group = selectedGroup
@@ -283,13 +306,14 @@ struct BabyEditView: View {
                     _ = MediaStore.saveThumbnail(of: selectedImage, basedOn: name)
                 }
             }
-            let newBaby = Baby(name: name, birthDate: birthDate, photoPath: finalPath, notes: notes)
+            let newBaby = Baby(name: trimmedName, birthDate: birthDate, photoPath: finalPath, notes: notes)
             newBaby.group = selectedGroup
             modelContext.insert(newBaby)
         }
         
         do {
             try modelContext.save()
+            dismiss()
         } catch {
                 // 保存失败，静默处理
             }
