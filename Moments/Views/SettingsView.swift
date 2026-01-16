@@ -25,43 +25,46 @@ struct SettingsView: View {
             Section(
                 NSLocalizedString("section_app_info", value: "应用信息", comment: "")
             ) {
-                HStack {
-                    Image(systemName: "bubbles.and.sparkles")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 30, height: 30)
-                        .padding(10)
-                        .clipShape(Circle())
-                    
-                    VStack(alignment: .leading) {
-                        Text(
-                            NSLocalizedString("app_name_cn", value: "每事每刻", comment: "")
-                        )
-                            .font(.headline)
-                        Text(
-                            String(
-                                format: NSLocalizedString(
-                                    "version_format",
-                                    value: "版本 %@",
-                                    comment: ""
-                                ),
-                                appVersion
-                            )
-                        )
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                .padding(.vertical, 8)
-                
                 Button(action: {
                     showingAbout = true
                 }) {
-                    Label(
-                        NSLocalizedString("action_about_moments", value: "关于每事每刻", comment: ""),
-                        systemImage: "info.circle"
-                    )
+                    HStack {
+                        Image(systemName: "bubbles.and.sparkles")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                            .padding(10)
+                            .clipShape(Circle())
+                        
+                        VStack(alignment: .leading) {
+                            Text(
+                                NSLocalizedString("app_name_cn", value: "每事每刻", comment: "")
+                            )
+                                .font(.headline)
+                                .foregroundColor(.primary)
+                            Text(
+                                String(
+                                    format: NSLocalizedString(
+                                        "version_format",
+                                        value: "版本 %@",
+                                        comment: ""
+                                    ),
+                                    appVersion
+                                )
+                            )
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(Color(.tertiaryLabel))
+                    }
+                    .padding(.vertical, 8)
                 }
+                .buttonStyle(.plain)
             }
             
             Section(
