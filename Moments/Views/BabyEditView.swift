@@ -21,9 +21,6 @@ struct BabyEditView: View {
     @State private var photoPath: String? = nil
     @State private var selectedImage: UIImage? = nil
     @State private var isShowingPhotoPicker = false
-    @State private var showingImagePicker = false
-    @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
-    @State private var showingCameraAlert = false
     @State private var showingDuplicateAlert = false
     @State private var selectedGroup: Group? = nil
     @State private var showingAddGroup = false
@@ -78,35 +75,17 @@ struct BabyEditView: View {
                     .buttonStyle(.bordered)
                     .controlSize(.large)
                     .padding(.top, 8)
-                    .confirmationDialog(
-                        NSLocalizedString("dialog_select_photo_title", value: "选择照片", comment: ""),
-                        isPresented: $isShowingPhotoPicker,
-                    ) {
-                        Button(
-                            NSLocalizedString("action_take_photo", value: "拍照", comment: "")
-                        ) {
-                            if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                                sourceType = .camera
-                                showingImagePicker = true
-                            } else {
-                                showingCameraAlert = true
-                            }
-                        }
-                        
-                        Button(
-                            NSLocalizedString("action_choose_from_library", value: "从相册选择", comment: "")
-                        ) {
-                            sourceType = .photoLibrary
-                            showingImagePicker = true
-                        }
-                        
-                        Button(
-                            NSLocalizedString("action_cancel", value: "取消", comment: ""),
-                            role: .cancel
-                        ) {
-                            isShowingPhotoPicker = false
-                        }
-                    }
+                    .background(
+                        PhotoPickerSheet(
+                            selectedImages: Binding(
+                                get: { selectedImage.map { [$0] } ?? [] },
+                                set: { images in
+                                    selectedImage = images.first
+                                }
+                            ),
+                            isPresented: $isShowingPhotoPicker
+                        )
+                    )
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
@@ -213,7 +192,7 @@ struct BabyEditView: View {
                     }
                 }
             }
-
+        
         
         }
         .navigationTitle(
@@ -251,35 +230,6 @@ struct BabyEditView: View {
         }
 
         .onChange(of: selectedImage) { _, _ in }
-        .sheet(isPresented: $showingImagePicker) {
-            ImagePicker(
-                selectedImages: Binding(
-                    get: { selectedImage.map { [$0] } ?? [] },
-                    set: { images in
-                        selectedImage = images.first
-                    }
-                ),
-                sourceType: sourceType,
-                allowsMultipleSelection: false
-            )
-        }
-        .alert(
-            NSLocalizedString("camera_unavailable_title", value: "相机不可用", comment: ""),
-            isPresented: $showingCameraAlert
-        ) {
-            Button(
-                NSLocalizedString("action_ok", value: "确定", comment: ""),
-                role: .cancel
-            ) { }
-        } message: {
-            Text(
-                NSLocalizedString(
-                    "camera_not_supported_message",
-                    value: "此设备不支持相机功能",
-                    comment: ""
-                )
-            )
-        }
         .alert(
             NSLocalizedString("error_item_name_exists", value: "物品名字已存在", comment: ""),
             isPresented: $showingDuplicateAlert

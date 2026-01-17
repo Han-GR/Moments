@@ -28,9 +28,6 @@ struct MomentEditView: View {
     @State private var isProcessingImages = false
     @State private var isShowingBabyPicker = false
     @State private var isShowingPhotoPicker = false
-    @State private var showingImagePicker = false
-    @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
-    @State private var showingCameraAlert = false
     @State private var previewVideoURL: URL?
     @State private var isShowingVideoPlayer = false
     
@@ -57,18 +54,6 @@ struct MomentEditView: View {
                 }
             }
             .onAppear(perform: loadData)
-            .sheet(isPresented: $showingImagePicker) {
-                ImagePicker(
-                    selectedMedia: $selectedMedia,
-                    sourceType: sourceType,
-                    allowsMultipleSelection: sourceType == .photoLibrary
-                )
-            }
-            .alert(NSLocalizedString("camera_unavailable_title", value: "相机不可用", comment: ""), isPresented: $showingCameraAlert) {
-                Button(NSLocalizedString("action_ok", value: "确定", comment: ""), role: .cancel) { }
-            } message: {
-                Text(NSLocalizedString("camera_not_supported_message", value: "此设备不支持相机功能", comment: ""))
-            }
             .sheet(isPresented: $isShowingBabyPicker) {
                 BabyPickerSheet(selectedBaby: $selectedBaby, isPresented: $isShowingBabyPicker, allBabies: allBabies)
             }
@@ -198,28 +183,12 @@ struct MomentEditView: View {
                     .cornerRadius(8)
             }
             .disabled(selectedMedia.count >= 9)
-            .confirmationDialog(
-                NSLocalizedString("dialog_select_photo_title", value: "选择照片", comment: ""),
-                isPresented: $isShowingPhotoPicker,
-            ) {
-                Button(NSLocalizedString("action_take_photo", value: "拍照", comment: "")) {
-                    if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                        sourceType = .camera
-                        showingImagePicker = true
-                    } else {
-                        showingCameraAlert = true
-                    }
-                }
-                
-                Button(NSLocalizedString("action_choose_from_library", value: "从相册选择", comment: "")) {
-                    sourceType = .photoLibrary
-                    showingImagePicker = true
-                }
-                
-                Button(NSLocalizedString("action_cancel", value: "取消", comment: ""), role: .cancel) {
-                    isShowingPhotoPicker = false
-                }
-            }
+            .background(
+                MediaPickerSheet(
+                    selectedMedia: $selectedMedia,
+                    isPresented: $isShowingPhotoPicker
+                )
+            )
             
             if !selectedMedia.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
