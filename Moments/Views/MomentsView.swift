@@ -267,53 +267,61 @@ struct MomentListItem: View {
                             HStack(spacing: 8) {
                                 let limited = Array(items.prefix(3))
                                 ForEach(limited, id: \.id) { item in
-                                    if let uiImage = MediaStore.loadImage(from: item.thumbnailPath ?? item.originalPath, preferThumbnail: true) {
-                                        ZStack(alignment: .center) {
-                                            Image(uiImage: uiImage)
-                                                .resizable()
-                                                .aspectRatio(1, contentMode: .fill)
-                                                .frame(width: 80, height: 80)
-                                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                            
-                                            if item.type == .video {
-                                                Image(systemName: "play.circle.fill")
-                                                    .foregroundColor(.white)
-                                                    .shadow(radius: 2)
-                                            } else if item.type == .livePhoto {
-                                                Image(systemName: "livephoto")
-                                                    .font(.caption)
-                                                    .foregroundColor(.white)
-                                                    .shadow(radius: 2)
-                                                    .padding(4)
-                                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                                            }
-                                        }
-                            }
-                        }
-                        if let items = moment.mediaItems, items.count > 3 {
-                            ZStack {
-                                Rectangle()
-                                    .fill(AppColors.grayBackground)
-                                    .frame(width: 80, height: 80)
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    MomentMediaThumbnail(item: item, size: 80)
+                                }
                                 
-                                Text("+\(items.count - 3)")
-                                    .font(.title2)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.secondary)
+                                if items.count > 3 {
+                                    ZStack {
+                                        Rectangle()
+                                            .fill(AppColors.grayBackground)
+                                            .frame(width: 80, height: 80)
+                                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                                        
+                                        Text("+\(items.count - 3)")
+                                            .font(.title2)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
                             }
                         }
                     }
                 }
                 .allowsHitTesting(false)
             }
-                }
-                .padding(.leading, 4)
-            }
-            
-            
         }
         .padding(.vertical, 8)
+    }
+}
+
+struct MomentMediaThumbnail: View {
+    let item: MomentMedia
+    let size: CGFloat
+    
+    var body: some View {
+        if let uiImage = MediaStore.loadImage(from: item.thumbnailPath ?? item.originalPath, preferThumbnail: true) {
+            ZStack(alignment: .center) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .aspectRatio(1, contentMode: .fill)
+                    .frame(width: size, height: size)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                
+                if item.type == .video {
+                    Image(systemName: "play.circle.fill")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                        .shadow(radius: 2)
+                } else if item.type == .livePhoto {
+                    Image(systemName: "livephoto")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                        .shadow(radius: 2)
+                        .padding(4)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                }
+            }
+        }
     }
 }
 

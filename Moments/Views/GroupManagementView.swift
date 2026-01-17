@@ -120,6 +120,28 @@ private let predefinedColors = [
     "#FF6347", "#9370DB", "#32CD32", "#FF1493"
 ]
 
+struct GroupColorSelectionGrid: View {
+    @Binding var selectedColor: String
+    
+    var body: some View {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), spacing: 10) {
+            ForEach(predefinedColors, id: \.self) { color in
+                Circle()
+                    .fill(Color(hex: color) ?? .pink)
+                    .frame(width: 30, height: 30)
+                    .overlay(
+                        Circle()
+                            .stroke(selectedColor == color ? AppColors.primaryText : AppColors.strokeClear, lineWidth: 2)
+                    )
+                    .onTapGesture {
+                        selectedColor = color
+                    }
+            }
+        }
+        .padding(.vertical, 8)
+    }
+}
+
 struct AddGroupView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -145,21 +167,7 @@ struct AddGroupView: View {
                 Section(
                     NSLocalizedString("section_select_color", value: "选择颜色", comment: "")
                 ) {
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), spacing: 10) {
-                        ForEach(predefinedColors, id: \.self) { color in
-                            Circle()
-                                .fill(Color(hex: color) ?? .pink)
-                                .frame(width: 30, height: 30)
-                                .overlay(
-                                    Circle()
-                                        .stroke(selectedColor == color ? AppColors.primaryText : AppColors.strokeClear, lineWidth: 2)
-                                )
-                                .onTapGesture {
-                                    selectedColor = color
-                                }
-                        }
-                    }
-                    .padding(.vertical, 8)
+                    GroupColorSelectionGrid(selectedColor: $selectedColor)
                 }
             }
             .navigationTitle(
@@ -254,21 +262,7 @@ struct EditGroupView: View {
                 Section(
                     NSLocalizedString("section_select_color", value: "选择颜色", comment: "")
                 ) {
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), spacing: 10) {
-                        ForEach(predefinedColors, id: \.self) { color in
-                            Circle()
-                                .fill(Color(hex: color) ?? .pink)
-                                .frame(width: 30, height: 30)
-                                .overlay(
-                                    Circle()
-                                        .stroke(selectedColor == color ? AppColors.primaryText : AppColors.strokeClear, lineWidth: 2)
-                                )
-                                .onTapGesture {
-                                    selectedColor = color
-                                }
-                        }
-                    }
-                    .padding(.vertical, 8)
+                    GroupColorSelectionGrid(selectedColor: $selectedColor)
                 }
                 
                 Section(
