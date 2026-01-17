@@ -20,7 +20,6 @@ struct BabyEditView: View {
     @State private var notes = ""
     @State private var photoPath: String? = nil
     @State private var selectedImage: UIImage? = nil
-    @State private var showDatePicker = false
     @State private var isShowingPhotoPicker = false
     @State private var showingImagePicker = false
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
@@ -121,36 +120,13 @@ struct BabyEditView: View {
                     text: $name
                 )
                 
-                HStack {
-                    Text(
-                        NSLocalizedString("field_birthday", value: "生日", comment: "")
-                    )
-                    Spacer()
-                    if let birthDate = birthDate {
-                        Text(birthDate, style: .date)
-                            .foregroundColor(.secondary)
-                    } else {
-                        Text(
-                            NSLocalizedString("label_not_set", value: "未设置", comment: "")
-                        )
-                            .foregroundColor(.secondary)
-                    }
-                    Button(action: { showDatePicker.toggle() }) {
-                        Image(systemName: "calendar")
-                    }
-                }
-                
-                if showDatePicker {
-                    DatePicker(
-                        NSLocalizedString("field_select_birthday", value: "选择生日", comment: ""),
-                        selection: Binding(
-                            get: { birthDate ?? Date() },
-                            set: { birthDate = $0 }
-                        ),
-                        displayedComponents: .date
-                    )
-                    .datePickerStyle(.graphical)
-                }
+                CollapsibleDatePickerRow(
+                    title: NSLocalizedString("field_birthday", value: "生日", comment: ""),
+                    placeholder: NSLocalizedString("label_not_set", value: "未设置", comment: ""),
+                    date: $birthDate,
+                    minimumDate: nil,
+                    maximumDate: Date()
+                )
             }
             
             Section(

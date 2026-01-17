@@ -153,8 +153,20 @@ struct MomentEditView: View {
     
     private var dateSection: some View {
         Section(NSLocalizedString("field_date", value: "日期", comment: "")) {
-            DatePicker(NSLocalizedString("field_select_date", value: "选择日期", comment: ""), selection: $date, displayedComponents: [.date])
-                .datePickerStyle(.compact)
+            CollapsibleDatePickerRow(
+                title: NSLocalizedString("field_select_date", value: "选择日期", comment: ""),
+                placeholder: NSLocalizedString("label_not_set", value: "未设置", comment: ""),
+                date: Binding<Date?>(
+                    get: { date },
+                    set: { newValue in
+                        if let value = newValue {
+                            date = value
+                        }
+                    }
+                ),
+                minimumDate: nil,
+                maximumDate: Date()
+            )
         }
     }
     
