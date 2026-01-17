@@ -79,6 +79,36 @@ struct BabyEditView: View {
                     .buttonStyle(.bordered)
                     .controlSize(.large)
                     .padding(.top, 8)
+                    .confirmationDialog(
+                        NSLocalizedString("dialog_select_photo_title", value: "选择照片", comment: ""),
+                        isPresented: $isShowingPhotoPicker,
+                        titleVisibility: .visible
+                    ) {
+                        Button(
+                            NSLocalizedString("action_take_photo", value: "拍照", comment: "")
+                        ) {
+                            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                                sourceType = .camera
+                                showingImagePicker = true
+                            } else {
+                                showingCameraAlert = true
+                            }
+                        }
+                        
+                        Button(
+                            NSLocalizedString("action_choose_from_library", value: "从相册选择", comment: "")
+                        ) {
+                            sourceType = .photoLibrary
+                            showingImagePicker = true
+                        }
+                        
+                        Button(
+                            NSLocalizedString("action_cancel", value: "取消", comment: ""),
+                            role: .cancel
+                        ) {
+                            isShowingPhotoPicker = false
+                        }
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
@@ -246,36 +276,6 @@ struct BabyEditView: View {
         }
 
         .onChange(of: selectedImage) { _, _ in }
-        .confirmationDialog(
-            NSLocalizedString("dialog_select_photo_title", value: "选择照片", comment: ""),
-            isPresented: $isShowingPhotoPicker,
-            titleVisibility: .visible
-        ) {
-            Button(
-                NSLocalizedString("action_take_photo", value: "拍照", comment: "")
-            ) {
-                if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                    sourceType = .camera
-                    showingImagePicker = true
-                } else {
-                    showingCameraAlert = true
-                }
-            }
-            
-            Button(
-                NSLocalizedString("action_choose_from_library", value: "从相册选择", comment: "")
-            ) {
-                sourceType = .photoLibrary
-                showingImagePicker = true
-            }
-            
-            Button(
-                NSLocalizedString("action_cancel", value: "取消", comment: ""),
-                role: .cancel
-            ) {
-                isShowingPhotoPicker = false
-            }
-        }
         .sheet(isPresented: $showingImagePicker) {
             ImagePicker(
                 selectedImages: Binding(
