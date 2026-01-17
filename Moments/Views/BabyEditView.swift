@@ -82,7 +82,6 @@ struct BabyEditView: View {
                     .confirmationDialog(
                         NSLocalizedString("dialog_select_photo_title", value: "选择照片", comment: ""),
                         isPresented: $isShowingPhotoPicker,
-                        titleVisibility: .visible
                     ) {
                         Button(
                             NSLocalizedString("action_take_photo", value: "拍照", comment: "")
