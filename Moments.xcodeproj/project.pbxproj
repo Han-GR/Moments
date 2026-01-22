@@ -407,6 +407,7 @@
 				DEVELOPMENT_TEAM = NYS89H56PL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Moments需要访问相机来拍照";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Moments需要访问麦克风来录制视频";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Moments需要保存照片到相册";
@@ -444,6 +445,7 @@
 				DEVELOPMENT_TEAM = NYS89H56PL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Moments需要访问相机来拍照";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Moments需要访问麦克风来录制视频";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Moments需要保存照片到相册";
