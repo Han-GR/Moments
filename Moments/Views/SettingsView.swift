@@ -265,7 +265,7 @@ struct AboutView: View {
                         .cornerRadius(16)
                         .padding(.horizontal)
                         
-                        Text("© 2026 Han-GR")
+                        Text("© 2026 ruisapp")
                             .font(.caption)
                             .foregroundColor(.secondary)
                             .padding(.top, 8)
