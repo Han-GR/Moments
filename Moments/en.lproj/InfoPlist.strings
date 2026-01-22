@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  Moments
+
+  Created for localization of app name.
+*/
+
+"CFBundleDisplayName" = "Moments Keeper";
+"CFBundleName" = "Moments Keeper";

@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  Moments
+
+  Created for localization of app name.
+*/
+
+"CFBundleDisplayName" = "每事每刻";
+"CFBundleName" = "每事每刻";
