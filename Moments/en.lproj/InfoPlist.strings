@@ -7,3 +7,8 @@
 
 "CFBundleDisplayName" = "Moments Keeper";
 "CFBundleName" = "Moments Keeper";
+
+"NSCameraUsageDescription" = "Moments Keeper needs access to your camera to allow you to take photos of your items and record videos of your life moments directly within the app.";
+"NSMicrophoneUsageDescription" = "Moments Keeper needs access to your microphone to include audio when you record videos of your life moments.";
+"NSPhotoLibraryUsageDescription" = "Moments Keeper needs access to your photo library to allow you to select existing photos to use as item covers or to add to your moment records.";
+"NSPhotoLibraryAddUsageDescription" = "Moments Keeper needs permission to save photos and videos you capture within the app to your system photo library.";

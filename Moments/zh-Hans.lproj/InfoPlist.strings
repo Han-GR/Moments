@@ -7,3 +7,8 @@
 
 "CFBundleDisplayName" = "每事每刻";
 "CFBundleName" = "每事每刻";
+
+"NSCameraUsageDescription" = "每事每刻需要访问您的相机，以便您可以直接在应用内拍摄物品照片或记录生活瞬间的视频。";
+"NSMicrophoneUsageDescription" = "每事每刻需要访问您的麦克风，以便您在录制生活瞬间的视频时可以包含声音。";
+"NSPhotoLibraryUsageDescription" = "每事每刻需要访问您的相册，以便您可以从现有的照片中选择图片作为物品封面或添加到瞬间记录中。";
+"NSPhotoLibraryAddUsageDescription" = "每事每刻需要权限将您在应用内拍摄的照片和视频保存到您的系统相册中。";
