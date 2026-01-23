@@ -61,12 +61,36 @@ struct ImagePicker: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> UIViewController {
         if sourceType == .camera {
+            // 尝试配置音频会话以避免录像时的冲突
+            do {
+                let session = AVAudioSession.sharedInstance()
+                try session.setCategory(.playAndRecord, mode: .videoRecording, options: [.mixWithOthers, .defaultToSpeaker])
+                try session.setActive(true)
+            } catch {
+                print("Failed to setup audio session: \(error)")
+            }
+            
             let picker = UIImagePickerController()
             picker.sourceType = sourceType
             picker.delegate = context.coordinator
             picker.allowsEditing = false
             picker.cameraFlashMode = .off  // 禁用闪光灯
-            picker.mediaTypes = ["public.image", "public.movie"] // 支持录像
+            picker.videoQuality = .typeHigh // 设置视频质量
+            
+            // 检查可用的媒体类型
+            if let availableTypes = UIImagePickerController.availableMediaTypes(for: .camera) {
+                var types: [String] = []
+                if availableTypes.contains("public.image") {
+                    types.append("public.image")
+                }
+                if availableTypes.contains("public.movie") {
+                    types.append("public.movie")
+                }
+                picker.mediaTypes = types.isEmpty ? ["public.image"] : types
+            } else {
+                picker.mediaTypes = ["public.image"]
+            }
+            
             return picker
         } else {
             var config = PHPickerConfiguration()
