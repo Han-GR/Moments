@@ -45,13 +45,13 @@ struct BabyEditView: View {
                     if let selectedImage = selectedImage {
                         Image(uiImage: selectedImage)
                             .resizable()
-                            .aspectRatio(1, contentMode: .fill)
+                            .scaledToFill()
                             .frame(width: photoSize, height: photoSize)
                             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                     } else if let path = photoPath, let uiImage = MediaStore.loadImage(from: path, preferThumbnail: true) {
                         Image(uiImage: uiImage)
                             .resizable()
-                            .aspectRatio(1, contentMode: .fill)
+                            .scaledToFill()
                             .frame(width: photoSize, height: photoSize)
                             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                     } else {

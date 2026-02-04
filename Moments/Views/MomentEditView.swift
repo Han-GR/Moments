@@ -200,7 +200,7 @@ struct MomentEditView: View {
                             ZStack(alignment: .topTrailing) {
                                 Image(uiImage: item.image)
                                     .resizable()
-                                    .aspectRatio(1, contentMode: .fill)
+                                    .scaledToFill()
                                     .frame(width: imageSize, height: imageSize)
                                     .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                                 

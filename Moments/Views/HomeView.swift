@@ -180,7 +180,7 @@ struct BabyGridItem: View {
             if let path = baby.photoPath, let uiImage = MediaStore.loadImage(from: path, preferThumbnail: true) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .aspectRatio(1, contentMode: .fill)
+                    .scaledToFill()
                     .frame(width: 150, height: 150)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                     .shadow(radius: 5)

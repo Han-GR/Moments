@@ -303,7 +303,7 @@ struct MomentMediaThumbnail: View {
             ZStack(alignment: .center) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .aspectRatio(1, contentMode: .fill)
+                    .scaledToFill()
                     .frame(width: size, height: size)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 

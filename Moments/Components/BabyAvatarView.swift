@@ -46,7 +46,7 @@ struct BabyAvatarView: View {
                 if let path = baby.photoPath, let uiImage = MediaStore.loadImage(from: path, preferThumbnail: true) {
                     Image(uiImage: uiImage)
                         .resizable()
-                        .aspectRatio(1, contentMode: .fill)
+                        .scaledToFill()
                         .frame(width: size, height: size)
                         .clipShape(Circle())
                 } else {
