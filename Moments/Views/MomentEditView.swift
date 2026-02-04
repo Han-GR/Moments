@@ -28,8 +28,6 @@ struct MomentEditView: View {
     @State private var isProcessingImages = false
     @State private var isShowingBabyPicker = false
     @State private var isShowingPhotoPicker = false
-    @State private var previewVideoURL: URL?
-    @State private var isShowingVideoPlayer = false
     
     var body: some View {
         formContent
@@ -56,13 +54,6 @@ struct MomentEditView: View {
             .onAppear(perform: loadData)
             .sheet(isPresented: $isShowingBabyPicker) {
                 BabyPickerSheet(selectedBaby: $selectedBaby, isPresented: $isShowingBabyPicker, allBabies: allBabies)
-            }
-            .sheet(isPresented: $isShowingVideoPlayer) {
-                if let url = previewVideoURL {
-                    VideoPlayerItemView(url: url)
-                } else {
-                    Text(NSLocalizedString("error_video_unable_to_load", value: "无法加载视频", comment: ""))
-                }
             }
     }
     
@@ -230,17 +221,6 @@ struct MomentEditView: View {
                                         .background(AppColors.blackOverlay)
                                         .clipShape(Circle())
                                         .padding(4)
-                                }
-                            }
-                            .onTapGesture {
-                                if item.type == .video {
-                                    if let url = item.videoURL {
-                                        previewVideoURL = url
-                                        isShowingVideoPlayer = true
-                                    } else if let filename = item.originalFilename {
-                                        previewVideoURL = MediaStore.videoURL(for: filename)
-                                        isShowingVideoPlayer = true
-                                    }
                                 }
                             }
                         }
