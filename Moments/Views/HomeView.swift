@@ -16,6 +16,7 @@ struct HomeView: View {
     @State private var isAddingNewBaby = false
     @State private var selectedGroupFilter: Group? = nil
     @State private var showingGroupManagement = false
+    @AppStorage("showItemNames") private var showItemNames = true
     
     var filteredBabies: [Baby] {
         var result = babies
@@ -154,11 +155,24 @@ struct HomeView: View {
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { isAddingNewBaby = true }) {
-                        Label(
-                            NSLocalizedString("action_add_item", value: "添加物品", comment: ""),
-                            systemImage: "plus"
-                        )
+                    HStack {
+                        Button(action: { isAddingNewBaby = true }) {
+                            Label(
+                                NSLocalizedString("action_add_item", value: "添加物品", comment: ""),
+                                systemImage: "plus"
+                            )
+                        }
+
+                        Menu {
+                            Toggle(isOn: $showItemNames) {
+                                Label(
+                                    NSLocalizedString("option_show_names", value: "显示名称", comment: ""),
+                                    systemImage: "eye"
+                                )
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                        }                        
                     }
                 }
             }
@@ -175,6 +189,7 @@ struct HomeView: View {
 
 struct BabyGridItem: View {
     let baby: Baby
+    @AppStorage("showItemNames") private var showItemNames = true
     
     var body: some View {
         VStack(spacing: 0) {
@@ -194,15 +209,17 @@ struct BabyGridItem: View {
                 .background(AppColors.lightPinkBackground)
                 .clipped()
             
-            HStack {
-                Text(baby.name)
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                    .lineLimit(1)
-                Spacer()
+            if showItemNames {
+                HStack {
+                    Text(baby.name)
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                        .lineLimit(1)
+                    Spacer()
+                }
+                .padding(12)
+                .background(Color(.systemBackground))
             }
-            .padding(12)
-            .background(Color(.systemBackground))
         }
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 4)

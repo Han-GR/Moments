@@ -116,3 +116,6 @@
 "about_feature_edit_info" = "編輯物品的基本資訊";
 "about_feature_record_moments" = "記錄物品的生活瞬間";
 "about_feature_view_all_items" = "在主頁查看所有物品";
+
+/* 首頁選項 */
+"option_show_names" = "顯示名稱";

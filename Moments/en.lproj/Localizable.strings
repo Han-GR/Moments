@@ -116,3 +116,6 @@
 "about_feature_edit_info" = "Edit basic item information";
 "about_feature_record_moments" = "Record life moments for items";
 "about_feature_view_all_items" = "View all items on the home page";
+
+/* Home Screen Options */
+"option_show_names" = "Show Names";
