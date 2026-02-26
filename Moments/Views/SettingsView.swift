@@ -101,6 +101,9 @@ struct SettingsView: View {
                 }
             }
         }
+        .navigationTitle(
+            NSLocalizedString("tab_settings", value: "设置", comment: "")
+        )
         .onAppear {
             if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
                 appVersion = version

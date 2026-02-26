@@ -48,10 +48,9 @@ struct HomeView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                // 分组选择器
-                if !groups.isEmpty {
+        VStack(spacing: 0) {
+            // 分组选择器
+            if !groups.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
                             // 全部分组按钮
@@ -141,6 +140,9 @@ struct HomeView: View {
                 placement: .navigationBarDrawer(displayMode: .always),
                 prompt: NSLocalizedString("search_items_placeholder", value: "搜索物品", comment: "")
             )
+            .navigationTitle(
+                NSLocalizedString("tab_items", value: "物品", comment: "")
+            )
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { showingGroupManagement = true }) {
@@ -168,7 +170,6 @@ struct HomeView: View {
             .sheet(isPresented: $showingGroupManagement) {
                 GroupManagementView()
             }
-        }
     }
 }
 
@@ -176,36 +177,43 @@ struct BabyGridItem: View {
     let baby: Baby
     
     var body: some View {
-        VStack {
-            if let path = baby.photoPath, let uiImage = MediaStore.loadImage(from: path, preferThumbnail: true) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 150, height: 150)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .shadow(radius: 5)
-            } else {
-                Image(systemName: "bubbles.and.sparkles")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 80, height: 80)
-                    .foregroundColor(.pink)
-                    .frame(width: 150, height: 150)
-                    .background(AppColors.lightPinkBackground)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .shadow(radius: 5)
-            }
+        VStack(spacing: 0) {
+            Color.clear
+                .aspectRatio(1, contentMode: .fit)
+                .overlay(
+                    ZStack {
+                        if let path = baby.photoPath {
+                            AsyncDiskImage(filename: path, preferThumbnail: true, contentMode: .fill) {
+                                placeholderView
+                            }
+                        } else {
+                            placeholderView
+                        }
+                    }
+                )
+                .background(AppColors.lightPinkBackground)
+                .clipped()
             
-            Text(baby.name)
-                .font(.headline)
-                .foregroundColor(.primary)
-                .lineLimit(1)
+            HStack {
+                Text(baby.name)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                Spacer()
+            }
+            .padding(12)
+            .background(Color(.systemBackground))
         }
-        .padding(.bottom, 5)
-        .frame(width: 160)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 4)
+    }
+    
+    private var placeholderView: some View {
+        Image(systemName: "bubbles.and.sparkles")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .padding(30)
+            .foregroundColor(.pink)
     }
 }
 
@@ -243,11 +251,12 @@ struct GroupSectionView: View {
             }
             
             // 物品网格
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 160))], spacing: 16) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 16, alignment: .top)], spacing: 16) {
                 ForEach(babies) { baby in
                     NavigationLink(destination: BabyDetailView(baby: baby)) {
                         BabyGridItem(baby: baby)
                     }
+                    .buttonStyle(PlainButtonStyle()) // 避免 NavigationLink 默认样式影响布局
                 }
             }
         }

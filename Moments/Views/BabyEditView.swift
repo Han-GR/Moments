@@ -15,21 +15,10 @@ struct BabyEditView: View {
     @Query private var groups: [Group]
     @Query private var existingBabies: [Baby]
     
-    @State private var name = ""
-    @State private var birthDate: Date? = nil
-    @State private var notes = ""
-    @State private var photoPath: String? = nil
-    @State private var selectedImage: UIImage? = nil
-    @State private var isShowingPhotoPicker = false
-    @State private var showingDuplicateAlert = false
-    @State private var selectedGroup: Group? = nil
-    @State private var showingAddGroup = false
-    @State private var showingGroupManagement = false
+    @StateObject private var viewModel: BabyEditViewModel
     
-    var baby: Baby? = nil
-    
-    var isEditing: Bool {
-        baby != nil
+    init(baby: Baby? = nil) {
+        _viewModel = StateObject(wrappedValue: BabyEditViewModel(baby: baby))
     }
     
     var body: some View {
@@ -42,18 +31,25 @@ struct BabyEditView: View {
                     let iconSize: CGFloat = 80
                     let cornerRadius: CGFloat = 15
                     
-                    if let selectedImage = selectedImage {
+                    if let selectedImage = viewModel.selectedImage {
                         Image(uiImage: selectedImage)
                             .resizable()
                             .scaledToFill()
                             .frame(width: photoSize, height: photoSize)
                             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-                    } else if let path = photoPath, let uiImage = MediaStore.loadImage(from: path, preferThumbnail: true) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: photoSize, height: photoSize)
-                            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+                    } else if let path = viewModel.photoPath {
+                        AsyncDiskImage(filename: path, preferThumbnail: true) {
+                            Image(systemName: "bubbles.and.sparkles")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: iconSize, height: iconSize)
+                                .frame(width: photoSize, height: photoSize)
+                                .background(AppColors.lightPinkBackground)
+                                .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+                        }
+                        .scaledToFill()
+                        .frame(width: photoSize, height: photoSize)
+                        .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                     } else {
                         Image(systemName: "bubbles.and.sparkles")
                             .resizable()
@@ -65,7 +61,7 @@ struct BabyEditView: View {
                     }
                     
                     Button(action: {
-                        isShowingPhotoPicker = true
+                        viewModel.isShowingPhotoPicker = true
                     }) {
                         Text(
                             NSLocalizedString("action_add_photo", value: "添加照片", comment: "")
@@ -78,12 +74,12 @@ struct BabyEditView: View {
                     .background(
                         PhotoPickerSheet(
                             selectedImages: Binding(
-                                get: { selectedImage.map { [$0] } ?? [] },
+                                get: { viewModel.selectedImage.map { [$0] } ?? [] },
                                 set: { images in
-                                    selectedImage = images.first
+                                    viewModel.selectedImage = images.first
                                 }
                             ),
-                            isPresented: $isShowingPhotoPicker
+                            isPresented: $viewModel.isShowingPhotoPicker
                         )
                     )
                 }
@@ -96,13 +92,13 @@ struct BabyEditView: View {
             ) {
                 TextField(
                     NSLocalizedString("field_name", value: "名字", comment: ""),
-                    text: $name
+                    text: $viewModel.name
                 )
                 
                 CollapsibleDatePickerRow(
                     title: NSLocalizedString("field_birthday", value: "生日", comment: ""),
                     placeholder: NSLocalizedString("label_not_set", value: "未设置", comment: ""),
-                    date: $birthDate,
+                    date: $viewModel.birthDate,
                     minimumDate: nil,
                     maximumDate: Date()
                 )
@@ -111,7 +107,7 @@ struct BabyEditView: View {
             Section(
                 NSLocalizedString("section_notes", value: "笔记", comment: "")
             ) {
-                TextEditor(text: $notes)
+                TextEditor(text: $viewModel.notes)
                     .frame(minHeight: 100)
             }
             
@@ -122,7 +118,7 @@ struct BabyEditView: View {
                     Button(
                         NSLocalizedString("label_no_group", value: "无分组", comment: "")
                     ) {
-                        selectedGroup = nil
+                        viewModel.selectedGroup = nil
                     }
                     
                     if !groups.isEmpty {
@@ -131,7 +127,7 @@ struct BabyEditView: View {
                         // 限制显示的分组数量，避免菜单过长
                         ForEach(groups.prefix(5), id: \.id) { group in
                             Button(action: {
-                                selectedGroup = group
+                                viewModel.selectedGroup = group
                             }) {
                                 HStack {
                                     Circle()
@@ -147,7 +143,7 @@ struct BabyEditView: View {
                             Button(
                                 NSLocalizedString("action_see_more_groups", value: "查看更多分组...", comment: "")
                             ) {
-                                showingGroupManagement = true
+                                viewModel.showingGroupManagement = true
                             }
                             .foregroundColor(.secondary)
                         }
@@ -156,7 +152,7 @@ struct BabyEditView: View {
                     Divider()
                     
                     Button(action: {
-                        showingAddGroup = true
+                        viewModel.showingAddGroup = true
                     }) {
                         HStack {
                             Image(systemName: "plus.circle.fill")
@@ -172,7 +168,7 @@ struct BabyEditView: View {
                         )
                             .foregroundColor(.primary)
                         Spacer()
-                        if let selectedGroup = selectedGroup {
+                        if let selectedGroup = viewModel.selectedGroup {
                             HStack {
                                 Circle()
                                     .fill(selectedGroup.displayColor)
@@ -180,23 +176,21 @@ struct BabyEditView: View {
                                 Text(selectedGroup.name)
                                     .foregroundColor(.secondary)
                             }
-                            } else {
+                        } else {
                             Text(
                                 NSLocalizedString("label_no_group", value: "无分组", comment: "")
                             )
                                 .foregroundColor(.secondary)
-                            }
+                        }
                         Image(systemName: "chevron.up.chevron.down")
                             .foregroundColor(.secondary)
                             .font(.caption)
                     }
                 }
             }
-        
-        
         }
         .navigationTitle(
-            isEditing
+            viewModel.isEditing
                 ? NSLocalizedString("title_edit_item", value: "编辑物品", comment: "")
                 : NSLocalizedString("action_add_item", value: "添加物品", comment: "")
         )
@@ -214,94 +208,46 @@ struct BabyEditView: View {
                 Button(
                     NSLocalizedString("action_save", value: "保存", comment: "")
                 ) {
-                    saveBaby()
+                    viewModel.save(modelContext: modelContext, existingBabies: existingBabies)
                 }
-                .disabled(name.isEmpty)
+                .disabled(viewModel.name.isEmpty)
             }
         }
-        .onAppear {
-            if let baby = baby {
-                name = baby.name
-                birthDate = baby.birthDate
-                notes = baby.notes
-                photoPath = baby.photoPath
-                selectedGroup = baby.group
+        .onChange(of: viewModel.shouldDismiss) { _, shouldDismiss in
+            if shouldDismiss {
+                dismiss()
             }
         }
-
-        .onChange(of: selectedImage) { _, _ in }
         .alert(
             NSLocalizedString("error_item_name_exists", value: "物品名字已存在", comment: ""),
-            isPresented: $showingDuplicateAlert
+            isPresented: $viewModel.showingDuplicateAlert
         ) {
             Button(
                 NSLocalizedString("action_ok", value: "确定", comment: ""),
                 role: .cancel
             ) { }
         }
-        .sheet(isPresented: $showingAddGroup) {
+        .alert(isPresented: Binding<Bool>(
+            get: { viewModel.errorMessage != nil },
+            set: { if !$0 { viewModel.errorMessage = nil } }
+        )) {
+            Alert(
+                title: Text(NSLocalizedString("error_title", value: "错误", comment: "")),
+                message: Text(viewModel.errorMessage ?? ""),
+                dismissButton: .default(Text("OK"))
+            )
+        }
+        .sheet(isPresented: $viewModel.showingAddGroup) {
             AddGroupView { newGroup in
-                selectedGroup = newGroup
-                showingAddGroup = false
+                viewModel.selectedGroup = newGroup
+                viewModel.showingAddGroup = false
             }
         }
-        .sheet(isPresented: $showingGroupManagement) {
-                GroupSelectionView(selectedGroup: selectedGroup) { group in
-                    selectedGroup = group
-                }
+        .sheet(isPresented: $viewModel.showingGroupManagement) {
+            GroupSelectionView(selectedGroup: viewModel.selectedGroup) { group in
+                viewModel.selectedGroup = group
             }
-    }
-    
-    private func saveBaby() {
-        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        // 检查名字是否重复
-        let isDuplicate: Bool
-        if let currentBaby = baby {
-            // 编辑模式：检查是否有其他物品使用了相同名字
-            isDuplicate = existingBabies.contains { $0.id != currentBaby.id && $0.name == trimmedName }
-        } else {
-            // 添加模式：检查是否有物品使用了相同名字
-            isDuplicate = existingBabies.contains { $0.name == trimmedName }
         }
-        
-        if isDuplicate {
-            showingDuplicateAlert = true
-            return
-        }
-        
-        if let baby = baby {
-            // 更新现有的物品
-            baby.name = trimmedName
-            baby.birthDate = birthDate
-            baby.notes = notes
-            baby.group = selectedGroup
-            if let selectedImage = selectedImage {
-                if let filename = MediaStore.saveImage(selectedImage, quality: 0.85) {
-                    _ = MediaStore.saveThumbnail(of: selectedImage, basedOn: filename)
-                    baby.photoPath = filename
-                }
-            }
-        } else {
-            // 创建新的物品
-            var finalPath: String? = nil
-            if let selectedImage = selectedImage {
-                finalPath = MediaStore.saveImage(selectedImage, quality: 0.85)
-                if let name = finalPath {
-                    _ = MediaStore.saveThumbnail(of: selectedImage, basedOn: name)
-                }
-            }
-            let newBaby = Baby(name: trimmedName, birthDate: birthDate, photoPath: finalPath, notes: notes)
-            newBaby.group = selectedGroup
-            modelContext.insert(newBaby)
-        }
-        
-        do {
-            try modelContext.save()
-            dismiss()
-        } catch {
-                // 保存失败，静默处理
-            }
     }
 }
 

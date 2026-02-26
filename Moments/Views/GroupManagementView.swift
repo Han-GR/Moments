@@ -16,7 +16,7 @@ struct GroupManagementView: View {
     @State private var showingAddGroup = false
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 ForEach(groups) { group in
                     GroupRowView(group: group)
@@ -153,7 +153,7 @@ struct AddGroupView: View {
     let onGroupCreated: ((Group) -> Void)?
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 Section(
                     NSLocalizedString("section_group_info", value: "分组信息", comment: "")
@@ -248,7 +248,7 @@ struct EditGroupView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 Section(
                     NSLocalizedString("section_group_info", value: "分组信息", comment: "")

@@ -15,24 +15,20 @@ struct MomentEditView: View {
     
     @Query private var allBabies: [Baby]
     
-    // 如果传入了特定的物品，则默认选择该物品
-    var baby: Baby?
-    // 如果传入了moment，则为编辑模式
-    var moment: Moment?
+    // StateObject for ViewModel
+    @StateObject private var viewModel: MomentEditViewModel
     
-
-    @State private var content = ""
-    @State private var date = Date()
-    @State private var selectedBaby: Baby?
-    @State private var selectedMedia: [PickerMediaItem] = []
-    @State private var isProcessingImages = false
     @State private var isShowingBabyPicker = false
     @State private var isShowingPhotoPicker = false
+    
+    init(moment: Moment? = nil, baby: Baby? = nil) {
+        _viewModel = StateObject(wrappedValue: MomentEditViewModel(moment: moment, baby: baby))
+    }
     
     var body: some View {
         formContent
             .navigationTitle(
-                moment != nil
+                viewModel.isEditing
                 ? NSLocalizedString("title_edit_moment", value: "编辑生活瞬间", comment: "")
                 : NSLocalizedString("title_record_moment", value: "记录生活瞬间", comment: "")
             )
@@ -45,15 +41,36 @@ struct MomentEditView: View {
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(NSLocalizedString("action_save", value: "保存", comment: "")) {
-                        saveMoment()
+                    if viewModel.isSaving {
+                        ProgressView()
+                    } else {
+                        Button(NSLocalizedString("action_save", value: "保存", comment: "")) {
+                            viewModel.save(modelContext: modelContext)
+                        }
+                        .disabled(viewModel.content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && viewModel.selectedMedia.isEmpty)
                     }
-                    .disabled(content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && selectedMedia.isEmpty)
                 }
             }
-            .onAppear(perform: loadData)
+            .onAppear {
+                viewModel.loadData()
+            }
+            .onChange(of: viewModel.shouldDismiss) { _, shouldDismiss in
+                if shouldDismiss {
+                    dismiss()
+                }
+            }
+            .alert(isPresented: Binding<Bool>(
+                get: { viewModel.errorMessage != nil },
+                set: { if !$0 { viewModel.errorMessage = nil } }
+            )) {
+                Alert(
+                    title: Text(NSLocalizedString("error_title", value: "错误", comment: "")),
+                    message: Text(viewModel.errorMessage ?? ""),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
             .sheet(isPresented: $isShowingBabyPicker) {
-                BabyPickerSheet(selectedBaby: $selectedBaby, isPresented: $isShowingBabyPicker, allBabies: allBabies)
+                BabyPickerSheet(selectedBaby: $viewModel.selectedBaby, isPresented: $isShowingBabyPicker, allBabies: allBabies)
             }
     }
     
@@ -65,44 +82,11 @@ struct MomentEditView: View {
             photosSection()
         }
     }
-
-    private func loadData() {
-        // 如果是编辑模式，加载现有数据
-        if let moment = moment {
-            content = moment.content
-            date = moment.date
-            selectedBaby = moment.baby
-            if let items = moment.mediaItems {
-                selectedMedia = items.compactMap { media in
-                    // 加载缩略图或原图用于显示
-                    if let image = MediaStore.loadImage(from: media.thumbnailPath ?? media.originalPath, preferThumbnail: true) {
-                        var videoURL: URL? = nil
-                        if media.type == .video {
-                            videoURL = MediaStore.videoURL(for: media.originalPath)
-                        }
-                        return PickerMediaItem(
-                            image: image,
-                            type: media.type,
-                            videoURL: videoURL,
-                            originalFilename: media.originalPath
-                        )
-                    }
-                    return nil
-                }
-            }
-        } else {
-            // 新建模式：如果传入了特定物品则选择，否则保持为nil
-            if let baby = baby {
-                selectedBaby = baby
-            }
-            // 不再自动选择第一个物品，让用户自主选择
-        }
-    }
     
     private var babySection: some View {
         Section(NSLocalizedString("field_item_optional", value: "物品（可选）", comment: "")) {
             HStack {
-                if let selectedBaby = selectedBaby {
+                if let selectedBaby = viewModel.selectedBaby {
                     HStack {
                         BabyAvatarView.medium(baby: selectedBaby)
                         
@@ -119,7 +103,7 @@ struct MomentEditView: View {
                 Button(action: {
                     isShowingBabyPicker = true
                 }) {
-                    Text(selectedBaby == nil
+                    Text(viewModel.selectedBaby == nil
                          ? NSLocalizedString("action_select", value: "选择", comment: "")
                          : NSLocalizedString("action_change", value: "更改", comment: ""))
                 }
@@ -133,10 +117,10 @@ struct MomentEditView: View {
                 title: NSLocalizedString("field_select_date", value: "选择日期", comment: ""),
                 placeholder: NSLocalizedString("label_not_set", value: "未设置", comment: ""),
                 date: Binding<Date?>(
-                    get: { date },
+                    get: { viewModel.date },
                     set: { newValue in
                         if let value = newValue {
-                            date = value
+                            viewModel.date = value
                         }
                     }
                 ),
@@ -148,43 +132,50 @@ struct MomentEditView: View {
     
     private var contentSection: some View {
         Section(NSLocalizedString("field_moment_content", value: "瞬间内容", comment: "")) {
-            TextEditor(text: $content)
+            TextEditor(text: $viewModel.content)
                 .frame(minHeight: 100)
         }
     }
     
     private func photosSection() -> some View {
-        let labelText: String = selectedMedia.count >= 9
+        let labelText: String = viewModel.selectedMedia.count >= 9
             ? NSLocalizedString("max_photos_reached", value: "已达到最大数量(9张)", comment: "")
             : String(
                 format: NSLocalizedString("add_photos_videos_count_format", value: "添加照片/视频 (%d/9)", comment: ""),
-                selectedMedia.count
+                viewModel.selectedMedia.count
             )
         
         return Section(NSLocalizedString("section_photos", value: "照片", comment: "")) {
             Button(action: {
-                if selectedMedia.count < 9 {
+                if viewModel.selectedMedia.count < 9 {
                     isShowingPhotoPicker = true
                 }
             }) {
                 Label(labelText, systemImage: "plus.circle.fill")
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .foregroundColor(selectedMedia.count >= 9 ? .gray : .blue)
+                    .foregroundColor(viewModel.selectedMedia.count >= 9 ? .gray : .blue)
                     .cornerRadius(8)
             }
-            .disabled(selectedMedia.count >= 9)
+            .disabled(viewModel.selectedMedia.count >= 9)
             .background(
                 MediaPickerSheet(
-                    selectedMedia: $selectedMedia,
+                    selectedMedia: $viewModel.selectedMedia,
                     isPresented: $isShowingPhotoPicker
                 )
             )
             
-            if !selectedMedia.isEmpty {
+            if viewModel.isProcessingImages {
+                 HStack {
+                     Spacer()
+                     ProgressView()
+                     Spacer()
+                 }
+                 .padding()
+            } else if !viewModel.selectedMedia.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
-                        ForEach(selectedMedia) { item in
+                        ForEach(viewModel.selectedMedia) { item in
                             let imageSize: CGFloat = 100
                             let cornerRadius: CGFloat = 8
                             
@@ -212,8 +203,8 @@ struct MomentEditView: View {
                                 }
                                 
                                 Button(action: {
-                                    if let index = selectedMedia.firstIndex(where: { $0.id == item.id }) {
-                                        selectedMedia.remove(at: index)
+                                    if let index = viewModel.selectedMedia.firstIndex(where: { $0.id == item.id }) {
+                                        viewModel.selectedMedia.remove(at: index)
                                     }
                                 }) {
                                     Image(systemName: "xmark.circle.fill")
@@ -229,88 +220,6 @@ struct MomentEditView: View {
                 }
             }
         }
-    }
-    
-    private func saveMoment() {
-        if let existingMoment = moment {
-            // 编辑模式：更新现有瞬间
-            existingMoment.content = content
-            existingMoment.date = date
-            existingMoment.baby = selectedBaby // 可以为nil
-            if let items = existingMoment.mediaItems {
-                for item in items {
-                    modelContext.delete(item)
-                }
-                existingMoment.mediaItems = []
-            }
-            let newItems: [MomentMedia] = selectedMedia.compactMap { item in
-                // 如果是已有文件，直接复用
-                if let originalFilename = item.originalFilename {
-                    let thumb = MediaStore.thumbnailName(for: originalFilename)
-                    let media = MomentMedia(type: item.type, originalPath: originalFilename, thumbnailPath: thumb)
-                    media.moment = existingMoment
-                    return media
-                }
-                
-                // 新文件
-                if item.type == .video, let videoURL = item.videoURL {
-                    guard let filename = MediaStore.saveVideo(from: videoURL) else { return nil }
-                    _ = MediaStore.generateVideoThumbnail(for: filename)
-                    let thumb = MediaStore.thumbnailName(for: filename)
-                    let media = MomentMedia(type: .video, originalPath: filename, thumbnailPath: thumb)
-                    media.moment = existingMoment
-                    return media
-                } else {
-                    // 图片或Live Photo (静态部分)
-                    guard let filename = MediaStore.saveImage(item.image, quality: 0.85) else { return nil }
-                    let thumb = MediaStore.saveThumbnail(of: item.image, basedOn: filename)
-                    // 如果是 Live Photo，保留类型标记
-                    let finalType: MomentMedia.MediaType = (item.type == .livePhoto) ? .livePhoto : .photo
-                    let media = MomentMedia(type: finalType, originalPath: filename, thumbnailPath: thumb)
-                    media.moment = existingMoment
-                    return media
-                }
-            }
-            existingMoment.mediaItems = newItems
-        } else {
-            // 新建模式：创建新瞬间
-            let newMoment = Moment(content: content, date: date)
-            
-            // 设置关系（可以为nil）
-            newMoment.baby = selectedBaby
-            
-            let newItems: [MomentMedia] = selectedMedia.compactMap { item in
-                if item.type == .video, let videoURL = item.videoURL {
-                    guard let filename = MediaStore.saveVideo(from: videoURL) else { return nil }
-                    _ = MediaStore.generateVideoThumbnail(for: filename)
-                    let thumb = MediaStore.thumbnailName(for: filename)
-                    let media = MomentMedia(type: .video, originalPath: filename, thumbnailPath: thumb)
-                    media.moment = newMoment
-                    return media
-                } else {
-                    guard let filename = MediaStore.saveImage(item.image, quality: 0.85) else { return nil }
-                    let thumb = MediaStore.saveThumbnail(of: item.image, basedOn: filename)
-                    let finalType: MomentMedia.MediaType = (item.type == .livePhoto) ? .livePhoto : .photo
-                    let media = MomentMedia(type: finalType, originalPath: filename, thumbnailPath: thumb)
-                    media.moment = newMoment
-                    return media
-                }
-            }
-            newMoment.mediaItems = newItems
-            
-            // 添加到数据库
-            modelContext.insert(newMoment)
-        }
-        
-        // 立即保存更改
-        do {
-            try modelContext.save()
-        } catch {
-            // 保存失败，静默处理
-        }
-        
-        // 关闭视图
-        dismiss()
     }
 }
 

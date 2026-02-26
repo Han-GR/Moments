@@ -43,12 +43,18 @@ struct BabyAvatarView: View {
                             .font(.system(size: size * 0.4))
                     )
             } else if let baby = baby {
-                if let path = baby.photoPath, let uiImage = MediaStore.loadImage(from: path, preferThumbnail: true) {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: size, height: size)
-                        .clipShape(Circle())
+                if let path = baby.photoPath {
+                    AsyncDiskImage(filename: path, preferThumbnail: true, contentMode: .fill) {
+                        Image(systemName: "bubbles.and.sparkles")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: size * 0.5, height: size * 0.5)
+                            .padding(size * 0.25)
+                            .background(AppColors.pinkBackground)
+                            .clipShape(Circle())
+                    }
+                    .frame(width: size, height: size)
+                    .clipShape(Circle())
                 } else {
                     Image(systemName: "bubbles.and.sparkles")
                         .resizable()

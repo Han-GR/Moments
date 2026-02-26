@@ -11,16 +11,18 @@ import SwiftData
 struct BabyDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @State private var isEditing = false
-    @State private var isAddingMoment = false
-    @State private var showDeleteConfirmation = false
+    
+    @StateObject private var viewModel: BabyDetailViewModel
+    
     let baby: Baby
     
-
-    @Query private var allMoments: [Moment]
+    init(baby: Baby) {
+        self.baby = baby
+        _viewModel = StateObject(wrappedValue: BabyDetailViewModel(baby: baby))
+    }
     
     var moments: [Moment] {
-        allMoments.filter { $0.baby?.id == baby.id }.sorted(by: { $0.date > $1.date })
+        (baby.moments ?? []).sorted(by: { $0.date > $1.date })
     }
     
     var body: some View {
@@ -31,13 +33,26 @@ struct BabyDetailView: View {
                     let iconSize: CGFloat = 100
                     let cornerRadius: CGFloat = 20
                     
-                    if let path = baby.photoPath, let uiImage = MediaStore.loadImage(from: path) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(maxWidth: .infinity)
-                            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-                            .padding(.horizontal)
+                    if let path = baby.photoPath {
+                        AsyncDiskImage(filename: path, preferThumbnail: false) {
+                            Rectangle()
+                                .fill(AppColors.pinkBackground)
+                                .frame(height: headerHeight)
+                                .frame(maxWidth: .infinity)
+                                .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+                                .overlay(
+                                    Image(systemName: "bubbles.and.sparkles")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: iconSize, height: iconSize)
+                                        .foregroundColor(AppColors.primaryPink)
+                                )
+                                .padding(.horizontal)
+                        }
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity)
+                        .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+                        .padding(.horizontal)
                     } else {
                         Rectangle()
                             .fill(AppColors.pinkBackground)
@@ -108,7 +123,7 @@ struct BabyDetailView: View {
                         
                         Spacer()
                         
-                        Button(action: { isAddingMoment = true }) {
+                        Button(action: { viewModel.isAddingMoment = true }) {
                             Label(
                                 NSLocalizedString("action_add_moment", value: "添加瞬间", comment: ""),
                                 systemImage: "plus"
@@ -160,7 +175,7 @@ struct BabyDetailView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
                      Button(action: {
-                         isEditing = true
+                         viewModel.isEditing = true
                      }) {
                          Label(
                              NSLocalizedString("action_edit", value: "编辑", comment: ""),
@@ -169,7 +184,7 @@ struct BabyDetailView: View {
                      }
                      
                      Button(role: .destructive, action: {
-                         showDeleteConfirmation = true
+                         viewModel.showDeleteConfirmation = true
                      }) {
                          Label(
                              NSLocalizedString("action_delete", value: "删除", comment: ""),
@@ -181,19 +196,19 @@ struct BabyDetailView: View {
                  }
             }
         }
-        .sheet(isPresented: $isEditing) {
+        .sheet(isPresented: $viewModel.isEditing) {
             NavigationStack {
                 BabyEditView(baby: baby)
             }
         }
-        .sheet(isPresented: $isAddingMoment) {
+        .sheet(isPresented: $viewModel.isAddingMoment) {
             NavigationStack {
                 MomentEditView(baby: baby)
             }
         }
         .alert(
             NSLocalizedString("title_delete_item", value: "删除物品", comment: ""),
-            isPresented: $showDeleteConfirmation
+            isPresented: $viewModel.showDeleteConfirmation
         ) {
              Button(
                 NSLocalizedString("action_cancel", value: "取消", comment: ""),
@@ -203,52 +218,55 @@ struct BabyDetailView: View {
                 NSLocalizedString("action_delete", value: "删除", comment: ""),
                 role: .destructive
              ) {
-                 deleteBaby()
+                 viewModel.deleteBaby(modelContext: modelContext)
              }
          } message: {
              Text(String(format: NSLocalizedString("delete_baby_confirmation", value: "确定要删除 %@ 吗？此操作无法撤销。", comment: ""), baby.name))
          }
+         .onChange(of: viewModel.shouldDismiss) { _, shouldDismiss in
+             if shouldDismiss {
+                 dismiss()
+             }
+         }
+         .alert(isPresented: Binding<Bool>(
+             get: { viewModel.errorMessage != nil },
+             set: { if !$0 { viewModel.errorMessage = nil } }
+         )) {
+             Alert(
+                 title: Text(NSLocalizedString("error_title", value: "错误", comment: "")),
+                 message: Text(viewModel.errorMessage ?? ""),
+                 dismissButton: .default(Text("OK"))
+             )
+         }
      }
-     
-     private func deleteBaby() {
-          // 删除与该物品相关的所有瞬间
-          for moment in moments {
-              modelContext.delete(moment)
-          }
-          
-          // 删除物品
-          modelContext.delete(baby)
-          
-          // 保存更改
-          do {
-              try modelContext.save()
-              // 删除成功后返回上一页
-              dismiss()
-          } catch {
-              print("删除物品时出错: \(error)")
-          }
-      }
  }
 
 
 
 #Preview {
-    do {
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: Baby.self, Moment.self, configurations: config)
-        
-        let sampleBaby = Baby(name: "小可爱", birthDate: Date(), notes: "这是一个测试笔记")
-        container.mainContext.insert(sampleBaby)
-        
-        let moment1 = Moment(content: "今天第一次见到小可爱，非常开心！")
-        moment1.baby = sampleBaby
-        container.mainContext.insert(moment1)
-        
-        return NavigationStack {
-            BabyDetailView(baby: sampleBaby)
+    // 使用包装视图来处理异常
+    PreviewWrapper()
+}
+
+struct PreviewWrapper: View {
+    var body: some View {
+        do {
+            let config = ModelConfiguration(isStoredInMemoryOnly: true)
+            let container = try ModelContainer(for: Baby.self, Moment.self, configurations: config)
+            
+            let sampleBaby = Baby(name: "小可爱", birthDate: Date(), notes: "这是一个测试笔记")
+            container.mainContext.insert(sampleBaby)
+            
+            let moment1 = Moment(content: "今天第一次见到小可爱，非常开心！")
+            moment1.baby = sampleBaby
+            container.mainContext.insert(moment1)
+            
+            return AnyView(NavigationStack {
+                BabyDetailView(baby: sampleBaby)
+            }
+            .modelContainer(container))
+        } catch {
+            return AnyView(Text("Failed to create preview: \(error.localizedDescription)"))
         }
-        .modelContainer(container)
-    } catch {
-        return Text("Failed to create preview: \(error.localizedDescription)")
     }
 }

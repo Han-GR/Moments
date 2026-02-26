@@ -18,7 +18,7 @@ final class Baby {
     var createdAt: Date
     var notes: String
     
-    @Relationship var moments: [Moment]? = []
+    @Relationship(deleteRule: .cascade, inverse: \Moment.baby) var moments: [Moment]? = []
     @Relationship(inverse: \Group.babies) var group: Group?
     
     init(name: String, birthDate: Date? = nil, photoPath: String? = nil, notes: String = "") {
@@ -66,8 +66,8 @@ final class Moment {
     var content: String
     var date: Date
     
-    @Relationship(inverse: \Baby.moments) var baby: Baby?
-    @Relationship(inverse: \MomentMedia.moment) var mediaItems: [MomentMedia]? = []
+    var baby: Baby?
+    @Relationship(deleteRule: .cascade, inverse: \MomentMedia.moment) var mediaItems: [MomentMedia]? = []
     
     init(content: String, date: Date = Date()) {
         self.id = UUID()

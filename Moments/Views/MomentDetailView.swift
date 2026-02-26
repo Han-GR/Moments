@@ -14,9 +14,14 @@ struct MomentDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @AppStorage("isWipingData") private var isWipingData = false
     
+    @StateObject private var viewModel: MomentDetailViewModel
+    
     let moment: Moment
-    @State private var isEditing = false
-    @State private var showDeleteConfirmation = false
+    
+    init(moment: Moment) {
+        self.moment = moment
+        _viewModel = StateObject(wrappedValue: MomentDetailViewModel(moment: moment))
+    }
     
     var body: some View {
         if isWipingData {
@@ -87,7 +92,7 @@ struct MomentDetailView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
                     Button(action: {
-                        isEditing = true
+                        viewModel.isEditing = true
                     }) {
                         Label(
                             NSLocalizedString("action_edit", value: "编辑", comment: ""),
@@ -96,7 +101,7 @@ struct MomentDetailView: View {
                     }
                     
                     Button(role: .destructive, action: {
-                        showDeleteConfirmation = true
+                        viewModel.showDeleteConfirmation = true
                     }) {
                         Label(
                             NSLocalizedString("action_delete", value: "删除", comment: ""),
@@ -108,14 +113,14 @@ struct MomentDetailView: View {
                 }
             }
         }
-        .sheet(isPresented: $isEditing) {
+        .sheet(isPresented: $viewModel.isEditing) {
             NavigationStack {
                 MomentEditView(moment: moment)
             }
         }
         .alert(
             NSLocalizedString("title_confirm_delete", value: "确认删除", comment: ""),
-            isPresented: $showDeleteConfirmation
+            isPresented: $viewModel.showDeleteConfirmation
         ) {
             Button(
                 NSLocalizedString("action_cancel", value: "取消", comment: ""),
@@ -125,7 +130,7 @@ struct MomentDetailView: View {
                 NSLocalizedString("action_delete", value: "删除", comment: ""),
                 role: .destructive
             ) {
-                deleteMoment()
+                viewModel.deleteMoment(modelContext: modelContext)
             }
         } message: {
             Text(
@@ -136,12 +141,22 @@ struct MomentDetailView: View {
                 )
             )
         }
+        .onChange(of: viewModel.shouldDismiss) { _, shouldDismiss in
+            if shouldDismiss {
+                dismiss()
+            }
         }
-    }
-    
-    private func deleteMoment() {
-        modelContext.delete(moment)
-        dismiss()
+        .alert(isPresented: Binding<Bool>(
+            get: { viewModel.errorMessage != nil },
+            set: { if !$0 { viewModel.errorMessage = nil } }
+        )) {
+            Alert(
+                title: Text(NSLocalizedString("error_title", value: "错误", comment: "")),
+                message: Text(viewModel.errorMessage ?? ""),
+                dismissButton: .default(Text("OK"))
+            )
+        }
+        }
     }
 }
 
@@ -213,7 +228,8 @@ struct PhotoDetailView: View {
                     if item.type == .video {
                         VideoPlayerItemView(url: MediaStore.videoURL(for: item.originalPath), isPlaying: currentIndex == index)
                             .tag(index)
-                    } else if let uiImage = MediaStore.loadImage(from: item.originalPath) {
+                    } else {
+                        // Photo or Live Photo
                         ZoomableScrollView(
                             onSwipeLeft: {
                                 withAnimation {
@@ -230,9 +246,11 @@ struct PhotoDetailView: View {
                                 }
                             }
                         ) {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
+                            AsyncDiskImage(filename: item.originalPath, preferThumbnail: false) {
+                                ProgressView()
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            }
+                            .aspectRatio(contentMode: .fit)
                         }
                         .tag(index)
                     }

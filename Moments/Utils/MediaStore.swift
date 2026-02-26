@@ -3,6 +3,9 @@ import UIKit
 import AVFoundation
 
 struct MediaStore {
+    // MARK: - Caching
+    private static let imageCache = NSCache<NSString, UIImage>()
+    
     // MARK: - Image Management
     static func imagesDirectoryURL() -> URL {
         let base = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
@@ -62,16 +65,41 @@ struct MediaStore {
     }
     
     static func loadImage(from filename: String, preferThumbnail: Bool = false) -> UIImage? {
+        // 1. Check Cache
+        let cacheKey = (preferThumbnail ? "thumb_" : "orig_") + filename
+        if let cachedImage = imageCache.object(forKey: cacheKey as NSString) {
+            return cachedImage
+        }
+        
+        // 2. Load from disk
+        var loadedImage: UIImage?
+        
         let url = imagesDirectoryURL().appendingPathComponent(filename)
+        
         if preferThumbnail {
             let thumbName = thumbnailName(for: filename)
             let thumbURL = imagesDirectoryURL().appendingPathComponent(thumbName)
-            if FileManager.default.fileExists(atPath: thumbURL.path), let data = try? Data(contentsOf: thumbURL) {
-                return UIImage(data: data)
+            if FileManager.default.fileExists(atPath: thumbURL.path), 
+               let data = try? Data(contentsOf: thumbURL),
+               let image = UIImage(data: data) {
+                loadedImage = image
             }
         }
-        guard let data = try? Data(contentsOf: url) else { return nil }
-        return UIImage(data: data)
+        
+        // Fallback to original if thumbnail not found or not requested
+        if loadedImage == nil {
+            if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+                loadedImage = image
+            }
+        }
+        
+        // 3. Cache and return
+        if let image = loadedImage {
+            imageCache.setObject(image, forKey: cacheKey as NSString)
+            return image
+        }
+        
+        return nil
     }
     
     static func thumbnailName(for filename: String) -> String {

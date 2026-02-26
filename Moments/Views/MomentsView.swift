@@ -54,9 +54,8 @@ struct MomentsView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            VStack {
-                if isWipingData {
+        VStack {
+            if isWipingData {
                     ContentUnavailableView(
                         NSLocalizedString("title_cleaning_data", value: "正在清理数据", comment: ""),
                         systemImage: "trash",
@@ -107,6 +106,9 @@ struct MomentsView: View {
                 placement: .navigationBarDrawer(displayMode: .always),
                 prompt: NSLocalizedString("search_moments_placeholder", value: "搜索瞬间", comment: "")
             )
+            .navigationTitle(
+                NSLocalizedString("tab_moments", value: "瞬间", comment: "")
+            )
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -126,7 +128,6 @@ struct MomentsView: View {
                     MomentEditView(baby: showUnboundOnly ? nil : selectedBaby)
                 }
             }
-        }
     }
 }
 
@@ -299,27 +300,27 @@ struct MomentMediaThumbnail: View {
     let size: CGFloat
     
     var body: some View {
-        if let uiImage = MediaStore.loadImage(from: item.thumbnailPath ?? item.originalPath, preferThumbnail: true) {
-            ZStack(alignment: .center) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFill()
+        ZStack(alignment: .center) {
+            AsyncDiskImage(filename: item.thumbnailPath ?? item.originalPath, preferThumbnail: true, contentMode: .fill) {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
                     .frame(width: size, height: size)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                
-                if item.type == .video {
-                    Image(systemName: "play.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                        .shadow(radius: 2)
-                } else if item.type == .livePhoto {
-                    Image(systemName: "livephoto")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                        .shadow(radius: 2)
-                        .padding(4)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                }
+            }
+            .frame(width: size, height: size)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            
+            if item.type == .video {
+                Image(systemName: "play.circle.fill")
+                    .font(.title2)
+                    .foregroundColor(.white)
+                    .shadow(radius: 2)
+            } else if item.type == .livePhoto {
+                Image(systemName: "livephoto")
+                    .font(.title2)
+                    .foregroundColor(.white)
+                    .shadow(radius: 2)
+                    .padding(4)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
         }
     }
