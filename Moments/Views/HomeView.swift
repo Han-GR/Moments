@@ -11,7 +11,7 @@ import SwiftData
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var babies: [Baby]
-    @Query private var groups: [Group]
+    @Query(sort: [SortDescriptor(\Group.sortOrder), SortDescriptor(\Group.createdAt)]) private var groups: [Group]
     @State private var searchText = ""
     @State private var isAddingNewBaby = false
     @State private var selectedGroupFilter: Group? = nil
@@ -43,7 +43,11 @@ struct HomeView: View {
             case (_, nil):
                 return true
             case let (group1?, group2?):
-                return group1.name < group2.name
+                if group1.sortOrder == group2.sortOrder {
+                    return group1.name < group2.name
+                } else {
+                    return group1.sortOrder < group2.sortOrder
+                }
             }
         }
     }

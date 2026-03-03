@@ -83,6 +83,7 @@ final class Group {
     var name: String
     var color: String // 存储颜色的十六进制字符串
     var createdAt: Date
+    var sortOrder: Int = 0
     
     @Relationship var babies: [Baby]? = []
     

@@ -11,9 +11,10 @@ import SwiftData
 struct GroupManagementView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @Query private var groups: [Group]
+    @Query(sort: [SortDescriptor(\Group.sortOrder), SortDescriptor(\Group.createdAt)]) private var groups: [Group]
     
     @State private var showingAddGroup = false
+    @State private var editMode: EditMode = .inactive
     
     var body: some View {
         NavigationStack {
@@ -21,12 +22,17 @@ struct GroupManagementView: View {
                 ForEach(groups) { group in
                     GroupRowView(group: group)
                 }
+                .onMove(perform: moveGroups)
                 .onDelete(perform: deleteGroups)
             }
+            .environment(\.editMode, $editMode)
             .navigationTitle(
                 NSLocalizedString("menu_group_management", value: "分组管理", comment: "")
             )
             .navigationBarTitleDisplayMode(.large)
+            .onAppear {
+                initializeSortOrderIfNeeded()
+            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(
@@ -37,11 +43,19 @@ struct GroupManagementView: View {
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(
-                        NSLocalizedString("action_add_group", value: "添加分组", comment: ""),
-                        systemImage: "plus"
-                    ) {
-                        showingAddGroup = true
+                    HStack {
+                        Button(
+                            editMode.isEditing ? NSLocalizedString("action_done", value: "完成排序", comment: "") : NSLocalizedString("action_sort", value: "排序", comment: "")
+                        ) {
+                            editMode = editMode.isEditing ? .inactive : .active
+                        }
+                        
+                        Button(
+                            NSLocalizedString("action_add_group", value: "添加分组", comment: ""),
+                            systemImage: "plus"
+                        ) {
+                            showingAddGroup = true
+                        }
                     }
                 }
             }
@@ -49,6 +63,26 @@ struct GroupManagementView: View {
                 AddGroupView()
             }
         }
+    }
+    
+    private func initializeSortOrderIfNeeded() {
+        guard !groups.isEmpty else { return }
+        let hasOrder = groups.contains { $0.sortOrder != 0 }
+        if !hasOrder {
+            for (index, group) in groups.enumerated() {
+                group.sortOrder = index + 1
+            }
+            _ = try? modelContext.save()
+        }
+    }
+    
+    private func moveGroups(from source: IndexSet, to destination: Int) {
+        var ordered = groups
+        ordered.move(fromOffsets: source, toOffset: destination)
+        for (idx, g) in ordered.enumerated() {
+            g.sortOrder = idx + 1
+        }
+        _ = try? modelContext.save()
     }
     
     private func deleteGroups(offsets: IndexSet) {
@@ -222,6 +256,9 @@ struct AddGroupView: View {
         
         let newGroup = Group(name: trimmedName, color: selectedColor)
         modelContext.insert(newGroup)
+        let all = (try? modelContext.fetch(FetchDescriptor<Group>())) ?? []
+        let nextOrder = (all.map { $0.sortOrder }.max() ?? 0) + 1
+        newGroup.sortOrder = nextOrder
         
         do {
             try modelContext.save()
@@ -348,7 +385,7 @@ struct EditGroupView: View {
 struct GroupSelectionView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @Query private var groups: [Group]
+    @Query(sort: [SortDescriptor(\Group.sortOrder), SortDescriptor(\Group.createdAt)]) private var groups: [Group]
     
     let onGroupSelected: (Group?) -> Void
     @State private var selectedGroup: Group?
