@@ -38,7 +38,8 @@ struct GroupManagementView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(
-                        NSLocalizedString("action_add_group", value: "添加分组", comment: "")
+                        NSLocalizedString("action_add_group", value: "添加分组", comment: ""),
+                        systemImage: "plus"
                     ) {
                         showingAddGroup = true
                     }
