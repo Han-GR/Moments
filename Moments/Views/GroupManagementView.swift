@@ -44,10 +44,11 @@ struct GroupManagementView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack {
-                        Button(
-                            editMode.isEditing ? NSLocalizedString("action_done", value: "完成排序", comment: "") : NSLocalizedString("action_sort", value: "排序", comment: "")
-                        ) {
+                        Button {
                             editMode = editMode.isEditing ? .inactive : .active
+                        } label: {
+                            Image(systemName: editMode.isEditing ? "checkmark.circle.fill" : "arrow.up.arrow.down")
+                                .symbolRenderingMode(.hierarchical)
                         }
                         
                         Button(
