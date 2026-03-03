@@ -43,20 +43,11 @@ struct GroupManagementView: View {
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    HStack {
-                        Button {
-                            editMode = editMode.isEditing ? .inactive : .active
-                        } label: {
-                            Image(systemName: editMode.isEditing ? "checkmark.circle.fill" : "arrow.up.arrow.down")
-                                .symbolRenderingMode(.hierarchical)
-                        }
-                        
-                        Button(
-                            NSLocalizedString("action_add_group", value: "添加分组", comment: ""),
-                            systemImage: "plus"
-                        ) {
-                            showingAddGroup = true
-                        }
+                    Button(
+                        NSLocalizedString("action_add_group", value: "添加分组", comment: ""),
+                        systemImage: "plus"
+                    ) {
+                        showingAddGroup = true
                     }
                 }
             }
